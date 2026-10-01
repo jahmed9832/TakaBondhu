@@ -1,0 +1,24 @@
+{
+  "name": "scamshield-backend",
+  "version": "1.0.0",
+  "description": "Backend API for TakaBachao financial safety and savings platform",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "ingest-knowledge": "node ingestKnowledge.js",
+    "voice-agent": "node voice-agent/agent.js dev",
+    "voice-agent:start": "node voice-agent/agent.js start"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "@livekit/agents": "^1.9.1",
+    "@livekit/agents-plugin-google": "^1.9.1",
+    "@supabase/supabase-js": "^2.117.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "livekit-server-sdk": "^2.19.1"
+  }
+}
