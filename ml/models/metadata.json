@@ -1,0 +1,16 @@
+{
+  "model_version": "v1.0.0-char-wb-lr",
+  "sklearn_version": "1.9.1",
+  "python_version": "3.14.2",
+  "trained_at": "2026-10-02T13:52:43.755844+00:00",
+  "threshold": 0.5,
+  "dataset_hash": "b0f29c62d4b4fab530b9e23e4ead5fe1ffaca7122df9ad89005ebf4a19ea02a9",
+  "feature_count": 15564,
+  "artifact_size_mb": 0.55,
+  "val_metrics": {
+    "fpr": 0.0,
+    "recall": 1.0,
+    "precision": 1.0,
+    "f1": 1.0
+  }
+}
