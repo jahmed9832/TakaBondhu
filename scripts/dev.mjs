@@ -103,11 +103,21 @@ async function dev() {
 
   // 3. Frontend Service
   console.log('🎨 [3/3] Starting React + Vite Frontend (:5173)...');
-  const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  const frontendProc = spawn(npmCmd, ['run', 'dev'], {
-    cwd: FRONTEND_DIR,
-    stdio: ['ignore', 'pipe', 'pipe']
-  });
+  const viteBin = path.join(FRONTEND_DIR, 'node_modules', 'vite', 'bin', 'vite.js');
+  let frontendProc;
+  if (fs.existsSync(viteBin)) {
+    frontendProc = spawn('node', [viteBin], {
+      cwd: FRONTEND_DIR,
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+  } else {
+    const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+    frontendProc = spawn(npmCmd, ['run', 'dev'], {
+      cwd: FRONTEND_DIR,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      shell: process.platform === 'win32'
+    });
+  }
   children.push(frontendProc);
 
   frontendProc.stdout.on('data', (d) => {
