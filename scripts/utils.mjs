@@ -72,9 +72,14 @@ export function isPortAvailable(port) {
  */
 export function execLive(cmd, args, options = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(cmd, args, {
+    const isWindows = process.platform === 'win32';
+    let resolvedCmd = cmd;
+    if (isWindows && cmd === 'npm') {
+      resolvedCmd = 'npm.cmd';
+    }
+    const child = spawn(resolvedCmd, args, {
       stdio: 'inherit',
-      shell: process.platform === 'win32',
+      shell: false,
       ...options
     });
     child.on('close', (code) => {
