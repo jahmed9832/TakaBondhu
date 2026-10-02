@@ -1,12 +1,15 @@
 /**
  * TakaBondhu - Voice Agent Scam Analysis Tool
- * Connects the LiveKit voice assistant directly into the existing multi-tier
- * Scam Shield intelligence: Deterministic Rule Engine + Supabase pgvector RAG.
+ * Connects the LiveKit voice assistant directly into the unified
+ * Scam Shield intelligence: Deterministic Rule Engine + Local ML Model + Supabase pgvector RAG.
+ * Uses the exact same scoring pipeline (backend/scoring.js) as the text API.
  */
 
 import { tool } from '@livekit/agents';
 import { runDeterministicRuleEngine } from '../ruleEngine.js';
 import { retrieveRelevantKnowledge } from '../ragService.js';
+import { predictScam } from '../mlClient.js';
+import { computeHybridScore } from '../scoring.js';
 
 export const scamAnalysisTool = tool({
   name: 'analyze_scam_situation',
@@ -32,7 +35,24 @@ export const scamAnalysisTool = tool({
     const candidateSignals = deterministic.rawSignals || [];
     console.log(`[Voice Agent] Rule engine detected ${candidateSignals.length} threat signal(s).`);
 
-    // RAG Layer: Retrieve Trusted Safety Guidance
+    // Tier 2: Local ML Service (FastAPI)
+    let mlResult = { status: 'unavailable' };
+    try {
+      mlResult = await predictScam(trimmed);
+      console.log(`[Voice Agent] ML prediction status: ${mlResult.status}, prob: ${mlResult.probability}`);
+    } catch (mlErr) {
+      console.warn(`[Voice Agent] ML predict error: ${mlErr.message}`);
+    }
+
+    // Unified Scoring (pure code computation)
+    const hybrid = computeHybridScore({
+      rulesResult: deterministic,
+      mlResult: mlResult,
+      llmAdjustment: 0,
+      llmIsScam: null
+    });
+
+    // RAG Layer: Retrieve Curated Safety Guidance
     console.log(`[Voice Agent] RAG retrieval started`);
     let ragDocs = [];
     let ragAvailable = false;
@@ -53,23 +73,23 @@ export const scamAnalysisTool = tool({
       console.warn(`[Voice Agent] ⚠️ RAG retrieval failed: ${ragErr.message}`);
     }
 
-    const hasCriticalSignals = candidateSignals.some(s => s.severity === 'CRITICAL' || s.severity === 'HIGH');
-    const isPotentialScam = candidateSignals.length > 0 || hasCriticalSignals;
-    
-    let riskLevel = 'LOW';
-    if (deterministic.baseScore >= 80) riskLevel = 'CRITICAL';
-    else if (deterministic.baseScore >= 60) riskLevel = 'HIGH';
-    else if (deterministic.baseScore >= 35) riskLevel = 'MEDIUM';
+    const isPotentialScam = hybrid.isFlagged;
+    const riskLevel = hybrid.riskLevel;
+    const riskScore = hybrid.finalScore;
 
-    // Build concise next step
+    // Concise next step guidance in Bangla
     const safeNextStep = isPotentialScam
-      ? 'টাকা পাঠাবেন না, কোনো ওটিপি বা পিন নম্বর দেবেন না। কলটি সাথে সাথে কেটে দিন এবং ব্যাংক বা সংশ্লিষ্ট প্রতিষ্ঠানের অফিশিয়াল হেল্পলাইনে নিজে ফোন করে যাচাই করুন।'
-      : 'স্বাভাবিক সতর্কতা বজায় রাখুন। কখনো কারো সাথে পাসওয়ার্ড বা পিন শেয়ার করবেন না।';
+      ? 'টাকা পাঠাবেন না, কোনো ওটিপি বা পিন নম্বর দেবেন না। কলটি সাথে সাথে কেটে দিন এবং ব্যাংক বা সংশ্লিষ্ট প্রতিষ্ঠানের অফিশিয়াল হেল্পলাইনে নিজে ফোন করে যাচাই করুন।'
+      : 'স্বাভাবিক সতর্কতা বজায় রাখুন। কখনো কারো সাথে পাসওয়ার্ড বা পিন শেয়ার করবেন না।';
 
     const resultPayload = {
       isPotentialScam,
       riskLevel,
-      riskScore: deterministic.baseScore,
+      riskScore,
+      scoring: hybrid.scoring,
+      ml: hybrid.ml,
+      case_card: hybrid.case_card,
+      needs_human_review: hybrid.needsHumanReview,
       signalsDetected: candidateSignals.map(s => ({
         type: s.type,
         severity: s.severity,
@@ -77,9 +97,9 @@ export const scamAnalysisTool = tool({
         explanation: s.explanation
       })),
       ragAvailable,
-      ragStatusNotice: ragAvailable 
-        ? `Retrieved ${ragDocs.length} trusted safety guidelines from TakaBondhu Knowledge Base.`
-        : `RAG safety knowledge is temporarily unavailable (${ragReason}). Analysis grounded using Deterministic Rule Engine.`,
+      ragStatusNotice: ragAvailable
+        ? `Retrieved ${ragDocs.length} curated safety guidelines from TakaBondhu Knowledge Base.`
+        : `RAG safety knowledge is temporarily unavailable (${ragReason}). Analysis grounded using Deterministic Rule Engine and ML.`,
       retrievedSafetyGuidance: ragDocs.map(d => ({
         title: d.title,
         category: d.category,
@@ -88,7 +108,7 @@ export const scamAnalysisTool = tool({
       safestPracticalNextStep: safeNextStep
     };
 
-    console.log(`[Voice Agent] Scam analysis complete. Status: ${isPotentialScam ? 'POTENTIAL SCAM' : 'SAFE'}, Risk: ${riskLevel}`);
+    console.log(`[Voice Agent] Scam analysis complete. Status: ${isPotentialScam ? 'POTENTIAL SCAM' : 'SAFE'}, Risk: ${riskLevel} (${riskScore}/100)`);
     console.log(`======================================================\n`);
 
     return resultPayload;
