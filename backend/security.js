@@ -1,3 +1,12 @@
+import crypto from 'crypto';
+
+/**
+ * Creates deterministic SHA-256 hash of normalized text for LRU cache lookup.
+ */
+export function hashText(text) {
+  return crypto.createHash('sha256').update((text || '').trim().toLowerCase()).digest('hex');
+}
+
 /**
  * Security and privacy utilities:
  * - PII Redaction (phone numbers, OTPs, PINs, NID numbers)

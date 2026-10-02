@@ -4,13 +4,17 @@
   "private": true,
   "description": "TakaBondhu - Protect. Save. Plan. Your AI companion for safer financial decisions.",
   "scripts": {
-    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run backend\" \"npm run frontend\"",
+    "setup": "node scripts/setup.mjs",
+    "train": "node scripts/train.mjs",
+    "dev": "node scripts/dev.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "demo:check": "node scripts/demo-check.mjs",
+    "bench": "node scripts/bench.mjs",
+    "test": "node scripts/test.mjs",
     "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev",
-    "ingest-knowledge": "cd backend && npm run ingest-knowledge",
     "voice-agent": "cd backend && npm run voice-agent",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+    "ingest-knowledge": "cd backend && npm run ingest-knowledge"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
