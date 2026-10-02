@@ -108,7 +108,8 @@ export function generateCaseCard({
     what_happened,
     why_risky,
     upay_action,
-    human_oversight_required: finalScore >= 50 || needsHumanReview
+    human_oversight_required: finalScore >= 50 || needsHumanReview,
+    human_review_required: finalScore >= 50 || Boolean(needsHumanReview)
   };
 }
 
@@ -128,11 +129,13 @@ export function computeHybridScore({
   llmAdjustment = 0,
   llmIsScam = null
 }) {
-  const rulesScore = typeof rulesResult.baseScore === 'number'
-    ? Math.max(10, Math.min(98, rulesResult.baseScore))
-    : 10;
+  const rulesScore = typeof rulesResult.rulesScore === 'number'
+    ? Math.max(10, Math.min(98, rulesResult.rulesScore))
+    : (typeof rulesResult.baseScore === 'number'
+        ? Math.max(10, Math.min(98, rulesResult.baseScore))
+        : 10);
 
-  const mlAvailable = mlResult && mlResult.status === 'active' && typeof mlResult.probability === 'number';
+  const mlAvailable = mlResult && (mlResult.status === 'active' || mlResult.status === 'ok') && typeof mlResult.probability === 'number';
   const mlProb = mlAvailable ? mlResult.probability : null;
   const mlScore = mlAvailable ? Math.round(mlProb * 100) : null;
 
@@ -221,7 +224,9 @@ export function computeHybridScore({
     reviewReason,
     scoring: {
       rules_score: rulesScore,
+      rules_weight: weights.rules,
       ml_score: mlScore,
+      ml_weight: weights.ml,
       base_blend: baseScore,
       weights,
       threshold: SCORING_CONFIG.THRESHOLD,

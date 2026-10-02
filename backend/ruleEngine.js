@@ -58,13 +58,13 @@ export function runDeterministicRuleEngine(message) {
   const urgencyEvidence = extractSnippet(
     message,
     [
-      /(?:within\s+\d+\s+(?:hours?|minutes?|days?)|expires\s+today|act\s+fast|urgently\s+need|send\s+right\s+now|cancel\s+right\s+now|dial\s+now|call\s+(?:us\s+)?now|before\s+\d+\s*(?:am|pm)|২\s*ঘণ্টার\s*মধ্যে|\d+\s*ঘণ্টার\s*মধ্যে|আজকের\s*মধ্যে|জরুরি\s*ভিত্তিতে|অতি\s*দ্রুত|এখনই\s*(?:পরিশোধ|পাঠান|বলুন|ফেরত|verify|confirm|call)|ekhoni\s*(?:call|verify|pathan|ferot|send))/i,
+      /(?:within\s+\d+\s+(?:hours?|minutes?|days?)|expires\s+today|act\s+fast|urgently\s+need|send\s+right\s+now|cancel\s+right\s+now|dial\s+now|call\s+(?:us\s+)?now|before\s+\d+\s*(?:am|pm)|\d+\s*ঘণ্টার\s*মধ্যে|আজকের\s*মধ্যে|জরুরি\s*নোটিশ|জরুরি\s*ভিত্তিতে|অতি\s*দ্রুত|এখনই\s*(?:পরিশোধ|পাঠান|বলুন|ফেরত|verify|confirm|call)|\d+\s*ghontar\s*moddhe|ekhoni\s*(?:call|verify|pathan|ferot|send))/i,
       /(?:last\s+chance|immediate\s+suspension|temporary\s+hold)/i
     ],
     [
       'within 2 hours', 'within 1 hour', 'within 24 hours', 'expires today',
       'act fast', 'urgently need', 'send right now', 'cancel right now',
-      '২ ঘণ্টার মধ্যে', 'ঘণ্টার মধ্যে', 'জরুরি ভিত্তিতে', 'অতি দ্রুত', 'shondhar age'
+      '২ ঘণ্টার মধ্যে', 'ঘণ্টার মধ্যে', 'জরুরি ভিত্তিতে', 'অতি দ্রুত', 'জরুরি নোটিশ', 'shondhar age'
     ]
   );
 
@@ -84,6 +84,7 @@ export function runDeterministicRuleEngine(message) {
     message,
     [
       /(?:(?:account|wallet|profile|sim|card|হিসাব|একাউন্ট|ওয়ালেট)\s*(?:is|will be|has been)?\s*(?:permanently\s+)?(?:blocked|suspended|deactivated|terminated|frozen|লক|স্থগিত|ব্লক))/i,
+      /(?:account\s*block\s*(?:hobe|hoye\s*jabe)|bkash\s*account\s*block|account\s*bondho\s*hobe)/i,
       /(?:permanently\s+(?:blocked|suspended|closed|terminated)|account\s+closure|temporary\s+freeze|স্থায়ীভাবে\s+বন্ধ|আইনি\s+ব্যবস্থা|police\s+complaint|permanently\s+block|bondho\s+hoye\s+jabe)/i,
       /(?:flagged\s+for\s+suspicious\s+activity|unauthorized\s+transaction\s+of)/i
     ],
@@ -115,7 +116,8 @@ export function runDeterministicRuleEngine(message) {
         /(?:প্রসেসিং\s*ফি|রেজিস্ট্রেশন\s*ফি|জামানত|ছাড়পত্র\s*ফি|ডকুমেন্ট\s*ফি|ট্যাক্স\s*বাবদ|অগ্রিম\s*ইন্স্যুরেন্স|সার্ভিস\s*চার্জ)/i,
         /(?:processing\s*fee|registration\s*fee|joining\s*fee|security\s*deposit|advance\s*insurance|stamp\s*charge)\s*(?:tk\s*|৳\s*)?\d+/i,
         /(?:refund\s+(?:it\s+)?to|mistake\s+transfer|send\s+it\s+back\s+to|return\s+it\s+to|ফেরত\s+পাঠান|ব্যাক\s+করুন|ferot\s+pathan|return\s+korun)\s*(?:[0-9+০-৯\s-]+)?/i,
-        /(?:wire\s+transfer|gift\s+card)/i
+        /(?:wire\s+transfer|gift\s+card)/i,
+        /(?:ekhoni\s*\d+\s*taka\s*pathan|\d+\s*taka\s*pathan\s*verify\s*korte|\d+\s*টাকা\s*ফি\s*দিন)/i
       ],
       [
         'processing fee', 'clearance fee', 'customs fee', 'advance insurance fee',
@@ -164,7 +166,7 @@ export function runDeterministicRuleEngine(message) {
       message,
       [
         /(?:(?:tell|send|share|reply\s+with|provide|disclose|read\s+back|state)\s*(?:your\s*)?(?:4-digit|6-digit)?\s*(?:otp|pin|verification\s+code|secret\s+pin|password|security\s+code))/i,
-        /(?:(?:বলুন|দিন|পাঠান|নিশ্চিত\s*করুন)\s*(?:গোপন\s*)?(?:পিন|ওটিপি|পাসওয়ার্ড|সিকিউরিটি\s*তথ্য))/i,
+        /(?:(?:পিন|ওটিপি|পাসওয়ার্ড|কোড)\s*(?:পাঠান|দিন|বলুন|শেয়ার\s*করুন)|(?:বলুন|দিন|পাঠান|নিশ্চিত\s*করুন)\s*(?:গোপন\s*)?(?:পিন|ওটিপি|পাসওয়ার্ড|সিকিউরিটি\s*তথ্য))/i,
         /(?:code\s*ta\s*ekhoni\s*bolun|pin\s*bolun|otp\s*ar\s*pin\s*bolun|security\s*code\s*share\s*korun)/i,
         /(?:enter\s+your\s+pin\s+and\s+claim|provide\s+your\s+4-digit\s*(?:secret\s*)?pin)/i,
         /(?:install\s+(?:anydesk|teamviewer|rustdesk|quicksupport)|anydesk\s+app\s+install|teamviewer\s+install)/i
@@ -276,9 +278,15 @@ export function runDeterministicRuleEngine(message) {
   // If no signals triggered, baseScore is 10. Otherwise, scaled up to max 98.
   const baseScore = rawSignals.length === 0 ? 10 : Math.min(Math.max(rawSum + 10, 20), 98);
 
+  const signalsWithAliases = rawSignals.map(s => ({
+    ...s,
+    verbatimSnippet: s.evidence
+  }));
+
   return {
-    rawSignals,
+    rawSignals: signalsWithAliases,
     scoreBreakdown,
-    baseScore
+    baseScore,
+    rulesScore: baseScore
   };
 }

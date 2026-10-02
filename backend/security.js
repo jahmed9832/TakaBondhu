@@ -30,9 +30,9 @@ export function redactPII(text) {
   sanitized = sanitized.replace(/\b\d{10}\b/g, '[REDACTED_NID_10]');
 
   // 2. Redact Phone numbers (+8801XXXXXXXXX, 01XXXXXXXXX, 01XXX-XXXXXX)
-  sanitized = sanitized.replace(/(?:\+880\s*|880\s*)?01[3-9]\d{2}[-\s]?\d{6}\b/g, '[REDACTED_PHONE]');
+  sanitized = sanitized.replace(/(?:\+880\s*|880\s*)?01[3-9]\d{2}[-\s]?\d{6}(?!\d)/g, '[REDACTED_PHONE]');
   // Bengali numerals phone format
-  sanitized = sanitized.replace(/(?:\+৮৮০\s*|৮৮০\s*)?০১[৩-৯][০-৯]{2}[-\s]?[০-৯]{6}\b/g, '[REDACTED_PHONE_BN]');
+  sanitized = sanitized.replace(/(?:\+৮৮০\s*|৮৮০\s*)?০১[৩-৯][০-৯]{2}[-\s]?[০-৯]{6}(?![০-৯])/g, '[REDACTED_PHONE_BN]');
 
   // 3. Redact isolated 4-digit to 6-digit OTP/PIN sequences
   // Avoid replacing year numbers like 2026 or small money amounts by checking context
@@ -59,21 +59,22 @@ export function validateVerbatimEvidence(evidence, originalText) {
 /**
  * In-memory sliding-window rate limiter per IP.
  */
-export function createRateLimiter({ windowMs = 60000, maxRequests = 60 } = {}) {
+export function createRateLimiter(optionsOrMax = 60, maybeWindowMs = 60000) {
+  let maxRequests = 60;
+  let windowMs = 60000;
+
+  if (typeof optionsOrMax === 'object' && optionsOrMax !== null) {
+    maxRequests = optionsOrMax.maxRequests ?? 60;
+    windowMs = optionsOrMax.windowMs ?? 60000;
+  } else if (typeof optionsOrMax === 'number') {
+    maxRequests = optionsOrMax;
+    windowMs = typeof maybeWindowMs === 'number' ? maybeWindowMs : 60000;
+  }
+
   const clients = new Map();
 
-  // Cleanup old entries every 2 minutes
-  setInterval(() => {
-    const now = Date.now();
-    for (const [ip, entry] of clients.entries()) {
-      if (now - entry.startTime > windowMs) {
-        clients.delete(ip);
-      }
-    }
-  }, 120000);
-
   return function rateLimitMiddleware(req, res, next) {
-    const ip = req.ip || req.connection.remoteAddress || '127.0.0.1';
+    const ip = req.ip || req.connection?.remoteAddress || '127.0.0.1';
     const now = Date.now();
 
     let record = clients.get(ip);
