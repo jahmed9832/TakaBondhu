@@ -1,14 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import StatsDashboard from './components/StatsDashboard';
 import MessageAnalyzer from './components/MessageAnalyzer';
 import RiskReport from './components/RiskReport';
+import ReviewQueue from './components/ReviewQueue';
 import SavingsGuide from './components/SavingsGuide';
 import Footer from './components/Footer';
 import Toast from './components/Toast';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('scam-shield'); // 'scam-shield' | 'savings-guide'
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (typeof window !== 'undefined' && window.location.pathname === '/review') {
+      return 'review';
+    }
+    return 'scam-shield';
+  });
   const [report, setReport] = useState(null);
   const [originalMessage, setOriginalMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +24,29 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('text'); // 'text' | 'voice'
 
   const analyzerRef = useRef(null);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (window.location.pathname === '/review') {
+        setCurrentPage('review');
+      } else {
+        setCurrentPage('scam-shield');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleNavigate = (page) => {
+    setCurrentPage(page);
+    if (page === 'review') {
+      window.history.pushState({}, '', '/review');
+    } else if (page === 'savings-guide') {
+      window.history.pushState({}, '', '/savings');
+    } else {
+      window.history.pushState({}, '', '/');
+    }
+  };
 
   const scrollToAnalyzer = () => {
     if (analyzerRef.current) {
@@ -73,19 +103,19 @@ export default function App() {
   return (
     <div className="min-h-screen bg-navy-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
       
-      {/* Navigation Bar (Scam Shield & Savings Guide only) */}
+      {/* Navigation Bar */}
       <Navbar 
         currentPage={currentPage}
-        onNavigate={setCurrentPage}
+        onNavigate={handleNavigate}
         onSelectVoice={() => {
-          setCurrentPage('scam-shield');
+          handleNavigate('scam-shield');
           setActiveTab('voice');
           setTimeout(scrollToAnalyzer, 100);
         }}
       />
 
       <main className="flex-grow">
-        {currentPage === 'scam-shield' ? (
+        {currentPage === 'scam-shield' && (
           <>
             {/* Hero Section */}
             <Hero 
@@ -98,6 +128,9 @@ export default function App() {
                 scrollToAnalyzer();
               }}
             />
+
+            {/* Live Telemetry & Model Benchmarks */}
+            <StatsDashboard />
 
             {/* Scam Message & Voice Analyzer */}
             <MessageAnalyzer 
@@ -118,14 +151,21 @@ export default function App() {
               />
             )}
           </>
-        ) : (
-          /* Savings Guide Page */
+        )}
+
+        {currentPage === 'savings-guide' && (
+          /* Savings Guide Page (Preserved as requested) */
           <SavingsGuide />
+        )}
+
+        {currentPage === 'review' && (
+          /* Simulated Analyst Review Queue */
+          <ReviewQueue />
         )}
       </main>
 
       {/* Platform Footer */}
-      <Footer onNavigate={setCurrentPage} />
+      <Footer onNavigate={handleNavigate} />
 
       {/* Toast Alert */}
       <Toast 

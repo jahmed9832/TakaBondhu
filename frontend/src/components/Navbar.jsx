@@ -81,6 +81,18 @@ export default function Navbar({
           >
             Savings Guide
           </button>
+
+          <button
+            type="button"
+            onClick={() => handleNav('review')}
+            className={`px-4 py-2 rounded-xl transition-all ${
+              currentPage === 'review'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/20'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+            }`}
+          >
+            Analyst Review
+          </button>
         </nav>
 
         {/* Right Status Indicator & Quick Action */}
@@ -148,6 +160,19 @@ export default function Navbar({
           >
             <span>Savings Guide</span>
             {currentPage === 'savings-guide' && <span className="w-2 h-2 rounded-full bg-violet-400"></span>}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleNav('review')}
+            className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold flex items-center justify-between ${
+              currentPage === 'review'
+                ? 'bg-amber-500/15 border border-amber-500/30 text-amber-300'
+                : 'text-slate-300 hover:bg-slate-800/50'
+            }`}
+          >
+            <span>Analyst Review Queue</span>
+            {currentPage === 'review' && <span className="w-2 h-2 rounded-full bg-amber-400"></span>}
           </button>
         </div>
       )}
