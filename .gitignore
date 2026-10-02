@@ -6,6 +6,21 @@
 
 # Dependencies
 node_modules/
+.venv/
+ml/.venv/
+env/
+venv/
+
+# Python Cache & Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Explicitly ensure ML artifacts are committed so demo works without retraining
+!ml/data/
+!ml/models/
+!ml/reports/
 
 # Logs
 logs/

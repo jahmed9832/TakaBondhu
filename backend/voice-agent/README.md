@@ -1,6 +1,6 @@
-# TakaBachao — Realtime Voice Agent (Scam Shield Feature)
+# TakaBondhu — Realtime Voice Agent (Scam Shield Feature)
 
-Realtime voice AI safety assistant for TakaBachao powered by **LiveKit Agents** and **Google Gemini Realtime Voice**, tightly integrated with the **Scam Shield Deterministic Rule Engine** and **Supabase pgvector RAG** knowledge base.
+Realtime voice AI safety assistant for TakaBondhu powered by **LiveKit Agents** and **Google Gemini Realtime Voice**, tightly integrated with the **Scam Shield Deterministic Rule Engine** and **Supabase pgvector RAG** knowledge base.
 
 ---
 
@@ -19,7 +19,7 @@ LiveKit Voice Agent Worker (Node.js)
        │
        └── scamTool: "analyze_scam_situation"
                ├── Tier 1: Deterministic Rule Engine (Verbatim Evidence Extraction)
-               └── RAG Layer: Supabase pgvector Similarity Search (TakaBachao Knowledge Base)
+               └── RAG Layer: Supabase pgvector Similarity Search (TakaBondhu Knowledge Base)
        │
        ▼ (Synthesized Spoken Bangla)
 Browser Speaker

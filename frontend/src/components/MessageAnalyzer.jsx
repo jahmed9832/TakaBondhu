@@ -96,7 +96,7 @@ export default function MessageAnalyzer({ onAnalyze, isLoading, error, analyzerR
             }`}
           >
             <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
-            <span>🎙️ Talk to TakaBachao</span>
+            <span>🎙️ Talk to TakaBondhu</span>
             <span className="px-1.5 py-0.5 rounded-full text-[9px] bg-cyan-500/20 text-cyan-300 uppercase font-black">
               LIVE VOICE
             </span>
@@ -225,7 +225,7 @@ export default function MessageAnalyzer({ onAnalyze, isLoading, error, analyzerR
                       </div>
                       <div className="text-center">
                         <p className="text-sm font-bold text-white tracking-wide">
-                          TakaBachao AI Scanning...
+                          TakaBondhu AI Scanning...
                         </p>
                         <p className="text-xs text-cyan-300 font-mono mt-0.5">
                           Checking threat signals and safety guidance

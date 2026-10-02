@@ -48,7 +48,7 @@ export default function Navbar({
 
           <div>
             <span className="text-xl font-black tracking-tight text-white block">
-              TAKA<span className="text-cyan-400">BACHAO</span>
+              TAKA<span className="text-cyan-400">BONDHU</span>
             </span>
             <p className="text-[11px] font-medium text-slate-400 tracking-wider uppercase">
               Protect. Save. Plan.
@@ -104,7 +104,7 @@ export default function Navbar({
             className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all flex items-center space-x-1.5 shadow-md shadow-cyan-500/10"
           >
             <Mic className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span className="hidden xs:inline">Talk to TakaBachao</span>
+            <span className="hidden xs:inline">Talk to TakaBondhu</span>
             <span className="xs:hidden">Voice</span>
           </button>
 

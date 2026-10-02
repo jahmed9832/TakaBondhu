@@ -33,7 +33,7 @@ export default function SavingsGuide() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: "স্বাগতম TakaBachao-তে! আমি আপনার Savings Guide। আপনার আয়, খরচ ও লক্ষ্য বুঝে একটি practical savings plan তৈরি করতে সাহায্য করব। আপনি মাসে কত টাকা সঞ্চয় করতে চান, বা কীসের জন্য টাকা জমাতে চান?",
+      content: "স্বাগতম TakaBondhu-তে! আমি আপনার Savings Guide। আপনার আয়, খরচ ও লক্ষ্য বুঝে একটি practical savings plan তৈরি করতে সাহায্য করব। আপনি মাসে কত টাকা সঞ্চয় করতে চান, বা কীসের জন্য টাকা জমাতে চান?",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -144,7 +144,7 @@ export default function SavingsGuide() {
       {
         id: 'welcome',
         role: 'assistant',
-        content: "স্বাগতম TakaBachao-তে! আমি আপনার Savings Guide। আপনার আয়, খরচ ও লক্ষ্য বুঝে একটি practical savings plan তৈরি করতে সাহায্য করব। আপনি মাসে কত টাকা সঞ্চয় করতে চান, বা কীসের জন্য টাকা জমাতে চান?",
+        content: "স্বাগতম TakaBondhu-তে! আমি আপনার Savings Guide। আপনার আয়, খরচ ও লক্ষ্য বুঝে একটি practical savings plan তৈরি করতে সাহায্য করব। আপনি মাসে কত টাকা সঞ্চয় করতে চান, বা কীসের জন্য টাকা জমাতে চান?",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
     ]);
@@ -154,7 +154,7 @@ export default function SavingsGuide() {
     setInputMessage('');
   };
 
-  // Optional Voice Input Handler (SpeechRecognition)
+  // Ultra-fast Voice Input Handler (SpeechRecognition with real-time interim streaming)
   const toggleVoiceInput = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -173,13 +173,17 @@ export default function SavingsGuide() {
       recognitionRef.current = recognition;
       recognition.lang = 'bn-BD';
       recognition.continuous = false;
-      recognition.interimResults = false;
+      recognition.interimResults = true; // Stream instant live voice transcript
 
       recognition.onstart = () => setIsListening(true);
       recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setInputMessage(transcript);
-        setIsListening(false);
+        let liveTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          liveTranscript += event.results[i][0].transcript;
+        }
+        if (liveTranscript.trim()) {
+          setInputMessage(liveTranscript);
+        }
       };
       recognition.onerror = () => setIsListening(false);
       recognition.onend = () => setIsListening(false);
@@ -198,7 +202,7 @@ export default function SavingsGuide() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-3">
             <PiggyBank className="w-3.5 h-3.5 text-violet-400" />
-            <span>TAKABACHAO SAVINGS GUIDE</span>
+            <span>TAKABONDHU SAVINGS GUIDE</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
@@ -221,7 +225,7 @@ export default function SavingsGuide() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                  <span>TakaBachao Savings Guide</span>
+                  <span>TakaBondhu Savings Guide</span>
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 </h3>
                 <p className="text-[11px] text-slate-400">Conversational Financial Planning</p>
@@ -413,7 +417,7 @@ export default function SavingsGuide() {
                         <div className="mt-4 pt-3 border-t border-slate-800/80 text-[10px] text-slate-400 flex items-start space-x-1.5">
                           <Info className="w-3 h-3 text-slate-400 flex-shrink-0 mt-0.5" />
                           <span>
-                            Educational estimate based on your stated inputs. TakaBachao does not provide certified investment advice or loan decisions.
+                            Educational estimate based on your stated inputs. TakaBondhu does not provide certified investment advice or loan decisions.
                           </span>
                         </div>
 

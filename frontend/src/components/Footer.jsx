@@ -15,7 +15,7 @@ export default function Footer({ onNavigate }) {
                 <ShieldCheck className="w-4 h-4" />
               </div>
               <span className="text-lg font-black text-white tracking-tight">
-                TAKA<span className="text-cyan-400">BACHAO</span>
+                TAKA<span className="text-cyan-400">BONDHU</span>
               </span>
             </div>
             
@@ -56,7 +56,7 @@ export default function Footer({ onNavigate }) {
         {/* Bottom Disclaimer */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400 text-center sm:text-left text-[11px]">
           <div>
-            © {new Date().getFullYear()} TakaBachao. All rights reserved.
+            © {new Date().getFullYear()} TakaBondhu. All rights reserved.
           </div>
           <div>
             Educational safety tool • Never input actual bank passwords, PINs, or financial credentials

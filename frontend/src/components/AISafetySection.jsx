@@ -5,7 +5,7 @@ export default function AISafetySection() {
   const principles = [
     {
       title: 'Guidance, Not Absolute Financial Advice',
-      description: 'TakaBachao provides contextual risk intelligence and warning sign detection to guide personal judgment, not automated financial or legal decisions.',
+      description: 'TakaBondhu provides contextual risk intelligence and warning sign detection to guide personal judgment, not automated financial or legal decisions.',
       icon: Scale,
       color: 'cyan'
     },
@@ -43,7 +43,7 @@ export default function AISafetySection() {
             AI Safety & Ethical Principles
           </h2>
           <p className="mt-3 text-slate-300 text-base">
-            How TakaBachao maintains strict ethical standards, protects user privacy, and ensures balanced evidence-based risk guidance.
+            How TakaBondhu maintains strict ethical standards, protects user privacy, and ensures balanced evidence-based risk guidance.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default function AISafetySection() {
         {/* Banner */}
         <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-navy-900 to-slate-900 border border-slate-800 text-center max-w-4xl mx-auto">
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            <strong className="text-cyan-400">Notice for Hackathon Evaluators:</strong> TakaBachao is engineered for educational awareness and defensive literacy. In production deployment, it integrates with pre-approved banking fraud feeds and regulatory hotlines for real-time threat reporting.
+            <strong className="text-cyan-400">Notice for Hackathon Evaluators:</strong> TakaBondhu is engineered for educational awareness and defensive literacy. In production deployment, it integrates with pre-approved banking fraud feeds and regulatory hotlines for real-time threat reporting.
           </p>
         </div>
 

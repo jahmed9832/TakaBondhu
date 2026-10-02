@@ -1,5 +1,5 @@
 /**
- * TakaBachao - Voice Agent Scam Analysis Tool
+ * TakaBondhu - Voice Agent Scam Analysis Tool
  * Connects the LiveKit voice assistant directly into the existing multi-tier
  * Scam Shield intelligence: Deterministic Rule Engine + Supabase pgvector RAG.
  */
@@ -10,7 +10,7 @@ import { retrieveRelevantKnowledge } from '../ragService.js';
 
 export const scamAnalysisTool = tool({
   name: 'analyze_scam_situation',
-  description: 'Analyze a user\'s described financial situation, suspicious phone call, or message. Runs the deterministic rule engine to extract objective threat signals and retrieves authoritative safety guidelines from the TakaBachao RAG knowledge base.',
+  description: 'Analyze a user\'s described financial situation, suspicious phone call, or message. Runs the deterministic rule engine to extract objective threat signals and retrieves curated safety guidelines from the TakaBondhu RAG knowledge base.',
   parameters: {
     type: 'object',
     properties: {
@@ -78,7 +78,7 @@ export const scamAnalysisTool = tool({
       })),
       ragAvailable,
       ragStatusNotice: ragAvailable 
-        ? `Retrieved ${ragDocs.length} trusted safety guidelines from TakaBachao Knowledge Base.`
+        ? `Retrieved ${ragDocs.length} trusted safety guidelines from TakaBondhu Knowledge Base.`
         : `RAG safety knowledge is temporarily unavailable (${ragReason}). Analysis grounded using Deterministic Rule Engine.`,
       retrievedSafetyGuidance: ragDocs.map(d => ({
         title: d.title,

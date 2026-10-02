@@ -7,11 +7,17 @@ import { runDeterministicRuleEngine, extractSnippet } from './ruleEngine.js';
 import { AccessToken, RoomServiceClient, AgentDispatchClient, RoomConfiguration, RoomAgentDispatch } from 'livekit-server-sdk';
 import { handleSavingsConversation, calculateFinancialPlan } from './savingsService.js';
 
+import crypto from 'crypto';
+
 dotenv.config();
+
+export function generateTraceId() {
+  return 'trace-' + Date.now().toString(36) + '-' + crypto.randomBytes(4).toString('hex');
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-// TakaBachao Application API Server
+// TakaBondhu Application API Server
 
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
@@ -36,8 +42,13 @@ console.log(`LiveKit URL configured: ${Boolean(livekitUrl)}`);
 console.log(`LiveKit API Key configured: ${Boolean(livekitApiKey)}`);
 console.log(`LiveKit Secret configured: ${Boolean(livekitApiSecret)}`);
 
-const GEMINI_MODEL_NAME = 'gemini-3.8-flash';
-const CANDIDATE_GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
+const GEMINI_MODEL_NAME = 'gemini-3.5-flash-lite';
+const CANDIDATE_GEMINI_MODELS = [
+  'gemini-3.5-flash-lite',
+  'gemini-3.5-flash',
+  'gemini-3.8-flash',
+  'gemini-3.1-flash-lite'
+];
 let activeGeminiModel = GEMINI_MODEL_NAME;
 let genAI = null;
 
@@ -57,10 +68,10 @@ if (isKeyConfigured) {
  * System instruction for Gemini Contextual Intelligence with RAG Knowledge
  */
 const GEMINI_SYSTEM_PROMPT = `
-You are the Contextual Intelligence Validator for TakaBachao's Scam Shield feature, an advanced financial scam prevention AI.
+You are the Contextual Intelligence Validator for TakaBondhu's Scam Shield feature, an advanced financial scam prevention AI.
 You operate as Tier 2 of a two-tier fraud detection architecture:
 Tier 1: Deterministic Rule Engine (detects keyword occurrences and extracts verbatim evidence).
-RAG Layer: Retrieves trusted educational safety knowledge documents from the TakaBachao Safety Knowledge Base.
+RAG Layer: Retrieves trusted educational safety knowledge documents from the TakaBondhu Safety Knowledge Base.
 Tier 2 (YOU): Contextual Semantic Understanding using objective evidence and retrieved trusted knowledge.
 
 CRITICAL INSTRUCTIONS:
@@ -131,11 +142,11 @@ async function runGeminiContextualAnalysis(message, deterministicResult, retriev
   // Build the RAG knowledge section for prompt
   let ragKnowledgeSection = 'RETRIEVED SAFETY KNOWLEDGE:\nNo safety documents retrieved (or RAG layer unavailable).\n';
   if (Array.isArray(retrievedDocs) && retrievedDocs.length > 0) {
-    ragKnowledgeSection = 'RETRIEVED SAFETY KNOWLEDGE (from TakaBachao Safety Knowledge Base):\n' +
+    ragKnowledgeSection = 'RETRIEVED SAFETY KNOWLEDGE (from TakaBondhu Safety Knowledge Base):\n' +
       retrievedDocs.map((doc, idx) => `[Document ${idx + 1}]
 Title: ${doc.title}
 Category: ${doc.category}
-Source: ${doc.source || 'TakaBachao Safety Knowledge Base'}
+Source: ${doc.source || 'TakaBondhu Safety Knowledge Base'}
 Content:
 ${doc.content}
 `).join('\n') + '\n';
@@ -148,6 +159,7 @@ ${doc.content}
         generationConfig: {
           responseMimeType: 'application/json',
           temperature: 0.1,
+          maxOutputTokens: 800
         },
         systemInstruction: GEMINI_SYSTEM_PROMPT,
       });
@@ -207,61 +219,78 @@ const HEALTH_CACHE_TTL_MS = 30000; // 30 seconds
  * Health check endpoint - tests live Gemini connectivity & RAG status (cached for 30s)
  */
 app.get('/api/health', async (req, res) => {
-  const now = Date.now();
-  if (cachedHealthResponse && (now - lastHealthCheckTimestamp) < HEALTH_CACHE_TTL_MS) {
-    return res.json({
-      ...cachedHealthResponse,
-      cached: true,
-      timestamp: new Date().toISOString()
-    });
-  }
+  try {
+    const now = Date.now();
+    if (cachedHealthResponse && (now - lastHealthCheckTimestamp) < HEALTH_CACHE_TTL_MS) {
+      return res.json({
+        ...cachedHealthResponse,
+        cached: true,
+        timestamp: new Date().toISOString()
+      });
+    }
 
-  let geminiLive = false;
-  let geminiError = null;
-  let workingModel = null;
+    let geminiLive = false;
+    let geminiError = null;
+    let workingModel = null;
 
-  if (isKeyConfigured && genAI) {
-    for (const modelName of CANDIDATE_GEMINI_MODELS) {
-      try {
-        const model = genAI.getGenerativeModel({ model: modelName });
-        const testPing = await model.generateContent('ping');
-        if (testPing && testPing.response) {
-          geminiLive = true;
-          workingModel = modelName;
-          activeGeminiModel = modelName;
-          break;
+    if (isKeyConfigured && genAI) {
+      for (const modelName of CANDIDATE_GEMINI_MODELS) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          const testPing = await model.generateContent('ping');
+          if (testPing && testPing.response) {
+            geminiLive = true;
+            workingModel = modelName;
+            activeGeminiModel = modelName;
+            break;
+          }
+        } catch (err) {
+          geminiError = err.message;
         }
-      } catch (err) {
-        geminiError = err.message;
       }
     }
+
+    let ragHealth = { configured: false, status: 'unavailable', model: 'none', documentCount: 0 };
+    try {
+      ragHealth = await checkRagHealth();
+    } catch (ragErr) {
+      console.warn('⚠️ RAG health check warning:', ragErr.message);
+    }
+
+    cachedHealthResponse = {
+      status: 'ok',
+      service: 'TakaBondhu Backend API',
+      product: 'TakaBondhu',
+      ruleEngine: 'active',
+      geminiConfigured: isKeyConfigured,
+      geminiStatus: geminiLive ? 'active' : 'unavailable',
+      model: workingModel || activeGeminiModel,
+      ragConfigured: Boolean(ragHealth.configured),
+      ragStatus: ragHealth.status || 'unavailable',
+      ragModel: ragHealth.model,
+      ragDocuments: ragHealth.documentCount || 0,
+      livekitConfigured: isLiveKitConfigured,
+      livekitStatus: isLiveKitConfigured ? 'active' : 'unavailable',
+      error: geminiLive ? null : geminiError
+    };
+    lastHealthCheckTimestamp = now;
+
+    return res.json({
+      ...cachedHealthResponse,
+      cached: false,
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    const traceId = generateTraceId();
+    console.error(`[${traceId}] ⚠️ /api/health error:`, err);
+    return res.status(200).json({
+      status: 'degraded',
+      service: 'TakaBondhu Backend API',
+      product: 'TakaBondhu',
+      ruleEngine: 'active',
+      trace_id: traceId
+    });
   }
-
-  const ragHealth = await checkRagHealth();
-
-  cachedHealthResponse = {
-    status: 'ok',
-    service: 'TakaBachao Backend API',
-    product: 'TakaBachao',
-    ruleEngine: 'active',
-    geminiConfigured: isKeyConfigured,
-    geminiStatus: geminiLive ? 'active' : 'unavailable',
-    model: workingModel || activeGeminiModel,
-    ragConfigured: ragHealth.configured,
-    ragStatus: ragHealth.status,
-    ragModel: ragHealth.model,
-    ragDocuments: ragHealth.documentCount || 0,
-    livekitConfigured: isLiveKitConfigured,
-    livekitStatus: isLiveKitConfigured ? 'active' : 'unavailable',
-    error: geminiLive ? null : geminiError
-  };
-  lastHealthCheckTimestamp = now;
-
-  res.json({
-    ...cachedHealthResponse,
-    cached: false,
-    timestamp: new Date().toISOString()
-  });
 });
 
 /**
@@ -270,15 +299,25 @@ app.get('/api/health', async (req, res) => {
 
 // GET /api/livekit/status - Return safe status without exposing secrets
 app.get('/api/livekit/status', (req, res) => {
-  const configured = Boolean(livekitUrl && livekitApiKey && livekitApiSecret);
-  res.json({
-    configured,
-    agentReady: configured,
-    livekitUrlConfigured: Boolean(livekitUrl),
-    voiceModel: process.env.GEMINI_VOICE_MODEL || 'gemini-3.1-flash-live-preview',
-    language: 'bn (Bangla)',
-    systemReady: true
-  });
+  try {
+    const configured = Boolean(livekitUrl && livekitApiKey && livekitApiSecret);
+    return res.json({
+      configured,
+      agentReady: configured,
+      livekitUrlConfigured: Boolean(livekitUrl),
+      voiceModel: process.env.GEMINI_VOICE_MODEL || 'gemini-3.1-flash-live-preview',
+      language: 'bn (Bangla)',
+      systemReady: true
+    });
+  } catch (err) {
+    const traceId = generateTraceId();
+    console.error(`[${traceId}] ⚠️ /api/livekit/status error:`, err);
+    return res.status(200).json({
+      configured: false,
+      agentReady: false,
+      trace_id: traceId
+    });
+  }
 });
 
 // POST /api/livekit/token - Generate temporary room access token for browser WebRTC
@@ -295,7 +334,7 @@ app.post('/api/livekit/token', async (req, res) => {
     const { roomName: requestedRoom, participantName } = req.body || {};
     const roomName = (requestedRoom && requestedRoom.trim()) || `scamshield-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
     const identity = `user-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
-    const name = (participantName && participantName.trim()) || 'TakaBachao User';
+    const name = (participantName && participantName.trim()) || 'TakaBondhu User';
 
     console.log(`[VOICE DEBUG] Token requested for room: ${roomName}`);
 
@@ -356,10 +395,11 @@ app.post('/api/livekit/token', async (req, res) => {
       identity
     });
   } catch (err) {
-    console.error('Error generating LiveKit token:', err);
+    const traceId = generateTraceId();
+    console.error(`[${traceId}] Error generating LiveKit token:`, err);
     return res.status(500).json({
       error: 'Failed to generate LiveKit room token.',
-      details: err.message
+      trace_id: traceId
     });
   }
 });
@@ -386,10 +426,11 @@ app.post('/api/savings/chat', async (req, res) => {
 
     return res.json(result);
   } catch (err) {
-    console.error('Error in /api/savings/chat:', err);
+    const traceId = generateTraceId();
+    console.error(`[${traceId}] Error in /api/savings/chat:`, err);
     return res.status(500).json({
       error: 'Failed to process savings conversation',
-      details: err.message
+      trace_id: traceId
     });
   }
 });
@@ -448,7 +489,7 @@ app.post('/api/savings-coach', async (req, res) => {
       });
     }
 
-    const prompt = `You are TakaBachao's AI Savings Guide, an educational financial planning assistant.
+    const prompt = `You are TakaBondhu's AI Savings Guide, an educational financial planning assistant.
 The user is planning a savings goal. The core arithmetic has ALREADY been calculated deterministically by our code:
 - Goal Name: "${goalName}"
 - Monthly Income: ৳${numIncome.toLocaleString()}
@@ -484,7 +525,8 @@ Respond with STRICT JSON format:
           model: modelName,
           generationConfig: {
             responseMimeType: 'application/json',
-            temperature: 0.3
+            temperature: 0.3,
+            maxOutputTokens: 350
           }
         });
 
@@ -751,7 +793,7 @@ app.post('/api/analyze', async (req, res) => {
         ? geminiResult.data.knowledgeUsed
         : (ragSucceeded ? retrievedDocs.map(d => ({ title: d.title, category: d.category, relevance: d.similarity })) : []),
       meta: {
-        product: 'TakaBachao',
+        product: 'TakaBondhu',
         feature: 'Scam Shield',
         architecture: 'Multi-Tier Hybrid: Deterministic Rule Engine + Supabase pgvector RAG + Gemini AI',
         ruleEngine: 'active',
@@ -767,17 +809,18 @@ app.post('/api/analyze', async (req, res) => {
     return res.json(responsePayload);
 
   } catch (error) {
-    console.error('Fatal error in /api/analyze:', error);
+    const traceId = generateTraceId();
+    console.error(`[${traceId}] Fatal error in /api/analyze:`, error);
     return res.status(500).json({
       error: 'An unexpected internal server error occurred while analyzing the message.',
-      details: error.message
+      trace_id: traceId
     });
   }
 });
 
 const server = app.listen(PORT, () => {
   console.log(`===============================================`);
-  console.log(`🛡️ TakaBachao Backend running on port ${PORT}`);
+  console.log(`🛡️ TakaBondhu Backend running on port ${PORT}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🔗 Analyze endpoint: POST http://localhost:${PORT}/api/analyze`);
   console.log(`===============================================`);
@@ -790,6 +833,14 @@ server.on('error', (err) => {
   } else {
     console.error('Server error:', err);
   }
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.warn('⚠️ Process caught unhandled rejection:', reason?.message || reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.warn('⚠️ Process caught uncaught exception:', err.message);
 });
 
 process.on('SIGINT', () => {

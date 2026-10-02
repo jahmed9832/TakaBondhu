@@ -174,7 +174,7 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
     setErrorMessage(null);
     setConnectionState('requesting_token');
     setUserTranscript('');
-    setAiTranscript('আসসালামু আলাইকুম! আমি TakaBachao-এর Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।');
+    setAiTranscript('আসসালামু আলাইকুম! আমি TakaBondhu-র Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।');
     setDetectedSignals([]);
 
     // 1. Request microphone access first
@@ -184,7 +184,9 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true
+          autoGainControl: true,
+          sampleRate: 24000,
+          channelCount: 1
         } 
       });
       micStreamRef.current = micStream;
@@ -240,14 +242,22 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
       console.log('[VOICE DEBUG] Frontend connecting to room:', tokenData.roomName);
       setConnectionState('connecting');
 
-      // 3. Initialize LiveKit Room
+      // 3. Initialize LiveKit Room with low-latency voice settings
       const room = new Room({
         adaptiveStream: true,
         dynacast: true,
         audioCaptureDefaults: {
           autoGainControl: true,
           echoCancellation: true,
-          noiseSuppression: true
+          noiseSuppression: true,
+          channelCount: 1,
+          sampleRate: 24000,
+          latency: 0.01
+        },
+        publishDefaults: {
+          dtx: true,
+          red: true,
+          audioBitrate: 24000
         }
       });
 
@@ -462,7 +472,7 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
                     "Tell me what happened."
                   </p>
                   <p className="text-xs text-slate-400 mt-2">
-                    Click Start Live Voice to speak directly in Bangla with TakaBachao.
+                    Click Start Live Voice to speak directly in Bangla with TakaBondhu.
                   </p>
                 </div>
               )}
@@ -588,7 +598,7 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
               <div className="p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/30">
                 <div className="flex items-center space-x-2 mb-2 text-xs font-semibold text-cyan-300">
                   <Volume2 className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>TakaBachao Voice AI (Spoken Bangla)</span>
+                  <span>TakaBondhu Voice AI (Spoken Bangla)</span>
                 </div>
                 <p className="text-sm text-cyan-100 font-bangla leading-relaxed">
                   "{aiTranscript}"

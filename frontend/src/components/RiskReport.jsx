@@ -106,7 +106,7 @@ export default function RiskReport({ report, originalMessage, onReset }) {
   };
 
   const handleCopyFullReport = () => {
-    const reportText = `[TakaBachao — Scam Shield Report]
+    const reportText = `[TakaBondhu — Scam Shield Report]
 Risk Level: ${riskLevel} RISK (${riskScore}/100)
 Assessment: ${theme.headline}
 Summary: ${summary}
@@ -117,7 +117,7 @@ ${displaySignals.map(s => `• ${s.type}${s.evidence ? `: "${s.evidence}"` : ''}
 What to do now:
 ${displayActions.map((a, i) => `${i + 1}. ${a.replace(/^[❌✅]\s*/, '')}`).join('\n')}
 
-Protected by TakaBachao (Scam Shield).`;
+Protected by TakaBondhu (Scam Shield).`;
 
     navigator.clipboard.writeText(reportText);
     setCopiedReport(true);

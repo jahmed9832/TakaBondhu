@@ -143,7 +143,7 @@ export async function retrieveRelevantKnowledge(queryText, limit = 3) {
         id: d.id,
         title: d.title,
         category: d.category,
-        source: d.source || 'TakaBachao Safety Knowledge Base',
+        source: d.source || 'TakaBondhu Safety Knowledge Base',
         excerpt: d.excerpt || d.content.slice(0, 160) + '...',
         content: d.content,
         similarity: d.similarity ? Math.round(d.similarity * 100) : 85

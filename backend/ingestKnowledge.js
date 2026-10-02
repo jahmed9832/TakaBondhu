@@ -1,5 +1,5 @@
 /**
- * TakaBachao — Knowledge Ingestion Script
+ * TakaBondhu — Knowledge Ingestion Script
  * Embeds and stores curated safety documents in Supabase pgvector table 'knowledge_documents'.
  * 
  * Usage:
@@ -20,7 +20,7 @@ const supabaseKey = secretKey || publishableKey;
 
 async function runIngestion() {
   console.log('================================================================');
-  console.log('📚 TakaBachao — Safety Knowledge Base Ingestion');
+  console.log('📚 TakaBondhu — Safety Knowledge Base Ingestion');
   console.log(`Using Embedding Model: ${EMBEDDING_MODEL_NAME} (${EMBEDDING_DIMENSION}-dim)`);
   console.log('================================================================\n');
 
@@ -39,7 +39,7 @@ async function runIngestion() {
   });
 
   console.log(`✓ Supabase connection initialized.`);
-  console.log(`Found ${KNOWLEDGE_DOCUMENTS.length} curated documents in TakaBachao Safety Knowledge Base.\n`);
+  console.log(`Found ${KNOWLEDGE_DOCUMENTS.length} curated documents in TakaBondhu Safety Knowledge Base.\n`);
 
   let successCount = 0;
   let failCount = 0;

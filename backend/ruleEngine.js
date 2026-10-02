@@ -1,5 +1,5 @@
 /**
- * TakaBachao - Scam Shield Deterministic Rule Engine
+ * TakaBondhu - Scam Shield Deterministic Rule Engine
  * Extracts objective signals, verbatim evidence snippets, and baseline points.
  * Supports English and Bengali patterns.
  */

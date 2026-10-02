@@ -1,5 +1,5 @@
 /**
- * TakaBachao - Voice Agent RAG Tool
+ * TakaBondhu - Voice Agent RAG Tool
  * Connects the voice pipeline to the existing Supabase pgvector safety knowledge base.
  */
 
@@ -8,7 +8,7 @@ import { retrieveRelevantKnowledge } from '../ragService.js';
 
 export const ragKnowledgeTool = tool({
   name: 'retrieve_safety_knowledge',
-  description: 'Retrieve authoritative safety guidance and anti-fraud knowledge documents from the trusted TakaBachao Safety Knowledge Base based on a topic, scam keyword, or suspicious financial scenario.',
+  description: 'Retrieve curated safety guidance and anti-fraud knowledge documents from the trusted TakaBondhu Safety Knowledge Base based on a topic, scam keyword, or suspicious financial scenario.',
   parameters: {
     type: 'object',
     properties: {

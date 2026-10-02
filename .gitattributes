@@ -1,0 +1,14 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Force LF line endings for scripts to prevent execution issues across OSes
+*.mjs text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.sql text eol=lf
+*.csv text eol=lf

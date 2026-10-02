@@ -1,9 +1,9 @@
-# 🛡️ TAKABACHAO — "Protect. Save. Plan."
+# 🛡️ TAKABONDHU — "Protect. Save. Plan."
 
 > **Your AI companion for safer financial decisions.**  
 > *Two-Feature Fintech Intelligence: Scam Shield (Multi-Tier Fraud Prevention) & Savings Guide (Conversational Financial Planning)*
 
-![TakaBachao Banner](https://img.shields.io/badge/Product-TAKABACHAO-06b6d4?style=for-the-badge)
+![TakaBondhu Banner](https://img.shields.io/badge/Product-TAKABONDHU-06b6d4?style=for-the-badge)
 ![Architecture](https://img.shields.io/badge/Architecture-Rule%20Engine%20%7C%20pgvector%20RAG%20%7C%20Gemini%20AI%20%7C%20LiveKit-blue?style=for-the-badge)
 ![Security](https://img.shields.io/badge/API%20Key-Server--Side%20Only-emerald?style=for-the-badge)
 
@@ -11,15 +11,15 @@
 
 ## 🌟 1. Product Overview
 
-**TakaBachao** is an AI-powered financial decision-support and fraud defense platform built to safeguard everyday individuals and families before they transfer money, share credentials, or make critical financial decisions.
+**TakaBondhu** is an AI-powered financial decision-support and fraud defense platform built to safeguard everyday individuals and families before they transfer money, share credentials, or make critical financial decisions.
 
 ### Product Hierarchy & Features
 
 ```
-TAKABACHAO (Product)
+TAKABONDHU (Product)
 ├── 1. SCAM SHIELD (Feature)
 │   ├── Deterministic Rule Engine (Verbatim Evidence Extraction)
-│   ├── Supabase pgvector RAG (9 Authoritative Financial Safety Categories)
+│   ├── Supabase pgvector RAG (9 Curated Financial Safety Categories)
 │   ├── Contextual Semantic Understanding (Google Gemini AI)
 │   └── LiveKit Realtime Voice AI (Spoken Bangla Assistant)
 │
@@ -52,9 +52,9 @@ LIVE VOICE / BROWSER SPEAKER
      Contains "OTP" and "customer support", but Gemini recognizes this as **defensive advice**, rejects the harvesting signal, and assigns `LOW RISK`.
    - **Actual Attack Example:** *"Tell me the OTP you just received so I can verify your account."*  
      Gemini recognizes this as an **active credential harvesting attempt**, validates the signal, and assigns `HIGH/CRITICAL RISK`.
-3. **Authoritative RAG Retrieval:** Supabase pgvector retrieves trusted safety documents across 9 pre-computed categories (bKash/Nagad account security, lottery fee scams, impersonation threats, etc.).
+3. **Curated RAG Retrieval:** Supabase pgvector retrieves trusted safety documents across 9 pre-computed categories (bKash/Nagad account security, lottery fee scams, impersonation threats, etc.).
 4. **Realtime Spoken Bangla Voice:** Powered by LiveKit Cloud WebRTC and Gemini Live, allowing users to speak naturally in Bangla and hear instant voice guidance.
-5. **Fault Tolerance:** If `GEMINI_API_KEY` is not provided or API quota is exceeded, TakaBachao gracefully falls back to the deterministic engine without crashing.
+5. **Fault Tolerance:** If `GEMINI_API_KEY` is not provided or API quota is exceeded, TakaBondhu gracefully falls back to the deterministic engine without crashing.
 
 ---
 

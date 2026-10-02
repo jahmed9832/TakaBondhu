@@ -47,7 +47,7 @@ export default function Hero({ onAnalyzeClick, onVoiceClick }) {
             className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-navy-900/90 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/10 hover:border-cyan-400 hover:text-white transition-all flex items-center justify-center space-x-2.5 shadow-lg group"
           >
             <Mic className="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform" />
-            <span>🎙️ Talk to TakaBachao</span>
+            <span>🎙️ Talk to TakaBondhu</span>
           </button>
         </div>
 

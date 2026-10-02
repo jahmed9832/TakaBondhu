@@ -1,5 +1,5 @@
 /**
- * TakaBachao - Conversational Savings Assistant Service
+ * TakaBondhu - Conversational Savings Assistant Service
  * Multi-Turn Gemini AI Conversational Flow + Deterministic State Machine & Financial Arithmetic
  * 
  * Preserves multi-turn conversation context across every turn.
@@ -11,8 +11,9 @@
 const savingsSessions = new Map();
 
 export const CANDIDATE_SAVINGS_MODELS = [
-  'gemini-3.8-flash',
   'gemini-3.5-flash-lite',
+  'gemini-3.5-flash',
+  'gemini-3.8-flash',
   'gemini-3.1-flash-lite'
 ];
 
@@ -558,7 +559,7 @@ export async function handleSavingsConversation({
   let usedGemini = false;
 
   if (genAI) {
-    const systemPrompt = `You are TakaBachao's AI Savings Guide, an educational conversational assistant.
+    const systemPrompt = `You are TakaBondhu's AI Savings Guide, an educational conversational assistant.
 You guide the user step-by-step to build a realistic monthly savings plan.
 
 CURRENT AUTHORITATIVE SAVINGS STATE (maintained by backend):
@@ -592,16 +593,20 @@ CONVERSATION INSTRUCTIONS:
       try {
         const model = genAI.getGenerativeModel({
           model: modelName,
-          systemInstruction: systemPrompt
+          systemInstruction: systemPrompt,
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 250
+          }
         });
 
         // Use server-side multi-turn chat history
         const chat = model.startChat({
-          history: session.history.slice(-10) // Keep recent turns for context
+          history: session.history.slice(-8) // Keep recent turns for context
         });
 
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Gemini response timed out')), 5000)
+          setTimeout(() => reject(new Error('Gemini response timed out')), 4000)
         );
 
         const sendPromise = chat.sendMessage(message);

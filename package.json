@@ -2,7 +2,7 @@
   "name": "scamshield-live",
   "version": "1.0.0",
   "private": true,
-  "description": "TakaBachao - Protect. Save. Plan. Your AI companion for safer financial decisions.",
+  "description": "TakaBondhu - Protect. Save. Plan. Your AI companion for safer financial decisions.",
   "scripts": {
     "start": "concurrently \"npm run backend\" \"npm run frontend\"",
     "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run backend\" \"npm run frontend\"",

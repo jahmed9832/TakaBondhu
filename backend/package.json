@@ -1,7 +1,7 @@
 {
   "name": "scamshield-backend",
   "version": "1.0.0",
-  "description": "Backend API for TakaBachao financial safety and savings platform",
+  "description": "Backend API for TakaBondhu financial safety and savings platform",
   "main": "server.js",
   "type": "module",
   "scripts": {

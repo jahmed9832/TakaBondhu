@@ -1,6 +1,6 @@
 # 🎙️ LiveKit Realtime Voice AI Setup Guide (Phase 4)
 
-This guide walks you through configuring and running the **LiveKit Realtime Voice AI** for TakaBachao (Scam Shield feature).
+This guide walks you through configuring and running the **LiveKit Realtime Voice AI** for TakaBondhu (Scam Shield feature).
 
 ---
 
@@ -74,7 +74,7 @@ LiveKit Voice Agent Worker (Node.js)
        │
        └── scamTool: "analyze_scam_situation"
                ├── Tier 1: Deterministic Rule Engine (Verbatim Evidence Extraction)
-               └── RAG Layer: Supabase pgvector Similarity Search (TakaBachao Knowledge Base)
+               └── RAG Layer: Supabase pgvector Similarity Search (TakaBondhu Knowledge Base)
        │
        ▼ (Synthesized Spoken Bangla)
 Browser Speaker
@@ -126,7 +126,7 @@ Connecting voice agent worker...
 3. Click the **Start Live Voice** button.
 4. When prompted by the browser, click **Allow** for microphone access.
 5. Once connected, you will hear the assistant's initial Bangla greeting:
-   > *"আসসালামু আলাইকুম! আমি TakaBachao-এর Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।"*
+   > *"আসসালামু আলাইকুম! আমি TakaBondhu-র Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।"*
 6. Speak your situation in Bangla, for example:
    - *"একজন আমাকে ফোন করে বলছে আমার বিকাশ অ্যাকাউন্ট বন্ধ হয়ে যাবে, এখনই ৫০০০ টাকা পাঠাতে হবে।"*
    - *"আমাকে একজন ফোন করে ওটিপি চাইছে ভেরিফিকেশনের জন্য।"*

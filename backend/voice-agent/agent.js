@@ -1,5 +1,5 @@
 /**
- * TakaBachao - Realtime Voice AI Agent (LiveKit + Google Gemini + RAG)
+ * TakaBondhu - Realtime Voice AI Agent (LiveKit + Google Gemini + RAG)
  * Speaks natural Bangla and assists users in detecting financial scams in realtime.
  */
 
@@ -84,7 +84,7 @@ export default defineAgent({
 
     // Spoken Bangla initial greeting
     try {
-      session.say('আসসালামু আলাইকুম! আমি TakaBachao-এর Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।');
+      session.say('আসসালামু আলাইকুম! আমি TakaBondhu-র Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।');
       console.log(`[Voice Agent] Initial Bangla greeting dispatched.`);
     } catch (greetErr) {
       console.warn(`[Voice Agent] Notice during greeting dispatch:`, greetErr.message);
