@@ -73,6 +73,9 @@ All numbers below are generated programmatically by running `npm run bench` and 
 | **Multi-Signal Fusion Layer** | **0.9982** | **0.9996** | **97.88%** | **98.46%** | **0.52%** | **3.80 ms** | Full Composite Pipeline (Val Tuned) |
 | **Handwritten Paraphrase Benchmark** | — | — | **98.75%** | **90.80%** | **10.00%** | 0.70 ms | 160 natural non-template human messages |
 
+> [!NOTE]
+> **Fusion Ablation Parity & Explainability Disclosure:** In the multi-signal ablation study ([ml/reports/results.md](ml/reports/results.md)), Full Fusion PR-AUC (0.9982) is essentially tied with standalone Txn-ML only (0.9981). The true engineering value of the 5-signal fusion layer is **not** an artificial score lift on pure ledger rows, but rather **defense-in-depth coverage** (intercepting social engineering text payloads, new-device ATO anomalies, and mule network flows), **explainable evidence** (rule traces, character n-gram attributions, and ego-subgraphs for human analysts), and **proportional pre-send intervention** without autonomous freeze. Standalone Message-ML achieves 0.9996 PR-AUC on text but appears low (0.4818) in the general transaction ablation because most banking transactions have no linked user message.
+
 ### Key Figures for Report & Presentation:
 - **Precision-Recall Curve:** [docs/figures/pr_curve.svg](docs/figures/pr_curve.svg)
 - **Confusion Matrix (58,345 Transactions):** [docs/figures/confusion_matrix.svg](docs/figures/confusion_matrix.svg)
@@ -190,7 +193,7 @@ takabondhu/  (project root)
     ├── JUDGE_MAP.md          # 7 official judging criteria mapped to files & commands
     ├── DEMO_SCRIPT.md        # Tight 3-minute video recording script (timestamps + click paths)
     ├── REPORT_OUTLINE.md     # Formal technical report skeleton & claims-vs-evidence table
-    ├── PITCH_QNA.md          # 25 technically rigorous answers to judge questions
+    ├── PITCH_QNA.md          # 28 technically rigorous answers to judge questions
     ├── BUSINESS_CASE.md      # Full economic model, sensitivity matrix, and rollout plan
     ├── RESPONSIBLE_AI.md     # Model cards, data sheet, fairness audit, threat model table
     ├── VALIDATION_AND_SCALE.md # 30-day shadow mode plan & core banking integration sequence

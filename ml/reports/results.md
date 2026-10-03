@@ -23,9 +23,13 @@ Evaluated on 5,370 held-out transactions combining security rules, message NLP, 
 | **Graph Only (NetworkX Mule)** | 0.2596 | 0.5078 | 0.0000 | 0.0000 | 0.0158 | 0.0000 | 0.0000 |
 | **Full Fusion Engine (TakaBondhu)** | **0.9982** | **0.9993** | **0.9846** | **0.9788** | **0.0052** | **0.9817** | **0.9075** |
 
-### Component Synergy & Fusion Dynamics
+### Component Synergy & Honest Fusion Dynamics
+- **Fusion PR-AUC Parity Disclosure:** Full Fusion PR-AUC (0.9982) is essentially tied with standalone Txn-ML only (0.9981) in this tabular ablation cohort. The decisive value of the 5-signal fusion layer is **not** an incremental statistical lift on pure ledger rows, but rather:
+  1. **Comprehensive Multi-Modal Coverage:** Standalone Txn-ML is blind to deceptive linguistic coercion, whereas Fusion ingests SMS/message transcripts to intercept social engineering before funds move.
+  2. **Rich Explainable Evidence:** Supplies fraud operations analysts with 3-question Case Cards, exact verbatim n-gram attributions, and NetworkX mule ego-subgraphs.
+  3. **Defense-in-Depth Against Evasion:** Prevents adversaries from spoofing transaction parameters (e.g. keeping amounts below ৳25k limit during daylight hours) by cross-referencing behavioral anomaly scores and graph topology.
+- **Why Message-ML Only Appears Weak on the Transaction Cohort (0.4818 PR-AUC):** In a real-world MFS ledger, the majority of transactions have no linked incoming message payload. Standalone Message-ML achieves near-perfect discrimination (0.9996 PR-AUC) when text is present, but on the unlinked transaction cohort, it cannot detect silent account takeovers or mule smurfing without accompanying text.
 - **Rules Only:** Delivers high precision for explicit boundary violations (regulatory structuring, deep-night transfers) with 0.6482 PR-AUC, but misses subtle evasion tactics.
-- **Message-ML Only:** Detects social engineering scams (0.4818 PR-AUC on transaction cohort), but is silent on account takeover or mule movements where no message is attached.
 - **Txn-ML Only:** Provides strong sub-2ms behavioral scoring across customer demographics, device age, channels, and night-time velocity (0.9981 PR-AUC).
 - **Full Fusion Engine:** Combines all 5 modalities using validation-tuned weights (`rules: 0.15`, `message: 0.20`, `txn: 0.55`, `anomaly: 0.05`, `graph: 0.05`). By operating at the validation-calibrated operating threshold (t = 0.25), Full Fusion achieves **0.9982 PR-AUC** with **97.88% recall** and **0.52% FPR**, eliminating single-signal blind spots without underperforming component models.
 

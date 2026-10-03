@@ -212,7 +212,7 @@ takabondhu/
     ├── JUDGE_MAP.md                 # 7 judging criteria mapped to files & commands
     ├── DEMO_SCRIPT.md               # Tight 3-minute video pitch & click path script
     ├── REPORT_OUTLINE.md            # Formal technical report skeleton & evidence table
-    ├── PITCH_QNA.md                 # 25 technically rigorous answers to judge questions
+    ├── PITCH_QNA.md                 # 28 technically rigorous answers to judge questions
     ├── BUSINESS_CASE.md             # Full economic model, sensitivity table & rollout
     ├── RESPONSIBLE_AI.md            # Model cards, data sheet, fairness audit, threat model
     ├── VALIDATION_AND_SCALE.md      # 30-day shadow mode & core banking integration plan
