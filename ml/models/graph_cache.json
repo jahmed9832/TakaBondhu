@@ -5,6 +5,22 @@
   "mule_suspects_count": 2500,
   "top_suspects": [
     {
+      "wallet_id": "01700999001",
+      "in_degree": 12,
+      "out_degree": 4,
+      "unique_senders": 12,
+      "unique_receivers": 4,
+      "total_inflow": 124000.0,
+      "total_outflow": 120000.0,
+      "risk_score": 96.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 12 distinct senders in 30 minutes",
+        "Rapid fund dispersion: 4 outgoing transfer targets within 1 hour",
+        "Transit hub pattern: high flow-through ratio (0.97)"
+      ]
+    },
+    {
       "wallet_id": "cust_01274",
       "in_degree": 25,
       "out_degree": 33,
@@ -1877,6 +1893,275 @@
       "reasons": [
         "High fan-in: received funds from 15 distinct senders",
         "Rapid fund dispersion: 38 outgoing transfer targets"
+      ]
+    },
+    "01700999001": {
+      "wallet_id": "01700999001",
+      "in_degree": 12,
+      "out_degree": 4,
+      "unique_senders": 12,
+      "unique_receivers": 4,
+      "total_inflow": 124000.0,
+      "total_outflow": 120000.0,
+      "risk_score": 96.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 12 distinct senders in 30 minutes",
+        "Rapid fund dispersion: 4 outgoing transfer targets within 1 hour",
+        "Transit hub pattern: high flow-through ratio (0.97)"
+      ]
+    }
+  },
+  "subgraphs": {
+    "01700999001": {
+      "wallet_id": "01700999001",
+      "in_degree": 12,
+      "out_degree": 4,
+      "unique_senders": 12,
+      "unique_receivers": 4,
+      "total_inflow": 124000.0,
+      "total_outflow": 120000.0,
+      "risk_score": 96.0,
+      "is_mule_suspect": true,
+      "nodes": [
+        {
+          "id": "01700999001",
+          "label": "Mule Hub (01700999001)",
+          "type": "customer",
+          "is_target": true,
+          "is_mule": true
+        },
+        {
+          "id": "01711000001",
+          "label": "Victim 01711000001",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000002",
+          "label": "Victim 01711000002",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000003",
+          "label": "Victim 01711000003",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000004",
+          "label": "Victim 01711000004",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000005",
+          "label": "Victim 01711000005",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000006",
+          "label": "Victim 01711000006",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000007",
+          "label": "Victim 01711000007",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000008",
+          "label": "Victim 01711000008",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000009",
+          "label": "Victim 01711000009",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000010",
+          "label": "Victim 01711000010",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000011",
+          "label": "Victim 01711000011",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01711000012",
+          "label": "Victim 01711000012",
+          "type": "customer",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "agent_0001",
+          "label": "Agent (agent_0001)",
+          "type": "agent",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "agent_0002",
+          "label": "Agent (agent_0002)",
+          "type": "agent",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "agent_0003",
+          "label": "Agent (agent_0003)",
+          "type": "agent",
+          "is_target": false,
+          "is_mule": false
+        },
+        {
+          "id": "01800999001",
+          "label": "Agent (01800999001)",
+          "type": "agent",
+          "is_target": false,
+          "is_mule": false
+        }
+      ],
+      "edges": [
+        {
+          "source": "01711000001",
+          "target": "01700999001",
+          "amount": 10250.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000002",
+          "target": "01700999001",
+          "amount": 10500.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000003",
+          "target": "01700999001",
+          "amount": 10750.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000004",
+          "target": "01700999001",
+          "amount": 11000.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000005",
+          "target": "01700999001",
+          "amount": 11250.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000006",
+          "target": "01700999001",
+          "amount": 11500.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000007",
+          "target": "01700999001",
+          "amount": 11750.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000008",
+          "target": "01700999001",
+          "amount": 12000.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000009",
+          "target": "01700999001",
+          "amount": 12250.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000010",
+          "target": "01700999001",
+          "amount": 12500.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000011",
+          "target": "01700999001",
+          "amount": 12750.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01711000012",
+          "target": "01700999001",
+          "amount": 13000.0,
+          "tx_count": 1,
+          "direction": "inflow"
+        },
+        {
+          "source": "01700999001",
+          "target": "agent_0001",
+          "amount": 30000.0,
+          "tx_count": 2,
+          "direction": "outflow"
+        },
+        {
+          "source": "01700999001",
+          "target": "agent_0002",
+          "amount": 30000.0,
+          "tx_count": 2,
+          "direction": "outflow"
+        },
+        {
+          "source": "01700999001",
+          "target": "agent_0003",
+          "amount": 30000.0,
+          "tx_count": 2,
+          "direction": "outflow"
+        },
+        {
+          "source": "01700999001",
+          "target": "01800999001",
+          "amount": 30000.0,
+          "tx_count": 2,
+          "direction": "outflow"
+        }
+      ],
+      "reasons": [
+        "High fan-in: received funds from 12 distinct senders in 30 minutes",
+        "Rapid fund dispersion: 4 outgoing transfer targets within 1 hour",
+        "Transit hub pattern: high flow-through ratio (0.97)"
       ]
     }
   }

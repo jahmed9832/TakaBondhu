@@ -243,11 +243,11 @@ async function runDemoCheck() {
   if (demoAto?.transactionData) {
     const txnRes2 = await testTransactionScenario({ transaction: demoAto.transactionData }, isLiveServer);
     console.log(`- Official Demo ATO Case: Score ${txnRes2.risk_score}/100 (${txnRes2.risk_level}) -> Recommendation: ${txnRes2.decision_recommendation}`);
-    if (!allowedRecs.includes(txnRes2.decision_recommendation)) {
-      console.error(`❌ ASSERTION FAILED: Official Demo ATO recommendation must be HOLD_FOR_REVIEW or SOFT_FRICTION. Received: ${txnRes2.decision_recommendation}`);
+    if (txnRes2.decision_recommendation !== 'HOLD_FOR_REVIEW') {
+      console.error(`❌ ASSERTION FAILED: Official Demo ATO recommendation must be HOLD_FOR_REVIEW. Received: ${txnRes2.decision_recommendation}`);
       process.exit(1);
     }
-    console.log(`✓ Assert Passed: Demo ATO scenario returned ${txnRes2.decision_recommendation}`);
+    console.log(`✓ Assert Passed: Demo ATO scenario returned HOLD_FOR_REVIEW`);
   }
 
   // -------------------------------------------------------------
@@ -260,13 +260,30 @@ async function runDemoCheck() {
   }
   console.log(`✓ Assert Passed: Invariant strictly verified — ZERO autonomous account blocks or money freezes.`);
 
-  // Graph and Agent checks
+  // -------------------------------------------------------------
+  // ASSERTION 7: Graph Mule Discovery (suspect=true, risk>=60, edges>0)
+  // -------------------------------------------------------------
   console.log('\n--- Graph Mule Discovery & Agent Structuring ---');
   const muleRes = await getMuleNetwork('01700999001');
-  console.log(`- Mule Network Wallet 01700999001: Risk=${muleRes.risk_score}, Suspect=${muleRes.is_mule_suspect}`);
+  const muleEdges = muleRes.edges?.length || 0;
+  console.log(`- Mule Network Wallet 01700999001: Risk=${muleRes.risk_score}, Suspect=${muleRes.is_mule_suspect}, Edges=${muleEdges}`);
+  if (!muleRes.is_mule_suspect || (muleRes.risk_score ?? 0) < 60 || muleEdges === 0) {
+    console.error(`❌ ASSERTION FAILED: Mule 01700999001 must have is_mule_suspect=true, risk_score>=60, and edges>0. Got suspect=${muleRes.is_mule_suspect}, risk=${muleRes.risk_score}, edges=${muleEdges}`);
+    process.exit(1);
+  }
+  console.log(`✓ Assert Passed: Mule network suspect=true, risk>=60 (${muleRes.risk_score}), edges>0 (${muleEdges})`);
 
+  // -------------------------------------------------------------
+  // ASSERTION 8: Agent Structuring Anomaly (risk>=60, |z|>=3)
+  // -------------------------------------------------------------
   const agentRes = await getAgentRisk('01800999001');
-  console.log(`- Agent 01800999001 Structuring: Risk=${agentRes.risk_score}, Z-Score=${agentRes.z_scores?.z_structuring ?? 5.2}`);
+  const zScore = Math.abs(agentRes.z_scores?.z_structuring ?? 0);
+  console.log(`- Agent 01800999001 Structuring: Risk=${agentRes.risk_score}, Z-Score=${zScore}`);
+  if ((agentRes.risk_score ?? 0) < 60 || zScore < 3.0) {
+    console.error(`❌ ASSERTION FAILED: Agent 01800999001 must have risk_score>=60 and |z|>=3. Got risk=${agentRes.risk_score}, |z|=${zScore}`);
+    process.exit(1);
+  }
+  console.log(`✓ Assert Passed: Agent structuring risk>=60 (${agentRes.risk_score}), |z|>=3 (${zScore})`);
 
   await testImpactSimulator();
 

@@ -32,6 +32,7 @@ class MuleGraphAnalyzer:
         self.G = nx.DiGraph()
         self.wallet_stats = {}
         self.mule_cache = {}
+        self.subgraphs = {}
 
     def load_cache(self, cache_path=None):
         cache_path = cache_path or os.path.join(MODELS_DIR, "graph_cache.json")
@@ -41,7 +42,8 @@ class MuleGraphAnalyzer:
                 self.wallet_stats = data.get("stats_sample", {})
                 for item in data.get("top_suspects", []):
                     self.wallet_stats[item.get("wallet_id")] = item
-            print(f"✓ Loaded {len(self.wallet_stats)} mule network profiles from cache.")
+                self.subgraphs = data.get("subgraphs", {})
+            print(f"✓ Loaded {len(self.wallet_stats)} mule network profiles and {len(self.subgraphs)} cached subgraphs.")
         return self
 
     def build_graph(self, tx_df):
@@ -133,7 +135,25 @@ class MuleGraphAnalyzer:
     def get_wallet_subgraph(self, wallet_id, depth=1):
         """Extract ego-subgraph with evidence edges for frontend graph visualization."""
         wallet_id = str(wallet_id)
+        if hasattr(self, "subgraphs") and wallet_id in self.subgraphs:
+            return self.subgraphs[wallet_id]
+
         if wallet_id not in self.G:
+            # Fallback if in wallet_stats
+            stats = self.wallet_stats.get(wallet_id)
+            if stats:
+                return {
+                    "wallet_id": wallet_id,
+                    "is_mule_suspect": stats.get("is_mule_suspect", False),
+                    "risk_score": stats.get("risk_score", 10.0),
+                    "total_inflow": stats.get("total_inflow", 0.0),
+                    "total_outflow": stats.get("total_outflow", 0.0),
+                    "unique_senders": stats.get("unique_senders", 0),
+                    "unique_receivers": stats.get("unique_receivers", 0),
+                    "nodes": [{"id": wallet_id, "label": f"Wallet ({wallet_id})", "type": "customer", "is_target": True, "is_mule": stats.get("is_mule_suspect", False)}],
+                    "edges": [],
+                    "reasons": stats.get("reasons", ["Standard peer-to-peer transaction activity."])
+                }
             return {
                 "wallet_id": wallet_id,
                 "is_mule_suspect": False,

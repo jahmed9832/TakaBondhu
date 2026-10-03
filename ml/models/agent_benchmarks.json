@@ -22,9 +22,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.3% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
-        "Unusual hours: 23.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.6)",
-        "Outlier turnover: Total cash-out \u09f31,227,612 is 4.3 std deviations above peer mean"
+        "Structuring anomaly: 24.3% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 23.0% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.6)",
+        "Outlier turnover: Total cash-out ৳1,227,612 is 4.3 std deviations above peer mean"
       ]
     },
     "agent_0002": {
@@ -40,9 +40,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 22.7% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.6)",
-        "Unusual hours: 21.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.2)",
-        "Outlier turnover: Total cash-out \u09f31,313,549 is 4.8 std deviations above peer mean"
+        "Structuring anomaly: 22.7% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.6)",
+        "Unusual hours: 21.5% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.2)",
+        "Outlier turnover: Total cash-out ৳1,313,549 is 4.8 std deviations above peer mean"
       ]
     },
     "agent_0003": {
@@ -58,9 +58,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 23.8% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
-        "Unusual hours: 15.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=3.7)",
-        "Outlier turnover: Total cash-out \u09f31,340,972 is 4.9 std deviations above peer mean"
+        "Structuring anomaly: 23.8% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 15.5% cashouts during 23:00–05:00 (peer avg 0.7%, z=3.7)",
+        "Outlier turnover: Total cash-out ৳1,340,972 is 4.9 std deviations above peer mean"
       ]
     },
     "agent_0004": {
@@ -76,9 +76,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 25.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.2)",
-        "Unusual hours: 22.6% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.5)",
-        "Outlier turnover: Total cash-out \u09f31,335,052 is 4.9 std deviations above peer mean"
+        "Structuring anomaly: 25.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.2)",
+        "Unusual hours: 22.6% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.5)",
+        "Outlier turnover: Total cash-out ৳1,335,052 is 4.9 std deviations above peer mean"
       ]
     },
     "agent_0005": {
@@ -94,9 +94,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 32.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=6.7)",
-        "Unusual hours: 25.1% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.1)",
-        "Outlier turnover: Total cash-out \u09f31,648,061 is 6.5 std deviations above peer mean"
+        "Structuring anomaly: 32.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=6.7)",
+        "Unusual hours: 25.1% cashouts during 23:00–05:00 (peer avg 0.7%, z=6.1)",
+        "Outlier turnover: Total cash-out ৳1,648,061 is 6.5 std deviations above peer mean"
       ]
     },
     "agent_0006": {
@@ -112,9 +112,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
-        "Unusual hours: 22.3% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.4)",
-        "Outlier turnover: Total cash-out \u09f31,281,077 is 4.6 std deviations above peer mean"
+        "Structuring anomaly: 24.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 22.3% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.4)",
+        "Outlier turnover: Total cash-out ৳1,281,077 is 4.6 std deviations above peer mean"
       ]
     },
     "agent_0007": {
@@ -130,9 +130,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 34.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=7.1)",
-        "Unusual hours: 25.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.2)",
-        "Outlier turnover: Total cash-out \u09f31,590,988 is 6.2 std deviations above peer mean"
+        "Structuring anomaly: 34.0% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=7.1)",
+        "Unusual hours: 25.5% cashouts during 23:00–05:00 (peer avg 0.7%, z=6.2)",
+        "Outlier turnover: Total cash-out ৳1,590,988 is 6.2 std deviations above peer mean"
       ]
     },
     "agent_0008": {
@@ -148,9 +148,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
-        "Unusual hours: 20.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=4.8)",
-        "Outlier turnover: Total cash-out \u09f31,385,933 is 5.2 std deviations above peer mean"
+        "Structuring anomaly: 24.0% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 20.0% cashouts during 23:00–05:00 (peer avg 0.7%, z=4.8)",
+        "Outlier turnover: Total cash-out ৳1,385,933 is 5.2 std deviations above peer mean"
       ]
     },
     "agent_0009": {
@@ -166,9 +166,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.9% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.1)",
-        "Unusual hours: 24.9% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.0)",
-        "Outlier turnover: Total cash-out \u09f31,476,210 is 5.6 std deviations above peer mean"
+        "Structuring anomaly: 24.9% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.1)",
+        "Unusual hours: 24.9% cashouts during 23:00–05:00 (peer avg 0.7%, z=6.0)",
+        "Outlier turnover: Total cash-out ৳1,476,210 is 5.6 std deviations above peer mean"
       ]
     },
     "agent_0010": {
@@ -184,9 +184,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 23.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.8)",
-        "Unusual hours: 20.8% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.0)",
-        "Outlier turnover: Total cash-out \u09f31,292,215 is 4.7 std deviations above peer mean"
+        "Structuring anomaly: 23.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.8)",
+        "Unusual hours: 20.8% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.0)",
+        "Outlier turnover: Total cash-out ৳1,292,215 is 4.7 std deviations above peer mean"
       ]
     },
     "agent_0011": {
@@ -828,9 +828,45 @@
       "reasons": [
         "Operating within normal peer behavioral baselines."
       ]
+    },
+    "01800999001": {
+      "agent_id": "01800999001",
+      "district": "Dhaka",
+      "n_cashouts": 148,
+      "total_volume": 1250000.0,
+      "structuring_ratio": 0.26,
+      "night_ratio": 0.22,
+      "z_structuring": 5.2,
+      "z_night": 4.8,
+      "z_volume": 3.9,
+      "risk_score": 95.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 26.0% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.2)",
+        "Unusual hours: 22.0% cashouts during 23:00–05:00 (peer avg 0.7%, z=4.8)",
+        "Outlier turnover: Total cash-out ৳1,250,000 is 3.9 std deviations above peer mean"
+      ]
     }
   },
   "high_risk_agents": [
+    {
+      "agent_id": "01800999001",
+      "district": "Dhaka",
+      "n_cashouts": 148,
+      "total_volume": 1250000.0,
+      "structuring_ratio": 0.26,
+      "night_ratio": 0.22,
+      "z_structuring": 5.2,
+      "z_night": 4.8,
+      "z_volume": 3.9,
+      "risk_score": 95.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 26.0% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.2)",
+        "Unusual hours: 22.0% cashouts during 23:00–05:00 (peer avg 0.7%, z=4.8)",
+        "Outlier turnover: Total cash-out ৳1,250,000 is 3.9 std deviations above peer mean"
+      ]
+    },
     {
       "agent_id": "agent_0001",
       "district": "Dinajpur",
@@ -844,9 +880,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.3% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
-        "Unusual hours: 23.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.6)",
-        "Outlier turnover: Total cash-out \u09f31,227,612 is 4.3 std deviations above peer mean"
+        "Structuring anomaly: 24.3% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 23.0% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.6)",
+        "Outlier turnover: Total cash-out ৳1,227,612 is 4.3 std deviations above peer mean"
       ]
     },
     {
@@ -862,9 +898,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 22.7% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.6)",
-        "Unusual hours: 21.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.2)",
-        "Outlier turnover: Total cash-out \u09f31,313,549 is 4.8 std deviations above peer mean"
+        "Structuring anomaly: 22.7% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.6)",
+        "Unusual hours: 21.5% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.2)",
+        "Outlier turnover: Total cash-out ৳1,313,549 is 4.8 std deviations above peer mean"
       ]
     },
     {
@@ -880,9 +916,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 23.8% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
-        "Unusual hours: 15.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=3.7)",
-        "Outlier turnover: Total cash-out \u09f31,340,972 is 4.9 std deviations above peer mean"
+        "Structuring anomaly: 23.8% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 15.5% cashouts during 23:00–05:00 (peer avg 0.7%, z=3.7)",
+        "Outlier turnover: Total cash-out ৳1,340,972 is 4.9 std deviations above peer mean"
       ]
     },
     {
@@ -898,9 +934,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 25.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.2)",
-        "Unusual hours: 22.6% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.5)",
-        "Outlier turnover: Total cash-out \u09f31,335,052 is 4.9 std deviations above peer mean"
+        "Structuring anomaly: 25.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.2)",
+        "Unusual hours: 22.6% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.5)",
+        "Outlier turnover: Total cash-out ৳1,335,052 is 4.9 std deviations above peer mean"
       ]
     },
     {
@@ -916,9 +952,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 32.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=6.7)",
-        "Unusual hours: 25.1% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.1)",
-        "Outlier turnover: Total cash-out \u09f31,648,061 is 6.5 std deviations above peer mean"
+        "Structuring anomaly: 32.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=6.7)",
+        "Unusual hours: 25.1% cashouts during 23:00–05:00 (peer avg 0.7%, z=6.1)",
+        "Outlier turnover: Total cash-out ৳1,648,061 is 6.5 std deviations above peer mean"
       ]
     },
     {
@@ -934,9 +970,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
-        "Unusual hours: 22.3% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.4)",
-        "Outlier turnover: Total cash-out \u09f31,281,077 is 4.6 std deviations above peer mean"
+        "Structuring anomaly: 24.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 22.3% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.4)",
+        "Outlier turnover: Total cash-out ৳1,281,077 is 4.6 std deviations above peer mean"
       ]
     },
     {
@@ -952,9 +988,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 34.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=7.1)",
-        "Unusual hours: 25.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.2)",
-        "Outlier turnover: Total cash-out \u09f31,590,988 is 6.2 std deviations above peer mean"
+        "Structuring anomaly: 34.0% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=7.1)",
+        "Unusual hours: 25.5% cashouts during 23:00–05:00 (peer avg 0.7%, z=6.2)",
+        "Outlier turnover: Total cash-out ৳1,590,988 is 6.2 std deviations above peer mean"
       ]
     },
     {
@@ -970,9 +1006,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
-        "Unusual hours: 20.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=4.8)",
-        "Outlier turnover: Total cash-out \u09f31,385,933 is 5.2 std deviations above peer mean"
+        "Structuring anomaly: 24.0% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 20.0% cashouts during 23:00–05:00 (peer avg 0.7%, z=4.8)",
+        "Outlier turnover: Total cash-out ৳1,385,933 is 5.2 std deviations above peer mean"
       ]
     },
     {
@@ -988,9 +1024,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 24.9% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.1)",
-        "Unusual hours: 24.9% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.0)",
-        "Outlier turnover: Total cash-out \u09f31,476,210 is 5.6 std deviations above peer mean"
+        "Structuring anomaly: 24.9% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=5.1)",
+        "Unusual hours: 24.9% cashouts during 23:00–05:00 (peer avg 0.7%, z=6.0)",
+        "Outlier turnover: Total cash-out ৳1,476,210 is 5.6 std deviations above peer mean"
       ]
     },
     {
@@ -1006,9 +1042,9 @@
       "risk_score": 98.0,
       "risk_level": "CRITICAL",
       "reasons": [
-        "Structuring anomaly: 23.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.8)",
-        "Unusual hours: 20.8% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.0)",
-        "Outlier turnover: Total cash-out \u09f31,292,215 is 4.7 std deviations above peer mean"
+        "Structuring anomaly: 23.2% of cashouts in ৳24,000–৳24,999 (peer avg 0.9%, z=4.8)",
+        "Unusual hours: 20.8% cashouts during 23:00–05:00 (peer avg 0.7%, z=5.0)",
+        "Outlier turnover: Total cash-out ৳1,292,215 is 4.7 std deviations above peer mean"
       ]
     }
   ]
