@@ -12,8 +12,8 @@ RUN npm install
 COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: Production Runtime Environment (Python 3.11 + Node.js 20)
-FROM python:3.11-slim
+# Stage 2: Production Runtime Environment (Python 3.12 + Node.js 20)
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -30,7 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python ML dependencies
 COPY ml/requirements.txt ./ml/requirements.txt
-RUN pip install --no-cache-dir -r ml/requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r ml/requirements.txt
 
 # Install Node Backend dependencies
 COPY backend/package*.json ./backend/
