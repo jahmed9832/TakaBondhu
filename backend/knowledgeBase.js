@@ -133,3 +133,45 @@ General Financial Cybersecurity Hygiene:
 `.trim()
   }
 ];
+
+/**
+ * Fast in-memory local retrieval over KNOWLEDGE_DOCUMENTS for offline voice and chat assistant.
+ * Matches keywords across titles, categories, excerpts, and contents.
+ */
+export function searchLocalKnowledge(query, limit = 2) {
+  if (!query || typeof query !== 'string') return [];
+  const qLower = query.toLowerCase();
+  const tokens = qLower.split(/[\s,?.!;:()[\]{}'"]+/).filter(t => t.length >= 2);
+
+  const scored = KNOWLEDGE_DOCUMENTS.map(doc => {
+    let score = 0;
+    const titleL = doc.title.toLowerCase();
+    const catL = doc.category.toLowerCase();
+    const excerptL = doc.excerpt.toLowerCase();
+    const contentL = doc.content.toLowerCase();
+
+    // Specific domain concept boosts
+    if ((qLower.includes('otp') || qLower.includes('ওটিপি') || qLower.includes('পিন') || qLower.includes('pin')) && doc.id === 'kb-otp-01') score += 10;
+    if ((qLower.includes('লটারি') || qLower.includes('পুরস্কার') || qLower.includes('lottery') || qLower.includes('prize') || qLower.includes('win')) && doc.id === 'kb-prz-01') score += 10;
+    if ((qLower.includes('বন্ধ') || qLower.includes('ব্লক') || qLower.includes('block') || qLower.includes('suspend') || qLower.includes('threat')) && doc.id === 'kb-acc-01') score += 10;
+    if ((qLower.includes('লিংক') || qLower.includes('link') || qLower.includes('url') || qLower.includes('phishing')) && doc.id === 'kb-phi-01') score += 10;
+    if ((qLower.includes('কাস্টমার') || qLower.includes('সাপোর্ট') || qLower.includes('support') || qLower.includes('helpline') || qLower.includes('হেল্পলাইন')) && (doc.id === 'kb-sup-01' || doc.id === 'kb-gen-01')) score += 8;
+    if ((qLower.includes('টিপস') || qLower.includes('নিরাপদ') || qLower.includes('safe') || qLower.includes('tips') || qLower.includes('রক্ষা')) && (doc.id === 'kb-gen-01' || doc.id === 'kb-soc-01')) score += 8;
+    if ((qLower.includes('kyc') || qLower.includes('ভেরিফিকেশন') || qLower.includes('verify') || qLower.includes('nid')) && doc.id === 'kb-ver-01') score += 10;
+    if ((qLower.includes('টাকা') || qLower.includes('পাঠাতে') || qLower.includes('send') || qLower.includes('refund') || qLower.includes('ফেরত')) && doc.id === 'kb-pay-01') score += 8;
+
+    for (const t of tokens) {
+      if (titleL.includes(t)) score += 3;
+      if (catL.includes(t)) score += 2;
+      if (excerptL.includes(t)) score += 1.5;
+      if (contentL.includes(t)) score += 0.5;
+    }
+
+    return { ...doc, score };
+  });
+
+  return scored
+    .filter(d => d.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}

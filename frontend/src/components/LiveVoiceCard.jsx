@@ -32,6 +32,9 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
 
   const [noticeMessage, setNoticeMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [networkError, setNetworkError] = useState(null);
+  const [pendingConfirmation, setPendingConfirmation] = useState(null);
+  const [conversationHistory, setConversationHistory] = useState([]);
 
   // Transcripts & Analysis
   const [userTranscript, setUserTranscript] = useState('');
@@ -48,10 +51,11 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
   const isCallActiveRef = useRef(false);
   const agentStateRef = useRef('idle');
   const isMutedRef = useRef(false);
+  const conversationHistoryRef = useRef([]);
   const recognitionRef = useRef(null);
   const debounceTimerRef = useRef(null);
   const roomRef = useRef(null);
-  const agentTimeoutRef = useRef(null);
+  const speakingWatchdogRef = useRef(null);
   const latestTranscriptRef = useRef('');
   const activeAudioRef = useRef(null);
   const activeUtteranceRef = useRef(null);
@@ -63,6 +67,28 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
 
   const isSpeechSupported = typeof window !== 'undefined' && 
     Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+  // Web Audio chime helper for subtle audible feedback
+  const playFeedbackChime = useCallback(() => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.36);
+    } catch {
+      // AudioContext unavailable or restricted
+    }
+  }, []);
 
   // Keep state refs in sync
   useEffect(() => {
@@ -77,14 +103,21 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     isMutedRef.current = isMuted;
   }, [isMuted]);
 
+  useEffect(() => {
+    conversationHistoryRef.current = conversationHistory;
+  }, [conversationHistory]);
+
   // 1. Fetch Voice Status on mount
   useEffect(() => {
     async function checkStatus() {
       try {
         const res = await fetch(apiUrl('/api/voice/status'));
         if (res.ok) {
-          const data = await res.json();
-          setVoiceStatus(data);
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await res.json();
+            setVoiceStatus(data);
+          }
         }
       } catch {
         setVoiceStatus({ browserVoice: true, realtime: false });
@@ -102,6 +135,11 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     isCallActiveRef.current = false;
     setIsCallActive(false);
 
+    if (speakingWatchdogRef.current) {
+      clearTimeout(speakingWatchdogRef.current);
+      speakingWatchdogRef.current = null;
+    }
+
     if (activeAudioRef.current) {
       try {
         activeAudioRef.current.pause();
@@ -113,10 +151,6 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
-    }
-    if (agentTimeoutRef.current) {
-      clearTimeout(agentTimeoutRef.current);
-      agentTimeoutRef.current = null;
     }
     if (recognitionRef.current) {
       try { recognitionRef.current.stop(); } catch { /* ignore */ }
@@ -147,18 +181,38 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
       window.speechSynthesis.cancel();
       window.speechSynthesis.resume();
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      activeUtteranceRef.current = utterance;
-
-      const voices = window.speechSynthesis.getVoices();
+      const voices = window.speechSynthesis.getVoices() || [];
       const bnVoice = voices.find(v => v.lang?.startsWith('bn')) ||
                       voices.find(v => v.lang?.includes('Bengali') || v.lang?.includes('Bangla'));
+
+      // If text is in Bengali and OS lacks a Bengali TTS voice:
+      // Passing Bengali unicode to an English voice results in total silence or crashes.
+      // In this scenario, play the audible feedback chime and advance after a natural reading delay.
+      if (!bnVoice && lang === 'bn') {
+        playFeedbackChime();
+        setAgentState('speaking');
+        const simulatedDuration = Math.min(3500, Math.max(1200, text.length * 45));
+        setTimeout(() => {
+          setAgentState('idle');
+          onFinish?.();
+          if (isCallActiveRef.current && !isMutedRef.current) {
+            startListeningRef.current?.();
+          }
+        }, simulatedDuration);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      activeUtteranceRef.current = utterance;
+      if (typeof window !== 'undefined') {
+        window.__takabondhu_utterance = utterance; // Prevent V8 garbage collector premature cutoff
+      }
+
       if (bnVoice) {
         utterance.voice = bnVoice;
         utterance.lang = bnVoice.lang;
       } else {
-        // If no Bengali voice installed on Windows, use system default so it doesn't fail with language-unavailable!
-        utterance.lang = lang === 'bn' ? (voices.length > 0 ? voices[0].lang : 'en-US') : 'en-US';
+        utterance.lang = 'en-US';
       }
       utterance.rate = 0.95;
 
@@ -176,7 +230,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
       };
 
       utterance.onerror = (err) => {
-        console.warn('SpeechSynthesis error notice:', err);
+        console.warn('SpeechSynthesis notice:', err);
         setAgentState('idle');
         activeUtteranceRef.current = null;
         onFinish?.();
@@ -193,7 +247,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
         startListeningRef.current?.();
       }
     }
-  }, [lang]);
+  }, [lang, playFeedbackChime]);
 
   // 3. Spoken Audio Engine (Primary: High-Fidelity /api/voice/tts MP3 audio; Secondary: SpeechSynthesis)
   const speakText = useCallback((text, onFinish) => {
@@ -204,7 +258,11 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
 
     const clean = text.trim();
 
-    // Stop any previous playing audio
+    // Stop any previous playing audio or speech
+    if (speakingWatchdogRef.current) {
+      clearTimeout(speakingWatchdogRef.current);
+      speakingWatchdogRef.current = null;
+    }
     if (activeAudioRef.current) {
       try {
         activeAudioRef.current.pause();
@@ -216,16 +274,38 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
       try { window.speechSynthesis.cancel(); } catch {}
     }
 
-    // 1. Primary: Stream crystal-clear MP3 from backend /api/voice/tts
+    setAgentState('speaking');
+
+    // Watchdog timer: ensure agent NEVER stays stuck in 'speaking' mode
+    const watchdogLimitMs = Math.min(8000, Math.max(3000, clean.length * 80));
+    speakingWatchdogRef.current = setTimeout(() => {
+      if (agentStateRef.current === 'speaking') {
+        console.warn('Voice playback watchdog triggered auto-transition to listening');
+        setAgentState('idle');
+        if (activeAudioRef.current) {
+          try { activeAudioRef.current.pause(); } catch {}
+          activeAudioRef.current = null;
+        }
+        onFinish?.();
+        if (isCallActiveRef.current && !isMutedRef.current) {
+          startListeningRef.current?.();
+        }
+      }
+    }, watchdogLimitMs);
+
+    // 1. Primary: Stream high-fidelity MP3 from backend /api/voice/tts
     try {
       const ttsUrl = apiUrl(`/api/voice/tts?text=${encodeURIComponent(clean.slice(0, 200))}&lang=${lang}`);
-      const audio = new Audio(ttsUrl);
+      const audio = new Audio();
+      audio.src = ttsUrl;
       audio.playbackRate = 1.05;
       activeAudioRef.current = audio;
 
-      setAgentState('speaking');
-
       audio.onended = () => {
+        if (speakingWatchdogRef.current) {
+          clearTimeout(speakingWatchdogRef.current);
+          speakingWatchdogRef.current = null;
+        }
         setAgentState('idle');
         activeAudioRef.current = null;
         onFinish?.();
@@ -262,6 +342,8 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     const cleanText = text.trim();
     setUserTranscript(cleanText);
     latestTranscriptRef.current = '';
+    setPendingConfirmation(null);
+    setNetworkError(null);
 
     // Pause recognition while assistant is thinking and speaking
     if (recognitionRef.current) {
@@ -272,13 +354,18 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     setErrorMessage(null);
 
     try {
+      const historyPayload = conversationHistoryRef.current.slice(-4);
       const res = await fetch(apiUrl('/api/voice/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: cleanText, lang })
+        body: JSON.stringify({ 
+          message: cleanText, 
+          lang,
+          history: historyPayload
+        })
       });
 
-      if (!res.ok) throw new Error('Voice chat request failed');
+      if (!res.ok) throw new Error(`HTTP ${res.status}: Voice chat request failed`);
       const data = await res.json();
 
       setAnalysisResult(data);
@@ -288,16 +375,31 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
         setDetectedSignals([]);
       }
 
-      const reply = data.reply || (lang === 'bn' ? 'আমি আপনার কথা বুঝতে পেরেছি।' : 'I understood your query.');
+      const reply = data.reply || (lang === 'bn' ? 'কী মেসেজ এসেছে বা কেউ কী বলেছে, সেটা বলুন।' : 'Please describe the message or call you received.');
       setAiReply(reply);
+
+      // Update conversation history (last 4 turns)
+      setConversationHistory(prev => [
+        ...prev.slice(-3),
+        { role: 'user', text: cleanText },
+        { role: 'assistant', text: reply }
+      ]);
+
       speakTextRef.current?.(reply);
     } catch (err) {
       console.warn('Voice chat turn error:', err);
-      const fallbackReply = lang === 'bn'
-        ? 'আমি আপনার কথা বুঝতে পেরেছি। কোনো ওটিপি বা পিন কোড কাউকে কখনো দেবেন না।'
-        : 'I hear you. Remember never to share your secret PIN or OTP with anyone.';
-      setAiReply(fallbackReply);
-      speakTextRef.current?.(fallbackReply);
+      // NEVER fall back to generic canned sentence on network error!
+      setAgentState('idle');
+      setNetworkError({
+        failedText: cleanText,
+        error: err.message || 'Network request failed'
+      });
+      setAiReply(
+        lang === 'bn'
+          ? 'সংযোগ বিচ্ছিন্ন বা সার্ভার ত্রুটি হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন বা নিচে লিখে পাঠান।'
+          : 'Connection error occurred. Please retry or type your inquiry below.'
+      );
+      // Do NOT invoke speakText with canned message
     }
   }, [lang]);
 
@@ -335,8 +437,13 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
 
       rec.onresult = (e) => {
         let currentTranscript = '';
+        let minConfidence = 1.0;
         for (let i = 0; i < e.results.length; i++) {
           currentTranscript += e.results[i][0].transcript;
+          const conf = e.results[i][0].confidence;
+          if (typeof conf === 'number' && conf > 0 && conf < minConfidence) {
+            minConfidence = conf;
+          }
         }
         const trimmed = currentTranscript.trim();
         if (trimmed) {
@@ -350,14 +457,28 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
           }
           debounceTimerRef.current = setTimeout(() => {
             if (latestTranscriptRef.current && isCallActiveRef.current) {
-              handleUserSpeechTurnRef.current?.(latestTranscriptRef.current);
+              const candidate = latestTranscriptRef.current;
+              // If recognized text is very short (< 4 chars) or confidence is low (< 0.45)
+              const isVeryShort = candidate.length < 4 || (candidate.split(/\s+/).filter(Boolean).length === 1 && candidate.length < 5);
+              const isLowConfidence = minConfidence > 0 && minConfidence < 0.45;
+
+              if (isVeryShort || isLowConfidence) {
+                setPendingConfirmation({
+                  text: candidate,
+                  reason: isVeryShort ? 'short' : 'low_confidence'
+                });
+                setAgentState('idle');
+              } else {
+                setPendingConfirmation(null);
+                handleUserSpeechTurnRef.current?.(candidate);
+              }
             }
           }, 750);
         }
       };
 
       rec.onerror = (e) => {
-        if (e.error === 'not-allowed') {
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
           setErrorMessage(
             lang === 'bn'
               ? 'মাইক্রোফোন ব্যবহারের অনুমতি দিন।'
@@ -366,15 +487,26 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
           setAgentState('idle');
         } else if (e.error === 'no-speech') {
           // Normal silence, don't show error
+        } else if (e.error === 'network') {
+          console.warn('Speech recognition network blip, scheduled retry');
+          setTimeout(() => {
+            if (isCallActiveRef.current && !isMutedRef.current && agentStateRef.current !== 'speaking' && agentStateRef.current !== 'thinking') {
+              try { rec.start(); } catch {}
+            }
+          }, 600);
         } else {
           console.warn('Speech recognition notice:', e.error);
         }
       };
 
       rec.onend = () => {
-        // If call is still active and AI isn't speaking, keep listening alive
-        if (isCallActiveRef.current && !isMutedRef.current && agentStateRef.current === 'listening') {
-          try { rec.start(); } catch {}
+        // If call is still active and AI isn't speaking or thinking, keep listening alive with a safe delay
+        if (isCallActiveRef.current && !isMutedRef.current && agentStateRef.current !== 'speaking' && agentStateRef.current !== 'thinking') {
+          setTimeout(() => {
+            if (isCallActiveRef.current && !isMutedRef.current && agentStateRef.current !== 'speaking' && agentStateRef.current !== 'thinking') {
+              try { rec.start(); } catch {}
+            }
+          }, 200);
         }
       };
 
@@ -397,6 +529,17 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     isCallActiveRef.current = true;
     setIsMuted(false);
     isMutedRef.current = false;
+
+    // Prompt/prime microphone access immediately within user gesture to satisfy browser security
+    if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          stream.getTracks().forEach(t => t.stop());
+        })
+        .catch(err => {
+          console.warn('Microphone permission request:', err.message);
+        });
+    }
 
     const openingGreeting = lang === 'bn'
       ? 'আসসালামু আলাইকুম! কীভাবে সাহায্য করতে পারি?'
@@ -618,6 +761,110 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
           🟢 সাধারণ কুশল বিনিময়
         </button>
       </div>
+
+      {/* Network Error with Retry & Text Input Option */}
+      {networkError && (
+        <div className="rounded-xl bg-rose-950/70 border border-rose-500/50 p-4 space-y-3 shadow-lg">
+          <div className="flex items-center gap-2 text-rose-300 text-xs font-semibold">
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <span>
+              {lang === 'bn' 
+                ? 'সংযোগ সমস্যা: সার্ভারে পৌঁছানো সম্ভব হয়নি' 
+                : 'Connection issue: Could not reach voice service'}
+            </span>
+          </div>
+          <p className="text-xs text-rose-200/90 leading-relaxed">
+            {lang === 'bn'
+              ? 'সার্ভারে সাময়িক সংযোগ ত্রুটি হয়েছে। আপনি সরাসরি পুনরায় চেষ্টা করতে পারেন অথবা টেক্সট বক্সে প্রশ্নটি পাঠিয়ে নিশ্চিত হতে পারেন।'
+              : 'A temporary network error occurred. You can retry directly or send your inquiry via text.'}
+          </p>
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                const retryText = networkError.failedText;
+                setNetworkError(null);
+                handleUserSpeechTurn(retryText);
+              }}
+              className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-rose-900/30 active:scale-95"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>{lang === 'bn' ? 'পুনরায় চেষ্টা করুন' : 'Retry'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setTextInput(networkError.failedText);
+                setNetworkError(null);
+              }}
+              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 text-xs font-medium transition-all"
+            >
+              <span>{lang === 'bn' ? 'টেক্সট বক্সে এডিট করুন' : 'Edit as text'}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Spoken Word Confirmation (For very short or low confidence speech) */}
+      {pendingConfirmation && (
+        <div className="rounded-xl bg-amber-950/70 border border-amber-500/50 p-4 space-y-3 shadow-lg">
+          <div className="flex items-center justify-between text-amber-300 text-xs font-semibold">
+            <div className="flex items-center gap-2">
+              <HelpCircle className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>
+                {lang === 'bn' 
+                  ? 'আমরা কি সঠিক কথা শুনতে পেয়েছি?' 
+                  : 'Did we capture your speech accurately?'}
+              </span>
+            </div>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/30">
+              {pendingConfirmation.reason === 'short'
+                ? (lang === 'bn' ? 'ছোট বাক্য' : 'Short utterance')
+                : (lang === 'bn' ? 'স্বল্প স্পষ্টতা' : 'Low confidence')}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-slate-900/90 border border-amber-500/30 text-white font-medium text-sm">
+            "{pendingConfirmation.text}"
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const confText = pendingConfirmation.text;
+                setPendingConfirmation(null);
+                handleUserSpeechTurn(confText);
+              }}
+              className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-emerald-900/30 active:scale-95"
+            >
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>{lang === 'bn' ? 'হ্যাঁ, ঠিক আছে (যাচাই করুন)' : 'Yes, Confirm & Check'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setPendingConfirmation(null);
+                setUserTranscript('');
+                startListening();
+              }}
+              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 text-xs font-medium transition-all"
+            >
+              <span>{lang === 'bn' ? 'আবার বলুন' : 'Speak again'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setTextInput(pendingConfirmation.text);
+                setPendingConfirmation(null);
+              }}
+              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 text-xs font-medium transition-all"
+            >
+              <span>{lang === 'bn' ? 'লিখে ঠিক করুন' : 'Edit text'}</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* User Speech Display */}
       {userTranscript && (

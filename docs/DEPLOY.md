@@ -35,11 +35,13 @@ Scroll to the **Environment Variables** section and configure:
 
 | Key | Value | Description |
 |:---|:---|:---|
-| `DEMO_OFFLINE` | `true` | **Recommended.** Enables 100% offline deterministic fallback with local ML microservice. No external API keys needed! |
+| `DEMO_OFFLINE` | `true` | **Recommended.** Enables deterministic hybrid scoring with local ML microservice, preventing external API quota failures. |
+| `GEMINI_API_KEY` | *(your key)* | **Optional.** Enables Google Gemini contextual reasoning and conversational voice synthesis. |
+| `VOICE_USE_GEMINI` | `true` | **Default: true.** When `GEMINI_API_KEY` is provided, voice chat uses Gemini for natural spoken replies even with `DEMO_OFFLINE=true`! Scoring/decisions remain 100% deterministic. |
 | `NODE_ENV` | `production` | Optimizes Express and React asset delivery. |
 | `PORT` | `10000` | Render standard application port (passed dynamically). |
 
-*(Optional: If you wish to enable online Google Gemini Live or LiveKit audio, you may add `GEMINI_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`. However, `DEMO_OFFLINE=true` guarantees the hackathon demo operates reliably without external quota failures).*
+*(Note: Setting `GEMINI_API_KEY` and `VOICE_USE_GEMINI=true` on Render provides natural voice chat while preserving deterministic safety decisions. If Gemini times out or is offline, the rebuilt deterministic offline fallback seamlessly answers using rule engine + ML + local safety knowledge).*
 
 ### Step 5: Health Check Path
 - Under **Advanced**, find **Health Check Path** and set it to:
@@ -182,15 +184,17 @@ gcloud run deploy takabondhu \
 
 TakaBondhu provides a dual-tier voice architecture engineered specifically for resilient live deployments:
 
-### Tier 1: Browser Voice (Default & Universal)
-- **Zero Server RAM Footprint:** Operates completely within client browsers without consuming container memory.
-- **Natural Bangla Support:** Uses Web Speech API (`SpeechRecognition` in `bn-BD`) + `POST /api/analyze` + `speechSynthesis` with native Bangla TTS voice.
-- **Typing Fallback:** On browsers without microphone speech recognition (e.g. Firefox/iOS), an intuitive typing fallback is automatically active.
+### Tier 1: Autonomous Browser Voice (Default & Universal)
+- **Zero Heavy Server RAM Footprint:** Runs seamlessly within Render's 512 MB free container without worker bloat.
+- **Conversational Spoken AI:** Uses `POST /api/voice/chat` + native audio streaming (`GET /api/voice/tts`).
+- **Gemini Voice on Render:** When `GEMINI_API_KEY` is set and `VOICE_USE_GEMINI=true`, voice chat uses Gemini to generate natural, conversational spoken responses even if `DEMO_OFFLINE=true`. Scoring remains 100% deterministic.
+- **Rebuilt Offline Fallback:** If Gemini is unavailable, voice chat runs the full real pipeline (rules + ML) and retrieves curated safety tips from `knowledgeBase.js`, guaranteeing accurate, non-repetitive answers without robotic score jargon.
+- **Speech Recognition & Fallback:** Web Speech API (`bn-BD` / `en-US`) with on-screen transcription and confirmation for short/low-confidence utterances, plus an integrated typing fallback for unsupported browsers.
 
-### Tier 2: Realtime LiveKit AI Worker (Optional)
-The LiveKit Voice Agent is a separate realtime audio pipeline. The 512 MB free Render container does not run this worker in-container to prevent out-of-memory restarts.
+### Tier 2: Realtime LiveKit AI Worker (Optional / Laptop-Only)
+> **Note:** The LiveKit realtime worker (`npm run voice-agent`) is **strictly optional and laptop-only**. It is designed for live video demonstration from a development machine. It does **NOT** run inside Render's 512 MB container, keeping the live cloud deployment fast, lightweight, and rock-solid.
 
-#### How to run the Voice Agent on a laptop for the submission video:
+#### How to run the optional LiveKit Voice Worker on your laptop for video demo:
 1. Ensure your `backend/.env` has:
    ```env
    LIVEKIT_URL=wss://your-project.livekit.cloud

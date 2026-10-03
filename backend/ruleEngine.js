@@ -60,7 +60,7 @@ export function runDeterministicRuleEngine(message) {
     urgencyEvidence = extractSnippet(
       message,
       [
-        /(?:within\s+\d+\s+(?:hours?|minutes?|days?)|expires\s+today|act\s+fast|urgently\s+need|send\s+right\s+now|cancel\s+right\s+now|dial\s+now|call\s+(?:us\s+)?now|before\s+\d+\s*(?:am|pm)|\d+\s*ঘণ্টার\s*মধ্যে|আজকের\s*মধ্যে|জরুরি\s*নোটিশ|জরুরি\s*ভিত্তিতে|জরুরি\s*(?:নিরাপত্তা\s*)?সতর্কতা|অতি\s*দ্রুত|অবিলম্বে\s*(?:এই\s*)?(?:এজেন্ট|নম্বরে|কল|টাকা|পাঠান|যোগাযোগ)|এখনই\s*(?:পরিশোধ|পাঠান|বলুন|ফেরত|এসএমএস|মেসেজ|verify|confirm|call)|জলদি\s*(?:টাকা|উপায়|সেন্ড|পাঠান|মেসেজ|করুন|কর|দিন)|এই\s*মুহূর্তে|\d+\s*ghontar\s*moddhe|ekhoni\s*(?:call|verify|pathan|ferot|send|sms))/i,
+        /(?:within\s+\d+\s+(?:hours?|minutes?|days?)|expires\s+today|act\s+fast|urgently\s+need|send\s+right\s+now|cancel\s+right\s+now|dial\s+now|call\s+(?:us\s+)?now|before\s+\d+\s*(?:am|pm)|\d+\s*ঘণ্টার\s*মধ্যে|আজকের\s*মধ্যে|জরুরি\s*নোটিশ|জরুরি\s*ভিত্তিতে|জরুরি\s*(?:নিরাপত্তা\s*)?সতর্কতা|অতি\s*দ্রুত|অবিলম্বে\s*(?:এই\s*)?(?:এজেন্ট|নম্বরে|কল|টাকা|পাঠিয়ে|পাঠান|যোগাযোগ|আনলক|পরিশোধ)|এখনই\s*(?:পরিশোধ|পাঠান|বলুন|ফেরত|এসএমএস|মেসেজ|verify|confirm|call)|জলদি\s*(?:টাকা|উপায়|সেন্ড|পাঠান|মেসেজ|করুন|কর|দিন)|এই\s*মুহূর্তে|\d+\s*ghontar\s*moddhe|ekhoni\s*(?:call|verify|pathan|ferot|send|sms))/i,
         /(?:last\s+chance|immediate\s+suspension|temporary\s+hold)/i
       ],
       [
@@ -90,7 +90,7 @@ export function runDeterministicRuleEngine(message) {
     threatEvidence = extractSnippet(
       message,
       [
-        /(?:(?:account|wallet|profile|sim|card|হিসাব|একাউন্ট|অ্যাকাউন্ট|ওয়ালেট)\s*(?:is|will be|has been)?\s*(?:permanently\s+)?(?:blocked|suspended|deactivated|terminated|frozen|লক|স্থগিত|ব্লক|বন্ধ\s*হওয়া\s*রোধ\s*করতে|বন্ধ\s*(?:হবে|হয়ে\s*যাবে)))/i,
+        /(?:(?:account|wallet|profile|sim|card|হিসাব|একাউন্ট|অ্যাকাউন্ট|ওয়ালেট)\s*(?:is|will be|has been)?\s*(?:এখনই|এখনি|শীঘ্রই|আজই|দ্রুত|permanently\s+)?\s*(?:blocked|suspended|deactivated|terminated|frozen|লক|স্থগিত|ব্লক|বন্ধ\s*হওয়া\s*রোধ\s*করতে|বন্ধ\s*(?:হবে|হয়ে\s*যাবে)))/i,
         /(?:account\s*block\s*(?:hobe|hoye\s*jabe)|bkash\s*account\s*block|account\s*bondho\s*hobe)/i,
         /(?:permanently\s+(?:blocked|suspended|closed|terminated)|account\s+closure|temporary\s+freeze|স্থায়ীভাবে\s+বন্ধ|আইনি\s+ব্যবস্থা|police\s+complaint|permanently\s+block|bondho\s+hoye\s+jabe)/i,
         /(?:flagged\s+for\s+suspicious\s+activity|unauthorized\s+transaction\s+of|সন্দেহজনক\s*লগইন\s*ধরা\s*পড়েছে)/i
@@ -175,10 +175,10 @@ export function runDeterministicRuleEngine(message) {
     otpHarvestEvidence = extractSnippet(
       message,
       [
-        /(?:(?:tell|send|share|reply\s+with|provide|disclose|read\s+back|state)\s*(?:your\s*)?(?:4-digit|6-digit)?\s*(?:otp|pin|verification\s+code|secret\s+pin|password|security\s+code))/i,
-        /(?:(?:পিন|ওটিপি|OTP|পাসওয়ার্ড|কোড)\s*(?:কোডটি\s*)?(?:এখনই\s*)?(?:এসএমএস\s*(?:করে\s*)?)?(?:পাঠান|দিন|বলুন|শেয়ার\s*করুন|শেয়ার\s*করুন))/i,
-        /(?:(?:বলুন|দিন|পাঠান|নিশ্চিত\s*করুন)\s*(?:গোপন\s*)?(?:পিন|ওটিপি|OTP|পাসওয়ার্ড|সিকিউরিটি\s*তথ্য))/i,
-        /(?:code\s*ta\s*ekhoni\s*bolun|pin\s*bolun|otp\s*ar\s*pin\s*bolun|security\s*code\s*share\s*korun)/i,
+        /(?:(?:tell|send|share|reply\s+with|provide|disclose|read\s+back|state|asking\s+for|demanding)\s*(?:your\s*)?(?:4-digit|6-digit)?\s*(?:otp|pin|verification\s+code|secret\s+pin|password|security\s+code))/i,
+        /(?:(?:পিন|ওটিপি|OTP|পাসওয়ার্ড|কোড)\s*(?:কোডটি\s*)?(?:এখনই\s*)?(?:এসএমএস\s*(?:করে\s*)?)?(?:পাঠান|দিন|বলুন|চাইছে|চাচ্ছে|দাবি|শেয়ার\s*করুন|শেয়ার\s*করুন))/i,
+        /(?:(?:বলুন|দিন|পাঠান|নিশ্চিত\s*করুন|চাইছে|চাচ্ছে)\s*(?:গোপন\s*)?(?:পিন|ওটিপি|OTP|পাসওয়ার্ড|সিকিউরিটি\s*তথ্য))/i,
+        /(?:code\s*ta\s*ekhoni\s*bolun|pin\s*bolun|otp\s*(?:ar\s*)?pin\s*bolun|security\s*code\s*share\s*korun|otp\s*(?:code\s*)?(?:ta\s*)?din)/i,
         /(?:enter\s+your\s+pin\s+and\s+claim|provide\s+your\s+4-digit\s*(?:secret\s*)?pin)/i,
         /(?:install\s+(?:anydesk|teamviewer|rustdesk|quicksupport)|anydesk\s+app\s+install|teamviewer\s+install)/i,
         /(?:৬\s*সংখ্যার\s*OTP\s*কোডটি\s*এখনই\s*এসএমএস\s*করে\s*পাঠান|৬\s*সংখ্যার\s*OTP\s*কোডটি)/i
@@ -211,8 +211,8 @@ export function runDeterministicRuleEngine(message) {
       [
         /(?:(?:won|winner\s+of)\s+(?:grand\s+prize|jackpot|cashback|cash\s+reward|lottery|mega\s+prize|raffle))/i,
         /(?:grand\s+prize\s+(?:of|winner)|lucky\s+winner|sweepstakes\s+grand\s+prize)/i,
-        /(?:লটারি\s*(?:জিতেছে|বিজয়ী|প্রাইজ)|পুরস্কার\s*বরাদ্দ|ক্যাশ\s*বোনাস|লাকি\s*ড্র|মেগা\s*অফার)/i,
-        /(?:lotari\s*prize|raffle\s*draw\s*te|big\s*prize\s*winner|bumper\s*prize|cash\s*bonus)/i
+        /(?:লটারি\s*(?:জিতেছে|জিতেছেন|জিতছেন|বিজয়ী|প্রাইজ)|পুরস্কার\s*(?:বরাদ্দ|পেতে|দিতে)|ক্যাশ\s*বোনাস|লাকি\s*ড্র|মেগা\s*অফার)/i,
+        /(?:lotari\s*prize|lottery\s*jitsen|raffle\s*draw\s*te|big\s*prize\s*winner|bumper\s*prize|cash\s*bonus)/i
       ],
       [
         'grand prize', 'sweepstakes', 'lottery prize', 'lucky winner',

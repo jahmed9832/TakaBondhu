@@ -330,7 +330,10 @@ export default function ReviewQueue({ onBackToAnalyzer, lang = 'bn', initialWall
                     {/* Expanded Evidence */}
                     {isExpanded && (
                       <div className="my-4 border-t border-slate-800 pt-3">
-                        <MuleNetworkGraph targetWallet={item.scam_type || initialWallet || 'cust_mule_04_unseen'} lang={lang} />
+                        <MuleNetworkGraph 
+                          targetWallet={item.wallet_id || (item.redacted_text?.match(/01[3-9]\d{8}/)?.[0]) || initialWallet || 'cust_mule_04_unseen'} 
+                          lang={lang} 
+                        />
                       </div>
                     )}
 

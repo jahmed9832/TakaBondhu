@@ -113,3 +113,177 @@ test('Voice Conversational Chat - Helpline query provides official upay helpline
   assert.ok(result.reply.includes('১৬২৬৮'), 'Must mention official helpline 16268');
   assert.strictEqual(result.isScam, false);
 });
+
+test('Voice Conversational Chat - 12 Diverse Bangla/Banglish/English Utterances Test Suite', async () => {
+  const { generateVoiceAgentReply } = await import('../server.js');
+
+  const cannedGenericSentence = 'আমি আপনার কথা বুঝতে পেরেছি। টাকাবন্ধুর সাথে আপনি যেকোনো সন্দেহজনক মেসেজ, ফোন কল বা আর্থিক বিষয় নিয়ে কথা বলতে পারেন। আমি নিরাপদ পরামর্শ দিয়ে সাহায্য করব।';
+
+  const testUtterances = [
+    {
+      category: 'greeting_bn',
+      message: 'আসসালামু আলাইকুম, কেমন আছেন?',
+      lang: 'bn',
+      expectedScam: false,
+      expectedSourcePrefix: 'offline_greeting'
+    },
+    {
+      category: 'greeting_en',
+      message: 'Hello, how are you today?',
+      lang: 'en',
+      expectedScam: false,
+      expectedSourcePrefix: 'offline_greeting'
+    },
+    {
+      category: 'greeting_banglish',
+      message: 'Salam kemon achen bhai?',
+      lang: 'bn',
+      expectedScam: false,
+      expectedSourcePrefix: 'offline_greeting'
+    },
+    {
+      category: 'otp_request_bn',
+      message: 'আমার ফোনে একটি ওটিপি এসেছে, ব্যাংক থেকে ফোন দিয়ে ওটিপি চাইছে।',
+      lang: 'bn',
+      expectedScam: true,
+      mustInclude: '১৬২৬৮',
+      expectedSourcePrefix: 'offline_pipeline'
+    },
+    {
+      category: 'otp_request_banglish',
+      message: 'Sir bkash theke bolchi, apnar account verify korte OTP code ta din',
+      lang: 'bn',
+      expectedScam: true,
+      mustInclude: '১৬২৬৮',
+      expectedSourcePrefix: 'offline_pipeline'
+    },
+    {
+      category: 'account_block_threat_bn',
+      message: 'আপনার অ্যাকাউন্ট এখনি ব্লক হয়ে যাবে, অবিলম্বে ৫০০০ টাকা পাঠিয়ে আনলক করুন।',
+      lang: 'bn',
+      expectedScam: true,
+      mustInclude: '১৬২৬৮',
+      expectedSourcePrefix: 'offline_pipeline'
+    },
+    {
+      category: 'account_block_threat_en',
+      message: 'Your account will be suspended immediately, send money to keep it active.',
+      lang: 'en',
+      expectedScam: true,
+      mustInclude: '16268',
+      expectedSourcePrefix: 'offline_pipeline'
+    },
+    {
+      category: 'lottery_prize_bn',
+      message: 'অভিনন্দন! আপনি ২৫ লাখ টাকার লটারি জিতেছেন, পুরস্কার পেতে ফি দিন।',
+      lang: 'bn',
+      expectedScam: true,
+      mustInclude: '১৬২৬৮',
+      expectedSourcePrefix: 'offline_pipeline'
+    },
+    {
+      category: 'lottery_prize_banglish',
+      message: 'Congratulations lottery jitsen, 1000 taka advance fee pathan',
+      lang: 'bn',
+      expectedScam: true,
+      mustInclude: '১৬২৬৮',
+      expectedSourcePrefix: 'offline_pipeline'
+    },
+    {
+      category: 'what_is_upay',
+      message: 'What is upay?',
+      lang: 'en',
+      expectedScam: false,
+      mustInclude: 'upay',
+      expectedSourcePrefix: 'offline_kb'
+    },
+    {
+      category: 'helpline_bn',
+      message: 'উপায়ের অফিশিয়াল হেল্পলাইন নম্বর কত?',
+      lang: 'bn',
+      expectedScam: false,
+      mustInclude: '১৬২৬৮',
+      expectedSourcePrefix: 'offline_kb'
+    },
+    {
+      category: 'benign_transfer_bn',
+      message: 'আমি আমার ভাইকে বিকাশে ৫০০ টাকা পাঠাতে চাই।',
+      lang: 'bn',
+      expectedScam: false,
+      expectedSourcePrefix: 'offline_advisory'
+    },
+    {
+      category: 'unknown_unclear',
+      message: 'হুম আচ্ছা ঠিক আছে blablabla xyz',
+      lang: 'bn',
+      expectedScam: false,
+      mustInclude: 'কী মেসেজ এসেছে বা কেউ কী বলেছে',
+      expectedSourcePrefix: 'offline_clarification'
+    }
+  ];
+
+  console.log('\n--- 12 UTTERANCES REAL VOICE REPLIES EVALUATION ---');
+  for (const item of testUtterances) {
+    const res = await generateVoiceAgentReply({
+      message: item.message,
+      lang: item.lang,
+      demoOffline: true
+    });
+
+    console.log(`[${item.category}]`);
+    console.log(`  User:    "${item.message}"`);
+    console.log(`  Reply:   "${res.reply}"`);
+    console.log(`  Source:  ${res.source}, isScam: ${res.isScam}, riskScore: ${res.riskScore}`);
+
+    assert.strictEqual(res.status, 'ok');
+    assert.strictEqual(
+      res.reply.includes(cannedGenericSentence), 
+      false, 
+      `Must NOT return canned generic sentence for category: ${item.category}`
+    );
+    assert.ok(res.reply && res.reply.length > 15, `Reply must be substantive (>15 chars) for ${item.category}`);
+    assert.strictEqual(res.isScam, item.expectedScam, `isScam mismatch for ${item.category}`);
+    if (item.mustInclude) {
+      assert.ok(
+        res.reply.includes(item.mustInclude), 
+        `Reply for ${item.category} must include "${item.mustInclude}", got: "${res.reply}"`
+      );
+    }
+    assert.ok(
+      res.source.startsWith(item.expectedSourcePrefix),
+      `Expected source ${item.expectedSourcePrefix}, got ${res.source}`
+    );
+  }
+  console.log('--- END OF VOICE REPLIES EVALUATION ---\n');
+});
+
+test('Voice Conversational Chat - Never returns identical reply twice in a row for unclear input', async () => {
+  const { generateVoiceAgentReply } = await import('../server.js');
+
+  const first = await generateVoiceAgentReply({
+    message: 'random unparseable phrase 12345',
+    lang: 'bn',
+    demoOffline: true,
+    history: []
+  });
+
+  const second = await generateVoiceAgentReply({
+    message: 'random unparseable phrase 12345',
+    lang: 'bn',
+    demoOffline: true,
+    history: [
+      { role: 'user', text: 'random unparseable phrase 12345' },
+      { role: 'assistant', text: first.reply }
+    ]
+  });
+
+  console.log('Follow-up avoidance test:');
+  console.log('  Turn 1 reply:', first.reply);
+  console.log('  Turn 2 reply:', second.reply);
+
+  assert.notStrictEqual(
+    first.reply, 
+    second.reply, 
+    'Consecutive unclear replies must not be identical'
+  );
+});
