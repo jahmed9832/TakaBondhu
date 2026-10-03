@@ -2,7 +2,7 @@
   "model_version": "v1.0.0-char-wb-lr",
   "sklearn_version": "1.9.1",
   "python_version": "3.14.2",
-  "trained_at": "2026-10-03T06:12:09.784381+00:00",
+  "trained_at": "2026-10-03T06:20:49.034988+00:00",
   "threshold": 0.5,
   "dataset_hash": "aaac61dbe30899b50936d3f69fdfc5e729b27e90a853314aca6da21e254e2a57",
   "feature_count": 16437,

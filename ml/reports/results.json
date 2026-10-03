@@ -1,7 +1,7 @@
 {
   "project": "TakaBondhu",
   "tagline": "Upay's friend that keeps your money safe",
-  "generated_at": "2026-10-03T12:12:23.185820",
+  "generated_at": "2026-10-03T12:21:02.940444",
   "disclaimer": "All figures originate strictly from executable evaluation scripts on held-out test splits. 100% synthetic data.",
   "message_intelligence": {
     "model_version": "v1.0.0-char-wb-lr",

@@ -21,9 +21,9 @@
 
 | Pipeline Stage / Endpoint | Mode / Condition | p50 Latency | p95 Latency | Sample Size |
 |:--------------------------|:-----------------|:------------|:------------|:------------|
-| **Raw ML Model Inference** | In-process Python joblib | **1.137 ms** | **1.435 ms** | 100 runs |
-| **ML Microservice (`/v1/predict`)** | Localhost HTTP (FastAPI) | **15.87 ms** | **18.03 ms** | 50 requests |
-| **Offline Hybrid Pipeline** | Deterministic Rules + Local ML (`DEMO_OFFLINE=true`) | **16.02 ms** | **18.14 ms** | 50 runs |
+| **Raw ML Model Inference** | In-process Python joblib | **1.127 ms** | **1.458 ms** | 100 runs |
+| **ML Microservice (`/v1/predict`)** | Localhost HTTP (FastAPI) | **15.84 ms** | **17.1 ms** | 50 requests |
+| **Offline Hybrid Pipeline** | Deterministic Rules + Local ML (`DEMO_OFFLINE=true`) | **15.48 ms** | **17.32 ms** | 50 runs |
 | **LRU Cached Analysis** | Exact message hash match (10 min TTL) | **0 ms** | **0.02 ms** | 50 requests |
 | **Gemini LLM Live Analysis** | Cloud API call (generative explanation) | *Measured live when key present (~1.5s - 3.2s) / not run in offline bench* | *Fallback timeout: 8000 ms* | Variable |
 
@@ -32,8 +32,8 @@
 ## 3. Key Observations & Architectural Decisions
 
 1. **Sub-5ms Local ML Decision:**
-   By utilizing character n-gram TF-IDF representations (2-5 grams) with Logistic Regression, feature extraction and calibrated inference complete in under **1.137 ms** on commodity laptop CPUs.
+   By utilizing character n-gram TF-IDF representations (2-5 grams) with Logistic Regression, feature extraction and calibrated inference complete in under **1.127 ms** on commodity laptop CPUs.
 2. **Instant Pre-Screening:**
-   The `/v1/screen` pre-send hook executes rules and local ML in **~16.02 ms**, comfortably within mobile financial services (MFS) transaction SLA limits (< 200 ms).
+   The `/v1/screen` pre-send hook executes rules and local ML in **~15.48 ms**, comfortably within mobile financial services (MFS) transaction SLA limits (< 200 ms).
 3. **Resilience to Network Jitter:**
    If the Gemini API or internet connection experiences latency spikes, the built-in 8-second timeout immediately triggers offline fallback, ensuring the user always receives a deterministic risk score and action checklist.

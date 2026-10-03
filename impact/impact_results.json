@@ -1,6 +1,6 @@
 {
   "status": "success",
-  "generated_at": "2026-10-03T12:12:24.241222",
+  "generated_at": "2026-10-03T12:21:03.968901",
   "disclaimer": "All figures illustrative, assumption-driven. Computed from real held-out test evaluation metrics combined with stated operational assumptions.",
   "real_model_inputs": {
     "recall": 0.9832,

@@ -1,7 +1,7 @@
 {
   "model_name": "TakaBondhu LightGBM Transaction Risk Classifier",
   "model_version": "v1.0.0-lgbm-calibrated",
-  "trained_at": "2026-10-03T06:12:17.962369+00:00",
+  "trained_at": "2026-10-03T06:20:57.744314+00:00",
   "threshold": 0.13,
   "feature_names": [
     "amount",
