@@ -129,15 +129,34 @@ async function dev() {
     if (line) console.error(`\x1b[35m[FRONTEND]\x1b[0m ${line}`);
   });
 
+  // 4. Voice Agent Service (Auto-started in background)
+  const voiceAgentScript = path.join(BACKEND_DIR, 'voice-agent', 'agent.js');
+  if (fs.existsSync(voiceAgentScript)) {
+    console.log('🎙️ [4/4] Starting Voice AI Agent Worker (:8089)...');
+    const voiceProc = spawn('node', ['--max-old-space-size=256', 'voice-agent/agent.js', 'dev'], {
+      cwd: BACKEND_DIR,
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    children.push(voiceProc);
+
+    voiceProc.stdout.on('data', (d) => {
+      const line = d.toString().trim();
+      if (line) console.log(`\x1b[34m[VOICE]\x1b[0m ${line}`);
+    });
+    voiceProc.stderr.on('data', (d) => {
+      const line = d.toString().trim();
+      if (line && !line.includes('Missing required LiveKit')) {
+        console.error(`\x1b[34m[VOICE]\x1b[0m ${line}`);
+      }
+    });
+  }
+
   console.log('\n======================================================');
   console.log('🎉 TakaBondhu is running locally:');
-  console.log('   • Frontend Web App:  http://localhost:5173');
-  console.log('   • Backend API:       http://localhost:5000');
-  console.log('   • ML Microservice:   http://localhost:8001');
-  console.log('------------------------------------------------------');
-  console.log('🎙️ Realtime Voice AI Agent:');
-  console.log('   To enable the Voice Assistant, open a 2nd terminal:');
-  console.log('   > npm run voice-agent');
+  console.log('   • Frontend Web App:   http://localhost:5173');
+  console.log('   • Backend API:        http://localhost:5000');
+  console.log('   • ML Microservice:    http://localhost:8001');
+  console.log('   • Voice AI Assistant: Built-in & Autonomous (Browser + Worker)');
   console.log('------------------------------------------------------');
   console.log('Press Ctrl+C to stop all services.');
   console.log('======================================================\n');

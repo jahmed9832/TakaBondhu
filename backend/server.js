@@ -453,6 +453,200 @@ app.get(['/api/voice/status', '/v1/voice/status'], (req, res) => {
   });
 });
 
+/**
+ * Core conversational voice generation engine
+ */
+export async function generateVoiceAgentReply({
+  message,
+  lang = 'bn',
+  traceId = 'trace-voice',
+  clientGenAI = genAI,
+  keyConfigured = isKeyConfigured,
+  demoOffline = IS_DEMO_OFFLINE,
+  candidateModel = activeGeminiModel
+} = {}) {
+  const cleanMessage = (message || '').trim();
+
+  if (!cleanMessage) {
+    const emptyReply = lang === 'bn' 
+      ? 'আসসালামু আলাইকুম! আমি শুনছি, বলুন আপনাকে কীভাবে সাহায্য করতে পারি?' 
+      : 'Hello! I am listening. How can I help you?';
+    return {
+      status: 'ok',
+      reply: emptyReply,
+      isScam: false,
+      riskScore: 0,
+      riskLevel: 'SAFE',
+      signals: [],
+      safestNextStep: 'স্বাভাবিক সতর্কতা বজায় রাখুন।'
+    };
+  }
+
+  // 1. Run Deterministic Rule Engine for threat detection
+  const deterministic = runDeterministicRuleEngine(cleanMessage);
+  const candidateSignals = deterministic.rawSignals || [];
+  const baseScore = deterministic.baseScore || 0;
+  const isThreat = candidateSignals.length > 0 && baseScore >= 35;
+
+  // 2. Retrieve relevant safety knowledge if there's any hint of threat
+  let retrievedDocs = [];
+  if (isThreat || cleanMessage.length > 8) {
+    try {
+      const ragRes = await retrieveRelevantKnowledge(cleanMessage, 2);
+      if (ragRes?.success && Array.isArray(ragRes.documents)) {
+        retrievedDocs = ragRes.documents;
+      }
+    } catch {
+      // Non-blocking
+    }
+  }
+
+  // 3. Conversational AI Generation via Gemini if available
+  let replyText = '';
+  let generationSource = 'fallback';
+
+  if (keyConfigured && clientGenAI && !demoOffline) {
+    try {
+      const voiceSystemPrompt = `You are TakaBondhu's Voice AI Assistant, a friendly and protective financial safety advisor for Bangladesh.
+When replying in Bengali, speak natural, polite Bengali (বাংলা).
+IMPORTANT RULES FOR SPOKEN AUDIO:
+1. Speak concisely in 2 to 3 natural sentences suitable for text-to-speech audio playback.
+2. DO NOT cite robotic scores or metrics (NEVER say "স্কোর ২০/১০০" or "score 20/100").
+3. If the user's message is a greeting or general friendly inquiry (e.g., Salam, kemon achen), greet warmly and ask how you can help keep their money safe.
+4. If the message describes a potential scam, lottery prize, OTP/PIN request, account block threat, or suspicious link:
+   - Warn them clearly and empathetically NOT to send money or share OTP/PIN.
+   - Explain that banks or mobile financial services (upay, bKash) NEVER ask for OTP or threaten to close accounts over phone.
+   - Advise them to call the official helpline (upay 16268 / bKash 16247).
+5. If the user asks general questions about TakaBondhu, upay, helpline numbers, or how to stay safe, answer accurately and helpfully.
+6. Return only the plain conversational response text. No bullet points, markdown headers, or JSON formatting.`;
+
+      const model = clientGenAI.getGenerativeModel({
+        model: candidateModel || 'gemini-3.5-flash-lite',
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 250
+        },
+        systemInstruction: voiceSystemPrompt
+      });
+
+      const promptText = `User spoken query: "${cleanMessage}"
+Threat detected: ${isThreat ? 'YES' : 'NO'}
+Threat signals: ${candidateSignals.map(s => s.type).join(', ') || 'None'}
+RAG Knowledge context: ${retrievedDocs.map(d => d.content).join('; ') || 'None'}
+Language requested: ${lang === 'bn' ? 'Bengali (বাংলা)' : 'English'}`;
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Voice Gemini timeout')), 5000)
+      );
+      const result = await Promise.race([model.generateContent(promptText), timeoutPromise]);
+      replyText = result?.response?.text()?.trim();
+      if (replyText) {
+        generationSource = 'gemini';
+      }
+    } catch (gemErr) {
+      console.warn(`[${traceId}] Voice Gemini fallback triggered:`, gemErr.message);
+    }
+  }
+
+  // 4. Intelligent Spoken Fallback if Gemini is offline or did not answer
+  if (!replyText) {
+    const lower = cleanMessage.toLowerCase();
+    
+    const isGreeting = lower.includes('সালাম') || lower.includes('salam') || 
+                       lower.includes('hello') || lower.includes('হাই') || lower.includes('hi') ||
+                       lower.includes('কেমন') || lower.includes('kemon') || lower.includes('শুভ');
+
+    const isHelpline = lower.includes('হেল্পলাইন') || lower.includes('helpline') || 
+                       lower.includes('নম্বর') || lower.includes('নাম্বার') || 
+                       lower.includes('hotline') || lower.includes('কাস্টমার কেয়ার');
+
+    const isAbout = lower.includes('টাকাবন্ধু') || lower.includes('takabondhu') || 
+                    lower.includes('কি কাজ') || lower.includes('how it works') || 
+                    lower.includes('আপনি কে') || lower.includes('who are you');
+
+    const isTips = lower.includes('টিপস') || lower.includes('নিরাপদ') || lower.includes('সেভ') ||
+                   lower.includes('রক্ষা') || lower.includes('tips') || lower.includes('safe');
+
+    if (isThreat) {
+      if (lower.includes('otp') || lower.includes('ওটিপি') || lower.includes('পিন') || lower.includes('pin')) {
+        replyText = lang === 'bn'
+          ? 'সাবধান! কাউকে কখনো আপনার গোপন পিন বা ওটিপি কোড দেবেন না। উপায় বা কোনো ব্যাংক কখনো ফোন করে ওটিপি চায় না। কলটি কেটে দিয়ে প্রয়োজনে অফিশিয়াল হেল্পলাইনে ১৬২৬৮ নম্বরে যোগাযোগ করুন।'
+          : 'Caution! Never share your PIN or OTP code with anyone. Banks and upay never ask for your PIN over the phone. Hang up and call 16268 if needed.';
+      } else if (lower.includes('বন্ধ') || lower.includes('block') || lower.includes('লক') || lower.includes('threat')) {
+        replyText = lang === 'bn'
+          ? 'ভয় পাবেন না এবং একদম কোনো টাকা পাঠাবেন না। প্রতারকরা ভয় দেখিয়ে অ্যাকাউন্ট বন্ধের কথা বলে দ্রুত টাকা হাতিয়ে নেয়। আসল তথ্য যাচাই করতে সরাসরি হেল্পলাইনে ১৬২৬৮ নম্বরে কল করুন।'
+          : 'Do not panic and do not send any money. Scammers use fear of account suspension to steal funds. Call official helpline 16268 to verify.';
+      } else if (lower.includes('লটারি') || lower.includes('পুরস্কার') || lower.includes('lottery') || lower.includes('prize') || lower.includes('জিতছেন')) {
+        replyText = lang === 'bn'
+          ? 'এটি নিশ্চিত লটারি প্রতারণার বার্তা! কোনো পুরস্কার বা লটারির টাকা পাওয়ার জন্য আগে ফি বা টাকা পাঠাতে হয় না। এই নাম্বারে কোনো লেনদেন করবেন না।'
+          : 'This is a lottery scam! You never need to pay a fee or share OTP to claim a legitimate prize. Do not send any money.';
+      } else {
+        replyText = lang === 'bn'
+          ? 'সাবধান! এই বার্তা বা কলেই প্রতারণার স্পষ্ট ঝুঁকি দেখা যাচ্ছে। কাউকে কোনো টাকা পাঠাবেন না বা পিন দেবেন না। সহায়তার জন্য অফিশিয়াল হেল্পলাইনে ১৬২৬৮ নম্বরে কথা বলুন।'
+          : 'Be careful! This situation indicates high risk of fraud. Do not send money or provide personal credentials. Contact official helpline 16268.';
+      }
+    } else if (isGreeting) {
+      replyText = lang === 'bn'
+        ? 'ওয়ালাইকুম আসসালাম! আমি ভালো আছি, ধন্যবাদ। আমি টাকাবন্ধুর ভয়েস সহকারী। আপনার কোনো আর্থিক লেনদেন, মেসেজ বা কল নিয়ে সন্দেহ থাকলে বলুন, আমি শুনছি।'
+        : 'Hello! I am doing well, thank you. I am TakaBondhu Voice Assistant. Feel free to speak about any financial message, call, or question.';
+    } else if (isHelpline) {
+      replyText = lang === 'bn'
+        ? 'উপায়ের অফিশিয়াল হেল্পলাইন নম্বর হলো ১৬২৬৮। আর বিকাশের হেল্পলাইন ১৬২৪৭ এবং নগদের ১৬১৬৭। যেকোনো সমস্যায় শুধুমাত্র এই অফিশিয়াল নম্বরেই কথা বলুন।'
+        : 'upay official helpline is 16268. bKash is 16247 and Nagad is 16167. Always contact only these official verified numbers.';
+    } else if (isAbout) {
+      replyText = lang === 'bn'
+        ? 'টাকাবন্ধু হলো আপনার আর্থিক সুরক্ষার বিশ্বস্ত বন্ধু। আপনার মোবাইলে আসা কোনো সন্দেহজনক মেসেজ বা কল যাচাই করে প্রতারণা থেকে আপনাকে নিরাপদ রাখাই আমার কাজ।'
+        : 'TakaBondhu is your trusted financial safety companion. I help verify suspicious calls and messages to protect your hard-earned money.';
+    } else if (isTips) {
+      replyText = lang === 'bn'
+        ? 'টাকা নিরাপদ রাখার প্রধান ৩টি নিয়ম: কখনো কারো সাথে পিন বা ওটিপি শেয়ার করবেন না, অ্যাকাউন্ট বন্ধের ভয়ে বিভ্রান্ত হবেন না, এবং সন্দেহ হলেই অফিশিয়াল হেল্পলাইনে ১৬২৬৮ নম্বরে যাচাই করবেন।'
+        : 'Top three safety rules: Never share your PIN or OTP, never panic over account suspension threats, and always verify with official helpline 16268.';
+    } else {
+      replyText = lang === 'bn'
+        ? 'আমি আপনার কথা বুঝতে পেরেছি। টাকাবন্ধুর সাথে আপনি যেকোনো সন্দেহজনক মেসেজ, ফোন কল বা আর্থিক বিষয় নিয়ে কথা বলতে পারেন। আমি নিরাপদ পরামর্শ দিয়ে সাহায্য করব।'
+        : 'I hear you clearly. You can speak with TakaBondhu about any suspicious SMS, call, or financial question to get safe guidance.';
+    }
+  }
+
+  return {
+    status: 'ok',
+    reply: replyText,
+    isScam: isThreat,
+    riskScore: deterministic.baseScore,
+    riskLevel: deterministic.riskLevel,
+    signals: candidateSignals.map(s => ({ type: s.type, severity: s.severity })),
+    safestNextStep: isThreat ? 'টাকা পাঠাবেন না বা পিন দেবেন না। অফিশিয়াল হেল্পলাইনে ১৬২৬৮ নম্বরে কল করুন।' : 'কোনো সন্দেহজনক লক্ষণ পাওয়া যায়নি। স্বাভাবিক সতর্কতা বজায় রাখুন।',
+    source: generationSource,
+    trace_id: traceId
+  };
+}
+
+// POST /api/voice/chat and /v1/voice/chat
+app.post(['/api/voice/chat', '/v1/voice/chat'], async (req, res) => {
+  const traceId = generateTraceId();
+  try {
+    const { message, lang = 'bn' } = req.body || {};
+    const result = await generateVoiceAgentReply({
+      message,
+      lang,
+      traceId,
+      clientGenAI: genAI,
+      keyConfigured: isKeyConfigured,
+      demoOffline: IS_DEMO_OFFLINE,
+      candidateModel: activeGeminiModel
+    });
+    return res.json(result);
+  } catch (err) {
+    console.error(`[${traceId}] ⚠️ /api/voice/chat error:`, err);
+    return res.status(500).json({
+      status: 'error',
+      reply: 'দুঃখিত, সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে আবার বলুন।',
+      error: 'Voice chat processing failed',
+      trace_id: traceId
+    });
+  }
+});
+
 // GET /api/livekit/status
 app.get('/api/livekit/status', (req, res) => {
   try {
@@ -1466,23 +1660,36 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-const server = app.listen(PORT, () => {
-  console.log(`===============================================`);
-  console.log(`🛡️ TakaBondhu Backend running on port ${PORT}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`🔗 Analyze endpoint: POST http://localhost:${PORT}/api/analyze`);
-  console.log(`🔗 upay Screen endpoint: POST http://localhost:${PORT}/v1/screen`);
-  console.log(`===============================================`);
-});
+const isDirectExecution = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(__filename);
+let server = null;
 
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`\n⚠️ Port ${PORT} is already occupied.`);
-    console.error(`If a previous instance is still closing, please wait a moment or stop it.`);
-  } else {
-    console.error('Server error:', err);
-  }
-});
+if (isDirectExecution && !process.env.NODE_TEST_CONTEXT && process.env.NODE_ENV !== 'test') {
+  server = app.listen(PORT, () => {
+    console.log(`===============================================`);
+    console.log(`🛡️ TakaBondhu Backend running on port ${PORT}`);
+    console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🔗 Analyze endpoint: POST http://localhost:${PORT}/api/analyze`);
+    console.log(`🔗 upay Screen endpoint: POST http://localhost:${PORT}/v1/screen`);
+    console.log(`===============================================`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`\n⚠️ Port ${PORT} is already occupied.`);
+      console.error(`If a previous instance is still closing, please wait a moment or stop it.`);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+
+  process.on('SIGINT', () => {
+    server?.close(() => process.exit(0));
+  });
+
+  process.on('SIGTERM', () => {
+    server?.close(() => process.exit(0));
+  });
+}
 
 process.on('unhandledRejection', (reason) => {
   console.warn('⚠️ Process caught unhandled rejection:', reason?.message || reason);
@@ -1490,12 +1697,4 @@ process.on('unhandledRejection', (reason) => {
 
 process.on('uncaughtException', (err) => {
   console.warn('⚠️ Process caught uncaught exception:', err.message);
-});
-
-process.on('SIGINT', () => {
-  server.close(() => process.exit(0));
-});
-
-process.on('SIGTERM', () => {
-  server.close(() => process.exit(0));
 });

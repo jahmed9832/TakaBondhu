@@ -90,7 +90,7 @@ export function runDeterministicRuleEngine(message) {
     threatEvidence = extractSnippet(
       message,
       [
-        /(?:(?:account|wallet|profile|sim|card|হিসাব|একাউন্ট|অ্যাকাউন্ট|ওয়ালেট)\s*(?:is|will be|has been)?\s*(?:permanently\s+)?(?:blocked|suspended|deactivated|terminated|frozen|লক|স্থগিত|ব্লক|বন্ধ\s*হওয়া\s*রোধ\s*করতে|বন্ধ\s*হবে))/i,
+        /(?:(?:account|wallet|profile|sim|card|হিসাব|একাউন্ট|অ্যাকাউন্ট|ওয়ালেট)\s*(?:is|will be|has been)?\s*(?:permanently\s+)?(?:blocked|suspended|deactivated|terminated|frozen|লক|স্থগিত|ব্লক|বন্ধ\s*হওয়া\s*রোধ\s*করতে|বন্ধ\s*(?:হবে|হয়ে\s*যাবে)))/i,
         /(?:account\s*block\s*(?:hobe|hoye\s*jabe)|bkash\s*account\s*block|account\s*bondho\s*hobe)/i,
         /(?:permanently\s+(?:blocked|suspended|closed|terminated)|account\s+closure|temporary\s+freeze|স্থায়ীভাবে\s+বন্ধ|আইনি\s+ব্যবস্থা|police\s+complaint|permanently\s+block|bondho\s+hoye\s+jabe)/i,
         /(?:flagged\s+for\s+suspicious\s+activity|unauthorized\s+transaction\s+of|সন্দেহজনক\s*লগইন\s*ধরা\s*পড়েছে)/i

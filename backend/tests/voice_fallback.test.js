@@ -68,3 +68,48 @@ test('Voice Status contract - GET /api/voice/status schema verification', async 
   const statusNotConfigured = getStatus(false, Date.now() - 5000);
   assert.strictEqual(statusNotConfigured.realtime, false);
 });
+
+test('Voice Conversational Chat - Greeting returns natural spoken Bangla without robotic score 20/100', async () => {
+  const { generateVoiceAgentReply } = await import('../server.js');
+  
+  const result = await generateVoiceAgentReply({
+    message: 'আসসালামু আলাইকুম, কেমন আছেন?',
+    lang: 'bn',
+    demoOffline: true
+  });
+
+  assert.strictEqual(result.status, 'ok');
+  assert.strictEqual(result.isScam, false);
+  assert.ok(result.reply.includes('ওয়ালাইকুম আসসালাম') || result.reply.includes('টাকাবন্ধু'), 'Should greet warmly in Bengali');
+  assert.strictEqual(result.reply.includes('২০/১০০'), false, 'Must NOT output robotic score 20/100');
+  assert.strictEqual(result.reply.includes('স্কোর'), false, 'Must NOT output raw metric jargon in spoken reply');
+});
+
+test('Voice Conversational Chat - Scam threat returns protective warning and helpline', async () => {
+  const { generateVoiceAgentReply } = await import('../server.js');
+  
+  const result = await generateVoiceAgentReply({
+    message: 'আপনার বিকাশ অ্যাকাউন্ট বন্ধ হয়ে যাবে, এখনই ওটিপি কোড এবং ৫০০০ টাকা পাঠান।',
+    lang: 'bn',
+    demoOffline: true
+  });
+
+  assert.strictEqual(result.status, 'ok');
+  assert.strictEqual(result.isScam, true, 'Scam threat must be flagged as isScam true');
+  assert.ok(result.reply.includes('টাকা') || result.reply.includes('ওটিপি') || result.reply.includes('সাবধান'), 'Must give defensive advice');
+  assert.strictEqual(result.reply.includes('২০/১০০'), false, 'Must NOT output robotic 20/100');
+});
+
+test('Voice Conversational Chat - Helpline query provides official upay helpline 16268', async () => {
+  const { generateVoiceAgentReply } = await import('../server.js');
+  
+  const result = await generateVoiceAgentReply({
+    message: 'উপায় হেল্পলাইন নম্বর কত?',
+    lang: 'bn',
+    demoOffline: true
+  });
+
+  assert.strictEqual(result.status, 'ok');
+  assert.ok(result.reply.includes('১৬২৬৮'), 'Must mention official helpline 16268');
+  assert.strictEqual(result.isScam, false);
+});
