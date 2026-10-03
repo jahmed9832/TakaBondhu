@@ -211,6 +211,33 @@ takabondhu/  (project root)
 
 ---
 
+## 🔍 Transparency: Pre-Existing vs. 72-Hour Hackathon Development
+
+In accordance with academic honesty and hackathon transparency standards, we explicitly disclose the provenance of all components in this repository:
+
+### What Existed Before the Hackathon (ScamShield Starter Skeleton)
+- **Base Frontend Skeleton:** Basic Vite + React application shell, generic dark-theme dashboard layouts, and navigation structure.
+- **Voice & Cloud Wrappers:** LiveKit client connection boilerplate, Supabase client configuration, and preliminary Google Gemini API chat call wrappers.
+- **Initial Mock Scenarios:** Rough prototype mock text prompts from earlier exploratory ideation.
+
+### What Was Built Entirely During the 72-Hour Hackathon Window (TakaBondhu for DIU CPC × upay)
+- **Synthetic MFS Data Generation Engine (`ml/transactions/`, `ml/data/`):** Full generative simulation generating 200,000 realistic MFS transactions and 7,000+ scam/benign messages across Bengali, Banglish, and English—incorporating USSD channel mechanics, sub-৳2,000 micro-scams, night-time velocity spikes, and agent cash-out smurfing.
+- **Strict Anti-Leakage Partitioning:** Temporal split (Days 1–60 train/val vs Days 61–90 test-time) and entity/template quarantines (500 unseen customer wallets, 72 quarantined message templates).
+- **5-Signal ML Intelligence Pipeline (`ml/service.py`, `ml/models/`):**
+  1. Sub-word `char_wb` TF-IDF + Calibrated Logistic Regression message classifier (0.65 ms p50).
+  2. Tabular `HistGradientBoostingClassifier` with `CalibratedClassifierCV` for pre-send transaction risk (1.20 ms p50).
+  3. Personal-baseline Isolation Forest for behavioral deviation detection.
+  4. NetworkX ego-subgraph analyzer for rapid money-mule fan-in / fan-out topology detection.
+  5. Parametric agent Z-score structuring outlier detector.
+- **Deterministic Fusion Engine (`ml/fusion.py`):** Multi-modal probability calibration, validation-tuned blending weights, and strict enforcement of the `Zero Autonomous Money Freeze` invariant.
+- **Production Upay Core Banking Adapter (`backend/integration/upayAdapter.js`):** Production-grade pre-send screening switch interface with SHA-256 idempotency caching, sub-4ms response guarantee, and graceful fallback on ML microservice interruption.
+- **Explainability & Trust Architecture:** Automated 3-question Case Cards, interactive SVG mule network graph visualization (`MuleNetworkGraph.jsx`), plain-Bangla 10-second soft-friction countdown UI, and tamper-evident SHA-256 audit log.
+- **Business Economics & ROI Simulation Module (`impact/`):** Code-driven financial simulator computing unit economics per 100k transactions across three transparent sensitivity scenarios.
+- **Verification & Benchmark Suite:** 160-item natural handwritten benchmark (`handwritten_eval.csv`), 49 passing automated unit/integration tests, zero-hardcoding assertions, and automated metric consistency audits (`scripts/verify-metrics.mjs`).
+- **Production Deployment & Dockerization:** Multi-stage unified Dockerfile (FastAPI + Node.js + Vite bundle), `render.yaml`, environment-driven API routing (`VITE_API_BASE`), and deployment manual (`docs/DEPLOY.md`).
+
+---
+
 ## ⚠️ Known Limitations & Honest Disclosures
 
 1. **Synthetic Data Simplification:** All training transactions and attack patterns are simulated (`SEED=42`). While realistic distributions, USSD channels, sub-2000 micro-scams, and seasonal spikes are modeled, synthetic data cannot capture the full entropy, non-stationary fraud evolution, and label ambiguity of live banking traffic.
@@ -222,4 +249,5 @@ takabondhu/  (project root)
 ---
 
 *TakaBondhu — Built for the AI Hackathon 2026 (DIU CPC × upay). Designed to make digital financial services safer, friendlier, and more trustworthy for every citizen of Bangladesh.*
+
 
