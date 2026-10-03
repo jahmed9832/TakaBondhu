@@ -37,8 +37,8 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
   const [userTranscript, setUserTranscript] = useState('');
   const [aiReply, setAiReply] = useState(
     lang === 'bn' 
-      ? 'আসসালামু আলাইকুম! কোনো মেসেজ বা সন্দেহজনক ফোন কল নিয়ে কথা বলতে নিচে কল শুরু করুন বা লিখে পাঠান।'
-      : 'Hello! To check any message or suspicious phone call, start a live voice call below or type your question.'
+      ? 'আসসালামু আলাইকুম! কীভাবে সাহায্য করতে পারি?'
+      : 'Hello! How can I help you today?'
   );
   const [detectedSignals, setDetectedSignals] = useState([]);
   const [analysisResult, setAnalysisResult] = useState(null);
@@ -220,6 +220,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     try {
       const ttsUrl = apiUrl(`/api/voice/tts?text=${encodeURIComponent(clean.slice(0, 200))}&lang=${lang}`);
       const audio = new Audio(ttsUrl);
+      audio.playbackRate = 1.05;
       activeAudioRef.current = audio;
 
       setAgentState('speaking');
@@ -343,7 +344,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
           latestTranscriptRef.current = trimmed;
           setAgentState('listening');
 
-          // Debounce turn completion: trigger assistant reply 1.2s after user pauses speaking
+          // Debounce turn completion: trigger assistant reply 750ms after user pauses speaking
           if (debounceTimerRef.current) {
             clearTimeout(debounceTimerRef.current);
           }
@@ -351,7 +352,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
             if (latestTranscriptRef.current && isCallActiveRef.current) {
               handleUserSpeechTurnRef.current?.(latestTranscriptRef.current);
             }
-          }, 1200);
+          }, 750);
         }
       };
 
@@ -398,8 +399,8 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     isMutedRef.current = false;
 
     const openingGreeting = lang === 'bn'
-      ? 'আসসালামু আলাইকুম! আমি TakaBondhu-র ভয়েস সহকারী। আপনার কোনো আর্থিক মেসেজ, লেনদেন বা সন্দেহজনক ফোন কল নিয়ে কথা বলুন, আমি শুনছি।'
-      : 'Hello! I am TakaBondhu Voice Assistant. Please speak about any financial message, transaction, or suspicious call. I am listening.';
+      ? 'আসসালামু আলাইকুম! কীভাবে সাহায্য করতে পারি?'
+      : 'Hello! How can I help you today?';
 
     setAiReply(openingGreeting);
 

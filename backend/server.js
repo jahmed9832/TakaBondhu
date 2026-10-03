@@ -469,8 +469,8 @@ export async function generateVoiceAgentReply({
 
   if (!cleanMessage) {
     const emptyReply = lang === 'bn' 
-      ? 'আসসালামু আলাইকুম! আমি শুনছি, বলুন আপনাকে কীভাবে সাহায্য করতে পারি?' 
-      : 'Hello! I am listening. How can I help you?';
+      ? 'আসসালামু আলাইকুম! কীভাবে সাহায্য করতে পারি?' 
+      : 'Hello! How can I help you?';
     return {
       status: 'ok',
       reply: emptyReply,
@@ -587,8 +587,8 @@ Language requested: ${lang === 'bn' ? 'Bengali (বাংলা)' : 'English'}`;
       }
     } else if (isGreeting) {
       replyText = lang === 'bn'
-        ? 'ওয়ালাইকুম আসসালাম! আমি ভালো আছি, ধন্যবাদ। আমি টাকাবন্ধুর ভয়েস সহকারী। আপনার কোনো আর্থিক লেনদেন, মেসেজ বা কল নিয়ে সন্দেহ থাকলে বলুন, আমি শুনছি।'
-        : 'Hello! I am doing well, thank you. I am TakaBondhu Voice Assistant. Feel free to speak about any financial message, call, or question.';
+        ? 'ওয়ালাইকুম আসসালাম! আমি ভালো আছি। কীভাবে সাহায্য করতে পারি বলুন?'
+        : 'Hello! I am doing well, thank you. How can I help you?';
     } else if (isHelpline) {
       replyText = lang === 'bn'
         ? 'উপায়ের অফিশিয়াল হেল্পলাইন নম্বর হলো ১৬২৬৮। আর বিকাশের হেল্পলাইন ১৬২৪৭ এবং নগদের ১৬১৬৭। যেকোনো সমস্যায় শুধুমাত্র এই অফিশিয়াল নম্বরেই কথা বলুন।'

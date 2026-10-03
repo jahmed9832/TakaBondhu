@@ -145,7 +145,7 @@ async function dev() {
     });
     voiceProc.stderr.on('data', (d) => {
       const line = d.toString().trim();
-      if (line && !line.includes('Missing required LiveKit')) {
+      if (line && !line.includes('Missing required LiveKit') && !line.includes('wmic') && !line.includes('failed to check supervised process')) {
         console.error(`\x1b[34m[VOICE]\x1b[0m ${line}`);
       }
     });
