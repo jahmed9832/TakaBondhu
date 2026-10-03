@@ -33,6 +33,17 @@ class MuleGraphAnalyzer:
         self.wallet_stats = {}
         self.mule_cache = {}
 
+    def load_cache(self, cache_path=None):
+        cache_path = cache_path or os.path.join(MODELS_DIR, "graph_cache.json")
+        if os.path.exists(cache_path):
+            with open(cache_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                self.wallet_stats = data.get("stats_sample", {})
+                for item in data.get("top_suspects", []):
+                    self.wallet_stats[item.get("wallet_id")] = item
+            print(f"✓ Loaded {len(self.wallet_stats)} mule network profiles from cache.")
+        return self
+
     def build_graph(self, tx_df):
         print(f"Building transaction network graph from {len(tx_df)} records...")
         self.G.clear()

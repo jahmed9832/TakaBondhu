@@ -26,9 +26,10 @@ if (fs.existsSync(backendEnv)) {
   dotenv.config();
 }
 
-// Ensure child worker processes have sufficient V8 heap on Windows
+// Ensure worker processes use moderate heap suitable for both local dev and cloud containers
+const heapLimit = process.env.NODE_MAX_MEM || (process.env.NODE_ENV === 'production' ? '128' : '2048');
 if (!process.env.NODE_OPTIONS || !process.env.NODE_OPTIONS.includes('--max-old-space-size')) {
-  process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ''} --max-old-space-size=4096`.trim();
+  process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ''} --max-old-space-size=${heapLimit}`.trim();
 }
 
 // LiveKit Agent Name for explicit dispatch routing

@@ -130,12 +130,16 @@ def load_model(force: bool = False):
         # 2. Multi-Signal Fusion Engine
         state["fusion_engine"] = FusionEngine()
 
-        # 3. Mule Graph Analyzer
+        # 3. Mule Graph Analyzer (load pre-computed cache for instant, low-memory startup)
         state["graph_analyzer"] = MuleGraphAnalyzer()
-        tx_csv = os.path.join(BASE_DIR, "data", "transactions", "transactions.csv")
-        if os.path.exists(tx_csv):
-            tx_sample = pd.read_csv(tx_csv).head(15000)
-            state["graph_analyzer"].build_graph(tx_sample)
+        graph_cache_path = os.path.join(MODELS_DIR, "graph_cache.json")
+        if os.path.exists(graph_cache_path):
+            state["graph_analyzer"].load_cache(graph_cache_path)
+        else:
+            tx_csv = os.path.join(BASE_DIR, "data", "transactions", "transactions.csv")
+            if os.path.exists(tx_csv):
+                tx_sample = pd.read_csv(tx_csv).head(1000)
+                state["graph_analyzer"].build_graph(tx_sample)
 
         # 4. Agent Benchmarker
         state["agent_benchmarker"] = AgentBenchmarker()
