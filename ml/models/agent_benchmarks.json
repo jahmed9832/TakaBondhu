@@ -1,0 +1,1015 @@
+{
+  "peer_metrics": {
+    "mean_structuring": 0.008692647722831947,
+    "std_structuring": 0.04695112581965639,
+    "mean_night": 0.007374700288781641,
+    "std_night": 0.04011466185903552,
+    "mean_volume": 386423.4090666667,
+    "std_volume": 193828.3684269285,
+    "total_agents_benchmarked": 300
+  },
+  "profiles_sample": {
+    "agent_0001": {
+      "agent_id": "agent_0001",
+      "district": "Dinajpur",
+      "n_cashouts": 152,
+      "total_volume": 1227612.23,
+      "structuring_ratio": 0.2434,
+      "night_ratio": 0.2303,
+      "z_structuring": 5.0,
+      "z_night": 5.56,
+      "z_volume": 4.34,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.3% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 23.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.6)",
+        "Outlier turnover: Total cash-out \u09f31,227,612 is 4.3 std deviations above peer mean"
+      ]
+    },
+    "agent_0002": {
+      "agent_id": "agent_0002",
+      "district": "Chittagong",
+      "n_cashouts": 163,
+      "total_volume": 1313548.85,
+      "structuring_ratio": 0.227,
+      "night_ratio": 0.2147,
+      "z_structuring": 4.65,
+      "z_night": 5.17,
+      "z_volume": 4.78,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 22.7% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.6)",
+        "Unusual hours: 21.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.2)",
+        "Outlier turnover: Total cash-out \u09f31,313,549 is 4.8 std deviations above peer mean"
+      ]
+    },
+    "agent_0003": {
+      "agent_id": "agent_0003",
+      "district": "Bogra",
+      "n_cashouts": 168,
+      "total_volume": 1340971.73,
+      "structuring_ratio": 0.2381,
+      "night_ratio": 0.1548,
+      "z_structuring": 4.89,
+      "z_night": 3.67,
+      "z_volume": 4.92,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 23.8% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 15.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=3.7)",
+        "Outlier turnover: Total cash-out \u09f31,340,972 is 4.9 std deviations above peer mean"
+      ]
+    },
+    "agent_0004": {
+      "agent_id": "agent_0004",
+      "district": "Bogra",
+      "n_cashouts": 159,
+      "total_volume": 1335052.49,
+      "structuring_ratio": 0.2516,
+      "night_ratio": 0.2264,
+      "z_structuring": 5.17,
+      "z_night": 5.46,
+      "z_volume": 4.89,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 25.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.2)",
+        "Unusual hours: 22.6% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.5)",
+        "Outlier turnover: Total cash-out \u09f31,335,052 is 4.9 std deviations above peer mean"
+      ]
+    },
+    "agent_0005": {
+      "agent_id": "agent_0005",
+      "district": "Jamalpur",
+      "n_cashouts": 171,
+      "total_volume": 1648061.21,
+      "structuring_ratio": 0.3216,
+      "night_ratio": 0.2515,
+      "z_structuring": 6.67,
+      "z_night": 6.08,
+      "z_volume": 6.51,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 32.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=6.7)",
+        "Unusual hours: 25.1% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.1)",
+        "Outlier turnover: Total cash-out \u09f31,648,061 is 6.5 std deviations above peer mean"
+      ]
+    },
+    "agent_0006": {
+      "agent_id": "agent_0006",
+      "district": "Gazipur",
+      "n_cashouts": 157,
+      "total_volume": 1281076.76,
+      "structuring_ratio": 0.242,
+      "night_ratio": 0.2229,
+      "z_structuring": 4.97,
+      "z_night": 5.37,
+      "z_volume": 4.62,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 22.3% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.4)",
+        "Outlier turnover: Total cash-out \u09f31,281,077 is 4.6 std deviations above peer mean"
+      ]
+    },
+    "agent_0007": {
+      "agent_id": "agent_0007",
+      "district": "Sylhet",
+      "n_cashouts": 153,
+      "total_volume": 1590987.79,
+      "structuring_ratio": 0.3399,
+      "night_ratio": 0.2549,
+      "z_structuring": 7.05,
+      "z_night": 6.17,
+      "z_volume": 6.21,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 34.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=7.1)",
+        "Unusual hours: 25.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.2)",
+        "Outlier turnover: Total cash-out \u09f31,590,988 is 6.2 std deviations above peer mean"
+      ]
+    },
+    "agent_0008": {
+      "agent_id": "agent_0008",
+      "district": "Jamalpur",
+      "n_cashouts": 175,
+      "total_volume": 1385932.52,
+      "structuring_ratio": 0.24,
+      "night_ratio": 0.2,
+      "z_structuring": 4.93,
+      "z_night": 4.8,
+      "z_volume": 5.16,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 20.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=4.8)",
+        "Outlier turnover: Total cash-out \u09f31,385,933 is 5.2 std deviations above peer mean"
+      ]
+    },
+    "agent_0009": {
+      "agent_id": "agent_0009",
+      "district": "Rangpur",
+      "n_cashouts": 181,
+      "total_volume": 1476209.54,
+      "structuring_ratio": 0.2486,
+      "night_ratio": 0.2486,
+      "z_structuring": 5.11,
+      "z_night": 6.01,
+      "z_volume": 5.62,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.9% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.1)",
+        "Unusual hours: 24.9% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.0)",
+        "Outlier turnover: Total cash-out \u09f31,476,210 is 5.6 std deviations above peer mean"
+      ]
+    },
+    "agent_0010": {
+      "agent_id": "agent_0010",
+      "district": "Gazipur",
+      "n_cashouts": 168,
+      "total_volume": 1292214.98,
+      "structuring_ratio": 0.2321,
+      "night_ratio": 0.2083,
+      "z_structuring": 4.76,
+      "z_night": 5.01,
+      "z_volume": 4.67,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 23.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.8)",
+        "Unusual hours: 20.8% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.0)",
+        "Outlier turnover: Total cash-out \u09f31,292,215 is 4.7 std deviations above peer mean"
+      ]
+    },
+    "agent_0011": {
+      "agent_id": "agent_0011",
+      "district": "Gazipur",
+      "n_cashouts": 141,
+      "total_volume": 431307.25,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.23,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0012": {
+      "agent_id": "agent_0012",
+      "district": "Pabna",
+      "n_cashouts": 123,
+      "total_volume": 388157.17,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.01,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0013": {
+      "agent_id": "agent_0013",
+      "district": "Pabna",
+      "n_cashouts": 140,
+      "total_volume": 407405.02,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.11,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0014": {
+      "agent_id": "agent_0014",
+      "district": "Khulna",
+      "n_cashouts": 114,
+      "total_volume": 352613.73,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.17,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0015": {
+      "agent_id": "agent_0015",
+      "district": "Barisal",
+      "n_cashouts": 131,
+      "total_volume": 408334.51,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.11,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0016": {
+      "agent_id": "agent_0016",
+      "district": "Mymensingh",
+      "n_cashouts": 122,
+      "total_volume": 371305.29,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.08,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0017": {
+      "agent_id": "agent_0017",
+      "district": "Tangail",
+      "n_cashouts": 112,
+      "total_volume": 323848.63,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.32,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0018": {
+      "agent_id": "agent_0018",
+      "district": "Pabna",
+      "n_cashouts": 109,
+      "total_volume": 295981.54,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.47,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0019": {
+      "agent_id": "agent_0019",
+      "district": "Jessore",
+      "n_cashouts": 118,
+      "total_volume": 352494.02,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.18,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0020": {
+      "agent_id": "agent_0020",
+      "district": "Brahmanbaria",
+      "n_cashouts": 141,
+      "total_volume": 383766.93,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.01,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0021": {
+      "agent_id": "agent_0021",
+      "district": "Khulna",
+      "n_cashouts": 134,
+      "total_volume": 376031.99,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.05,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0022": {
+      "agent_id": "agent_0022",
+      "district": "Feni",
+      "n_cashouts": 91,
+      "total_volume": 259978.52,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.65,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0023": {
+      "agent_id": "agent_0023",
+      "district": "Chittagong",
+      "n_cashouts": 120,
+      "total_volume": 352111.03,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.18,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0024": {
+      "agent_id": "agent_0024",
+      "district": "Brahmanbaria",
+      "n_cashouts": 110,
+      "total_volume": 354361.09,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.17,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0025": {
+      "agent_id": "agent_0025",
+      "district": "Feni",
+      "n_cashouts": 121,
+      "total_volume": 346536.11,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.21,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0026": {
+      "agent_id": "agent_0026",
+      "district": "Dhaka",
+      "n_cashouts": 105,
+      "total_volume": 365089.77,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.11,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0027": {
+      "agent_id": "agent_0027",
+      "district": "Feni",
+      "n_cashouts": 103,
+      "total_volume": 325616.08,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.31,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0028": {
+      "agent_id": "agent_0028",
+      "district": "Narayanganj",
+      "n_cashouts": 119,
+      "total_volume": 390737.75,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.02,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0029": {
+      "agent_id": "agent_0029",
+      "district": "Noakhali",
+      "n_cashouts": 128,
+      "total_volume": 354786.03,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.16,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0030": {
+      "agent_id": "agent_0030",
+      "district": "Dhaka",
+      "n_cashouts": 119,
+      "total_volume": 380481.72,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.03,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0031": {
+      "agent_id": "agent_0031",
+      "district": "Noakhali",
+      "n_cashouts": 130,
+      "total_volume": 355324.16,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.16,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0032": {
+      "agent_id": "agent_0032",
+      "district": "Sylhet",
+      "n_cashouts": 126,
+      "total_volume": 417149.61,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.16,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0033": {
+      "agent_id": "agent_0033",
+      "district": "Mymensingh",
+      "n_cashouts": 99,
+      "total_volume": 242226.24,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.74,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0034": {
+      "agent_id": "agent_0034",
+      "district": "Sylhet",
+      "n_cashouts": 129,
+      "total_volume": 462640.05,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.39,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0035": {
+      "agent_id": "agent_0035",
+      "district": "Noakhali",
+      "n_cashouts": 128,
+      "total_volume": 341790.26,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.23,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0036": {
+      "agent_id": "agent_0036",
+      "district": "Comilla",
+      "n_cashouts": 123,
+      "total_volume": 409635.71,
+      "structuring_ratio": 0.0081,
+      "night_ratio": 0.0,
+      "z_structuring": -0.01,
+      "z_night": -0.18,
+      "z_volume": 0.12,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0037": {
+      "agent_id": "agent_0037",
+      "district": "Feni",
+      "n_cashouts": 110,
+      "total_volume": 337295.36,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.25,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0038": {
+      "agent_id": "agent_0038",
+      "district": "Cox's Bazar",
+      "n_cashouts": 145,
+      "total_volume": 441138.83,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.28,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0039": {
+      "agent_id": "agent_0039",
+      "district": "Tangail",
+      "n_cashouts": 108,
+      "total_volume": 312962.38,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.38,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0040": {
+      "agent_id": "agent_0040",
+      "district": "Gazipur",
+      "n_cashouts": 117,
+      "total_volume": 332264.19,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.28,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0041": {
+      "agent_id": "agent_0041",
+      "district": "Cox's Bazar",
+      "n_cashouts": 140,
+      "total_volume": 415465.31,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.15,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0042": {
+      "agent_id": "agent_0042",
+      "district": "Feni",
+      "n_cashouts": 98,
+      "total_volume": 247281.47,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.72,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0043": {
+      "agent_id": "agent_0043",
+      "district": "Noakhali",
+      "n_cashouts": 126,
+      "total_volume": 436327.76,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.26,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0044": {
+      "agent_id": "agent_0044",
+      "district": "Jessore",
+      "n_cashouts": 115,
+      "total_volume": 325516.58,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.31,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0045": {
+      "agent_id": "agent_0045",
+      "district": "Bogra",
+      "n_cashouts": 125,
+      "total_volume": 373159.87,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.07,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0046": {
+      "agent_id": "agent_0046",
+      "district": "Cox's Bazar",
+      "n_cashouts": 124,
+      "total_volume": 354562.73,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.16,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0047": {
+      "agent_id": "agent_0047",
+      "district": "Feni",
+      "n_cashouts": 97,
+      "total_volume": 265151.18,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.63,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0048": {
+      "agent_id": "agent_0048",
+      "district": "Noakhali",
+      "n_cashouts": 116,
+      "total_volume": 332117.98,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.28,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0049": {
+      "agent_id": "agent_0049",
+      "district": "Mymensingh",
+      "n_cashouts": 136,
+      "total_volume": 389580.18,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": 0.02,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    },
+    "agent_0050": {
+      "agent_id": "agent_0050",
+      "district": "Feni",
+      "n_cashouts": 105,
+      "total_volume": 303523.37,
+      "structuring_ratio": 0.0,
+      "night_ratio": 0.0,
+      "z_structuring": -0.19,
+      "z_night": -0.18,
+      "z_volume": -0.43,
+      "risk_score": 10.0,
+      "risk_level": "LOW",
+      "reasons": [
+        "Operating within normal peer behavioral baselines."
+      ]
+    }
+  },
+  "high_risk_agents": [
+    {
+      "agent_id": "agent_0001",
+      "district": "Dinajpur",
+      "n_cashouts": 152,
+      "total_volume": 1227612.23,
+      "structuring_ratio": 0.2434,
+      "night_ratio": 0.2303,
+      "z_structuring": 5.0,
+      "z_night": 5.56,
+      "z_volume": 4.34,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.3% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 23.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.6)",
+        "Outlier turnover: Total cash-out \u09f31,227,612 is 4.3 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0002",
+      "district": "Chittagong",
+      "n_cashouts": 163,
+      "total_volume": 1313548.85,
+      "structuring_ratio": 0.227,
+      "night_ratio": 0.2147,
+      "z_structuring": 4.65,
+      "z_night": 5.17,
+      "z_volume": 4.78,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 22.7% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.6)",
+        "Unusual hours: 21.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.2)",
+        "Outlier turnover: Total cash-out \u09f31,313,549 is 4.8 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0003",
+      "district": "Bogra",
+      "n_cashouts": 168,
+      "total_volume": 1340971.73,
+      "structuring_ratio": 0.2381,
+      "night_ratio": 0.1548,
+      "z_structuring": 4.89,
+      "z_night": 3.67,
+      "z_volume": 4.92,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 23.8% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 15.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=3.7)",
+        "Outlier turnover: Total cash-out \u09f31,340,972 is 4.9 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0004",
+      "district": "Bogra",
+      "n_cashouts": 159,
+      "total_volume": 1335052.49,
+      "structuring_ratio": 0.2516,
+      "night_ratio": 0.2264,
+      "z_structuring": 5.17,
+      "z_night": 5.46,
+      "z_volume": 4.89,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 25.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.2)",
+        "Unusual hours: 22.6% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.5)",
+        "Outlier turnover: Total cash-out \u09f31,335,052 is 4.9 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0005",
+      "district": "Jamalpur",
+      "n_cashouts": 171,
+      "total_volume": 1648061.21,
+      "structuring_ratio": 0.3216,
+      "night_ratio": 0.2515,
+      "z_structuring": 6.67,
+      "z_night": 6.08,
+      "z_volume": 6.51,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 32.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=6.7)",
+        "Unusual hours: 25.1% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.1)",
+        "Outlier turnover: Total cash-out \u09f31,648,061 is 6.5 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0006",
+      "district": "Gazipur",
+      "n_cashouts": 157,
+      "total_volume": 1281076.76,
+      "structuring_ratio": 0.242,
+      "night_ratio": 0.2229,
+      "z_structuring": 4.97,
+      "z_night": 5.37,
+      "z_volume": 4.62,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.0)",
+        "Unusual hours: 22.3% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.4)",
+        "Outlier turnover: Total cash-out \u09f31,281,077 is 4.6 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0007",
+      "district": "Sylhet",
+      "n_cashouts": 153,
+      "total_volume": 1590987.79,
+      "structuring_ratio": 0.3399,
+      "night_ratio": 0.2549,
+      "z_structuring": 7.05,
+      "z_night": 6.17,
+      "z_volume": 6.21,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 34.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=7.1)",
+        "Unusual hours: 25.5% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.2)",
+        "Outlier turnover: Total cash-out \u09f31,590,988 is 6.2 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0008",
+      "district": "Jamalpur",
+      "n_cashouts": 175,
+      "total_volume": 1385932.52,
+      "structuring_ratio": 0.24,
+      "night_ratio": 0.2,
+      "z_structuring": 4.93,
+      "z_night": 4.8,
+      "z_volume": 5.16,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.0% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.9)",
+        "Unusual hours: 20.0% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=4.8)",
+        "Outlier turnover: Total cash-out \u09f31,385,933 is 5.2 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0009",
+      "district": "Rangpur",
+      "n_cashouts": 181,
+      "total_volume": 1476209.54,
+      "structuring_ratio": 0.2486,
+      "night_ratio": 0.2486,
+      "z_structuring": 5.11,
+      "z_night": 6.01,
+      "z_volume": 5.62,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 24.9% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=5.1)",
+        "Unusual hours: 24.9% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=6.0)",
+        "Outlier turnover: Total cash-out \u09f31,476,210 is 5.6 std deviations above peer mean"
+      ]
+    },
+    {
+      "agent_id": "agent_0010",
+      "district": "Gazipur",
+      "n_cashouts": 168,
+      "total_volume": 1292214.98,
+      "structuring_ratio": 0.2321,
+      "night_ratio": 0.2083,
+      "z_structuring": 4.76,
+      "z_night": 5.01,
+      "z_volume": 4.67,
+      "risk_score": 98.0,
+      "risk_level": "CRITICAL",
+      "reasons": [
+        "Structuring anomaly: 23.2% of cashouts in \u09f324,000\u2013\u09f324,999 (peer avg 0.9%, z=4.8)",
+        "Unusual hours: 20.8% cashouts during 23:00\u201305:00 (peer avg 0.7%, z=5.0)",
+        "Outlier turnover: Total cash-out \u09f31,292,215 is 4.7 std deviations above peer mean"
+      ]
+    }
+  ]
+}

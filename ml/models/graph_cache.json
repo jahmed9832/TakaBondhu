@@ -1,0 +1,1883 @@
+{
+  "generated_at": "2026-10-03T11:52:55.149977",
+  "total_nodes": 4598,
+  "total_edges": 90094,
+  "mule_suspects_count": 2500,
+  "top_suspects": [
+    {
+      "wallet_id": "cust_01274",
+      "in_degree": 25,
+      "out_degree": 33,
+      "unique_senders": 25,
+      "unique_receivers": 33,
+      "total_inflow": 52089.47,
+      "total_outflow": 44446.87,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 33 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.85)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00142",
+      "in_degree": 23,
+      "out_degree": 48,
+      "unique_senders": 23,
+      "unique_receivers": 48,
+      "total_inflow": 48826.11,
+      "total_outflow": 73576.08,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 48 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.66)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01174",
+      "in_degree": 26,
+      "out_degree": 40,
+      "unique_senders": 26,
+      "unique_receivers": 40,
+      "total_inflow": 81031.87,
+      "total_outflow": 103730.15,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 26 distinct senders",
+        "Rapid fund dispersion: 40 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.78)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00132",
+      "in_degree": 18,
+      "out_degree": 35,
+      "unique_senders": 18,
+      "unique_receivers": 35,
+      "total_inflow": 39629.44,
+      "total_outflow": 34224.28,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 35 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.86)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00776",
+      "in_degree": 19,
+      "out_degree": 32,
+      "unique_senders": 19,
+      "unique_receivers": 32,
+      "total_inflow": 39982.08,
+      "total_outflow": 50371.63,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 19 distinct senders",
+        "Rapid fund dispersion: 32 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.79)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00298",
+      "in_degree": 25,
+      "out_degree": 37,
+      "unique_senders": 25,
+      "unique_receivers": 37,
+      "total_inflow": 51118.06,
+      "total_outflow": 66865.57,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 37 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.76)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01593",
+      "in_degree": 23,
+      "out_degree": 28,
+      "unique_senders": 23,
+      "unique_receivers": 28,
+      "total_inflow": 39881.65,
+      "total_outflow": 37129.13,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 28 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.93)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01820",
+      "in_degree": 23,
+      "out_degree": 30,
+      "unique_senders": 23,
+      "unique_receivers": 30,
+      "total_inflow": 71511.91,
+      "total_outflow": 67207.96,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 30 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.94)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01958",
+      "in_degree": 28,
+      "out_degree": 44,
+      "unique_senders": 28,
+      "unique_receivers": 44,
+      "total_inflow": 70857.13,
+      "total_outflow": 86920.89,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 28 distinct senders",
+        "Rapid fund dispersion: 44 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.82)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01133",
+      "in_degree": 28,
+      "out_degree": 37,
+      "unique_senders": 28,
+      "unique_receivers": 37,
+      "total_inflow": 40773.57,
+      "total_outflow": 53688.48,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 28 distinct senders",
+        "Rapid fund dispersion: 37 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.76)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00741",
+      "in_degree": 23,
+      "out_degree": 36,
+      "unique_senders": 23,
+      "unique_receivers": 36,
+      "total_inflow": 50875.74,
+      "total_outflow": 68226.58,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 36 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.75)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00048",
+      "in_degree": 25,
+      "out_degree": 34,
+      "unique_senders": 25,
+      "unique_receivers": 34,
+      "total_inflow": 68209.98,
+      "total_outflow": 77929.86,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.88)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00970",
+      "in_degree": 29,
+      "out_degree": 34,
+      "unique_senders": 29,
+      "unique_receivers": 34,
+      "total_inflow": 93740.31,
+      "total_outflow": 89854.44,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 29 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.96)"
+      ]
+    },
+    {
+      "wallet_id": "cust_02209",
+      "in_degree": 14,
+      "out_degree": 27,
+      "unique_senders": 14,
+      "unique_receivers": 27,
+      "total_inflow": 43130.51,
+      "total_outflow": 65624.67,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 14 distinct senders",
+        "Rapid fund dispersion: 27 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.66)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01659",
+      "in_degree": 33,
+      "out_degree": 41,
+      "unique_senders": 33,
+      "unique_receivers": 41,
+      "total_inflow": 60344.45,
+      "total_outflow": 85816.08,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 33 distinct senders",
+        "Rapid fund dispersion: 41 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.70)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01989",
+      "in_degree": 17,
+      "out_degree": 47,
+      "unique_senders": 17,
+      "unique_receivers": 47,
+      "total_inflow": 60869.79,
+      "total_outflow": 81023.71,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 17 distinct senders",
+        "Rapid fund dispersion: 47 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.75)"
+      ]
+    },
+    {
+      "wallet_id": "cust_00825",
+      "in_degree": 16,
+      "out_degree": 29,
+      "unique_senders": 16,
+      "unique_receivers": 29,
+      "total_inflow": 48227.49,
+      "total_outflow": 64578.01,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 16 distinct senders",
+        "Rapid fund dispersion: 29 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.75)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01858",
+      "in_degree": 18,
+      "out_degree": 33,
+      "unique_senders": 18,
+      "unique_receivers": 33,
+      "total_inflow": 40568.11,
+      "total_outflow": 50256.0,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 33 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.81)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01119",
+      "in_degree": 29,
+      "out_degree": 39,
+      "unique_senders": 29,
+      "unique_receivers": 39,
+      "total_inflow": 82963.18,
+      "total_outflow": 72593.91,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 29 distinct senders",
+        "Rapid fund dispersion: 39 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.88)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01275",
+      "in_degree": 38,
+      "out_degree": 39,
+      "unique_senders": 38,
+      "unique_receivers": 39,
+      "total_inflow": 74411.29,
+      "total_outflow": 80903.54,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 38 distinct senders",
+        "Rapid fund dispersion: 39 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.92)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01501",
+      "in_degree": 28,
+      "out_degree": 32,
+      "unique_senders": 28,
+      "unique_receivers": 32,
+      "total_inflow": 54028.88,
+      "total_outflow": 64982.67,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 28 distinct senders",
+        "Rapid fund dispersion: 32 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.83)"
+      ]
+    },
+    {
+      "wallet_id": "cust_01598",
+      "in_degree": 23,
+      "out_degree": 22,
+      "unique_senders": 23,
+      "unique_receivers": 22,
+      "total_inflow": 43522.28,
+      "total_outflow": 35373.1,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 22 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.81)"
+      ]
+    },
+    {
+      "wallet_id": "cust_02024",
+      "in_degree": 23,
+      "out_degree": 35,
+      "unique_senders": 23,
+      "unique_receivers": 35,
+      "total_inflow": 36328.89,
+      "total_outflow": 31422.74,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 35 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.86)"
+      ]
+    },
+    {
+      "wallet_id": "cust_02269",
+      "in_degree": 16,
+      "out_degree": 24,
+      "unique_senders": 16,
+      "unique_receivers": 24,
+      "total_inflow": 32687.81,
+      "total_outflow": 26744.91,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 16 distinct senders",
+        "Rapid fund dispersion: 24 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.82)"
+      ]
+    },
+    {
+      "wallet_id": "cust_02158",
+      "in_degree": 26,
+      "out_degree": 38,
+      "unique_senders": 26,
+      "unique_receivers": 38,
+      "total_inflow": 56567.11,
+      "total_outflow": 65141.58,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 26 distinct senders",
+        "Rapid fund dispersion: 38 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.87)"
+      ]
+    }
+  ],
+  "stats_sample": {
+    "cust_01274": {
+      "wallet_id": "cust_01274",
+      "in_degree": 25,
+      "out_degree": 33,
+      "unique_senders": 25,
+      "unique_receivers": 33,
+      "total_inflow": 52089.47,
+      "total_outflow": 44446.87,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 33 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.85)"
+      ]
+    },
+    "agent_0003": {
+      "wallet_id": "agent_0003",
+      "in_degree": 160,
+      "out_degree": 0,
+      "unique_senders": 160,
+      "unique_receivers": 0,
+      "total_inflow": 1340971.73,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 160 distinct senders"
+      ]
+    },
+    "cust_00142": {
+      "wallet_id": "cust_00142",
+      "in_degree": 23,
+      "out_degree": 48,
+      "unique_senders": 23,
+      "unique_receivers": 48,
+      "total_inflow": 48826.11,
+      "total_outflow": 73576.08,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 48 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.66)"
+      ]
+    },
+    "ato_drain_192": {
+      "wallet_id": "ato_drain_192",
+      "in_degree": 2,
+      "out_degree": 0,
+      "unique_senders": 2,
+      "unique_receivers": 0,
+      "total_inflow": 16960.4,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_01536": {
+      "wallet_id": "cust_01536",
+      "in_degree": 12,
+      "out_degree": 21,
+      "unique_senders": 12,
+      "unique_receivers": 21,
+      "total_inflow": 11815.9,
+      "total_outflow": 36027.6,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 12 distinct senders",
+        "Rapid fund dispersion: 21 outgoing transfer targets"
+      ]
+    },
+    "agent_0009": {
+      "wallet_id": "agent_0009",
+      "in_degree": 171,
+      "out_degree": 0,
+      "unique_senders": 171,
+      "unique_receivers": 0,
+      "total_inflow": 1476209.54,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 171 distinct senders"
+      ]
+    },
+    "cust_01072": {
+      "wallet_id": "cust_01072",
+      "in_degree": 18,
+      "out_degree": 36,
+      "unique_senders": 18,
+      "unique_receivers": 36,
+      "total_inflow": 34556.73,
+      "total_outflow": 81425.57,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 36 outgoing transfer targets"
+      ]
+    },
+    "agent_0005": {
+      "wallet_id": "agent_0005",
+      "in_degree": 165,
+      "out_degree": 0,
+      "unique_senders": 165,
+      "unique_receivers": 0,
+      "total_inflow": 1648061.21,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 165 distinct senders"
+      ]
+    },
+    "cust_01174": {
+      "wallet_id": "cust_01174",
+      "in_degree": 26,
+      "out_degree": 40,
+      "unique_senders": 26,
+      "unique_receivers": 40,
+      "total_inflow": 81031.87,
+      "total_outflow": 103730.15,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 26 distinct senders",
+        "Rapid fund dispersion: 40 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.78)"
+      ]
+    },
+    "agent_0010": {
+      "wallet_id": "agent_0010",
+      "in_degree": 162,
+      "out_degree": 0,
+      "unique_senders": 162,
+      "unique_receivers": 0,
+      "total_inflow": 1292214.98,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 162 distinct senders"
+      ]
+    },
+    "cust_00340": {
+      "wallet_id": "cust_00340",
+      "in_degree": 25,
+      "out_degree": 26,
+      "unique_senders": 25,
+      "unique_receivers": 26,
+      "total_inflow": 76397.06,
+      "total_outflow": 45699.09,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 26 outgoing transfer targets"
+      ]
+    },
+    "ato_drain_401": {
+      "wallet_id": "ato_drain_401",
+      "in_degree": 2,
+      "out_degree": 0,
+      "unique_senders": 2,
+      "unique_receivers": 0,
+      "total_inflow": 37511.92,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_00784": {
+      "wallet_id": "cust_00784",
+      "in_degree": 15,
+      "out_degree": 51,
+      "unique_senders": 15,
+      "unique_receivers": 51,
+      "total_inflow": 24963.49,
+      "total_outflow": 114975.38,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 15 distinct senders",
+        "Rapid fund dispersion: 51 outgoing transfer targets"
+      ]
+    },
+    "ato_drain_305": {
+      "wallet_id": "ato_drain_305",
+      "in_degree": 3,
+      "out_degree": 0,
+      "unique_senders": 3,
+      "unique_receivers": 0,
+      "total_inflow": 15753.35,
+      "total_outflow": 0,
+      "risk_score": 36.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 3 distinct senders"
+      ]
+    },
+    "cust_00132": {
+      "wallet_id": "cust_00132",
+      "in_degree": 18,
+      "out_degree": 35,
+      "unique_senders": 18,
+      "unique_receivers": 35,
+      "total_inflow": 39629.44,
+      "total_outflow": 34224.28,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 35 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.86)"
+      ]
+    },
+    "ato_drain_945": {
+      "wallet_id": "ato_drain_945",
+      "in_degree": 2,
+      "out_degree": 0,
+      "unique_senders": 2,
+      "unique_receivers": 0,
+      "total_inflow": 16528.29,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_00606": {
+      "wallet_id": "cust_00606",
+      "in_degree": 27,
+      "out_degree": 44,
+      "unique_senders": 27,
+      "unique_receivers": 44,
+      "total_inflow": 54170.03,
+      "total_outflow": 115487.98,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 27 distinct senders",
+        "Rapid fund dispersion: 44 outgoing transfer targets"
+      ]
+    },
+    "ato_drain_511": {
+      "wallet_id": "ato_drain_511",
+      "in_degree": 1,
+      "out_degree": 0,
+      "unique_senders": 1,
+      "unique_receivers": 0,
+      "total_inflow": 19461.52,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_00350": {
+      "wallet_id": "cust_00350",
+      "in_degree": 19,
+      "out_degree": 33,
+      "unique_senders": 19,
+      "unique_receivers": 33,
+      "total_inflow": 30987.91,
+      "total_outflow": 165754.29,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 19 distinct senders",
+        "Rapid fund dispersion: 33 outgoing transfer targets"
+      ]
+    },
+    "ato_drain_437": {
+      "wallet_id": "ato_drain_437",
+      "in_degree": 2,
+      "out_degree": 0,
+      "unique_senders": 2,
+      "unique_receivers": 0,
+      "total_inflow": 12144.26,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_00776": {
+      "wallet_id": "cust_00776",
+      "in_degree": 19,
+      "out_degree": 32,
+      "unique_senders": 19,
+      "unique_receivers": 32,
+      "total_inflow": 39982.08,
+      "total_outflow": 50371.63,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 19 distinct senders",
+        "Rapid fund dispersion: 32 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.79)"
+      ]
+    },
+    "ato_drain_768": {
+      "wallet_id": "ato_drain_768",
+      "in_degree": 4,
+      "out_degree": 0,
+      "unique_senders": 4,
+      "unique_receivers": 0,
+      "total_inflow": 40977.05,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 4 distinct senders"
+      ]
+    },
+    "cust_00790": {
+      "wallet_id": "cust_00790",
+      "in_degree": 17,
+      "out_degree": 44,
+      "unique_senders": 17,
+      "unique_receivers": 44,
+      "total_inflow": 52647.25,
+      "total_outflow": 92401.42,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 17 distinct senders",
+        "Rapid fund dispersion: 44 outgoing transfer targets"
+      ]
+    },
+    "ato_drain_176": {
+      "wallet_id": "ato_drain_176",
+      "in_degree": 2,
+      "out_degree": 0,
+      "unique_senders": 2,
+      "unique_receivers": 0,
+      "total_inflow": 26557.49,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_00298": {
+      "wallet_id": "cust_00298",
+      "in_degree": 25,
+      "out_degree": 37,
+      "unique_senders": 25,
+      "unique_receivers": 37,
+      "total_inflow": 51118.06,
+      "total_outflow": 66865.57,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 37 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.76)"
+      ]
+    },
+    "ato_drain_583": {
+      "wallet_id": "ato_drain_583",
+      "in_degree": 1,
+      "out_degree": 0,
+      "unique_senders": 1,
+      "unique_receivers": 0,
+      "total_inflow": 4571.87,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_01525": {
+      "wallet_id": "cust_01525",
+      "in_degree": 18,
+      "out_degree": 35,
+      "unique_senders": 18,
+      "unique_receivers": 35,
+      "total_inflow": 30441.92,
+      "total_outflow": 80622.06,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 35 outgoing transfer targets"
+      ]
+    },
+    "ato_drain_241": {
+      "wallet_id": "ato_drain_241",
+      "in_degree": 4,
+      "out_degree": 0,
+      "unique_senders": 4,
+      "unique_receivers": 0,
+      "total_inflow": 38042.44,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 4 distinct senders"
+      ]
+    },
+    "cust_01221": {
+      "wallet_id": "cust_01221",
+      "in_degree": 22,
+      "out_degree": 54,
+      "unique_senders": 22,
+      "unique_receivers": 54,
+      "total_inflow": 26721.44,
+      "total_outflow": 139432.46,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 22 distinct senders",
+        "Rapid fund dispersion: 54 outgoing transfer targets"
+      ]
+    },
+    "ato_drain_442": {
+      "wallet_id": "ato_drain_442",
+      "in_degree": 1,
+      "out_degree": 0,
+      "unique_senders": 1,
+      "unique_receivers": 0,
+      "total_inflow": 17985.25,
+      "total_outflow": 0,
+      "risk_score": 10.0,
+      "is_mule_suspect": false,
+      "reasons": []
+    },
+    "cust_01180": {
+      "wallet_id": "cust_01180",
+      "in_degree": 25,
+      "out_degree": 34,
+      "unique_senders": 25,
+      "unique_receivers": 34,
+      "total_inflow": 50210.91,
+      "total_outflow": 84378.41,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets"
+      ]
+    },
+    "agent_0275": {
+      "wallet_id": "agent_0275",
+      "in_degree": 131,
+      "out_degree": 0,
+      "unique_senders": 131,
+      "unique_receivers": 0,
+      "total_inflow": 407762.19,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 131 distinct senders"
+      ]
+    },
+    "cust_00692": {
+      "wallet_id": "cust_00692",
+      "in_degree": 25,
+      "out_degree": 34,
+      "unique_senders": 25,
+      "unique_receivers": 34,
+      "total_inflow": 33204.73,
+      "total_outflow": 79698.98,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets"
+      ]
+    },
+    "cust_01593": {
+      "wallet_id": "cust_01593",
+      "in_degree": 23,
+      "out_degree": 28,
+      "unique_senders": 23,
+      "unique_receivers": 28,
+      "total_inflow": 39881.65,
+      "total_outflow": 37129.13,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 28 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.93)"
+      ]
+    },
+    "cust_00688": {
+      "wallet_id": "cust_00688",
+      "in_degree": 22,
+      "out_degree": 49,
+      "unique_senders": 22,
+      "unique_receivers": 49,
+      "total_inflow": 28858.77,
+      "total_outflow": 88866.81,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 22 distinct senders",
+        "Rapid fund dispersion: 49 outgoing transfer targets"
+      ]
+    },
+    "agent_0187": {
+      "wallet_id": "agent_0187",
+      "in_degree": 134,
+      "out_degree": 0,
+      "unique_senders": 134,
+      "unique_receivers": 0,
+      "total_inflow": 402464.21,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 134 distinct senders"
+      ]
+    },
+    "cust_01615": {
+      "wallet_id": "cust_01615",
+      "in_degree": 17,
+      "out_degree": 44,
+      "unique_senders": 17,
+      "unique_receivers": 44,
+      "total_inflow": 21583.94,
+      "total_outflow": 90880.54,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 17 distinct senders",
+        "Rapid fund dispersion: 44 outgoing transfer targets"
+      ]
+    },
+    "agent_0248": {
+      "wallet_id": "agent_0248",
+      "in_degree": 101,
+      "out_degree": 0,
+      "unique_senders": 101,
+      "unique_receivers": 0,
+      "total_inflow": 361161.59,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 101 distinct senders"
+      ]
+    },
+    "cust_00145": {
+      "wallet_id": "cust_00145",
+      "in_degree": 16,
+      "out_degree": 54,
+      "unique_senders": 16,
+      "unique_receivers": 54,
+      "total_inflow": 60395.84,
+      "total_outflow": 107407.83,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 16 distinct senders",
+        "Rapid fund dispersion: 54 outgoing transfer targets"
+      ]
+    },
+    "cust_00318": {
+      "wallet_id": "cust_00318",
+      "in_degree": 27,
+      "out_degree": 28,
+      "unique_senders": 27,
+      "unique_receivers": 28,
+      "total_inflow": 61764.81,
+      "total_outflow": 29849.27,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 27 distinct senders",
+        "Rapid fund dispersion: 28 outgoing transfer targets"
+      ]
+    },
+    "cust_00930": {
+      "wallet_id": "cust_00930",
+      "in_degree": 29,
+      "out_degree": 38,
+      "unique_senders": 29,
+      "unique_receivers": 38,
+      "total_inflow": 52260.34,
+      "total_outflow": 105613.38,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 29 distinct senders",
+        "Rapid fund dispersion: 38 outgoing transfer targets"
+      ]
+    },
+    "cust_01957": {
+      "wallet_id": "cust_01957",
+      "in_degree": 17,
+      "out_degree": 21,
+      "unique_senders": 17,
+      "unique_receivers": 21,
+      "total_inflow": 36515.19,
+      "total_outflow": 144623.95,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 17 distinct senders",
+        "Rapid fund dispersion: 21 outgoing transfer targets"
+      ]
+    },
+    "cust_01820": {
+      "wallet_id": "cust_01820",
+      "in_degree": 23,
+      "out_degree": 30,
+      "unique_senders": 23,
+      "unique_receivers": 30,
+      "total_inflow": 71511.91,
+      "total_outflow": 67207.96,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 30 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.94)"
+      ]
+    },
+    "cust_01664": {
+      "wallet_id": "cust_01664",
+      "in_degree": 28,
+      "out_degree": 43,
+      "unique_senders": 28,
+      "unique_receivers": 43,
+      "total_inflow": 64881.83,
+      "total_outflow": 126400.3,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 28 distinct senders",
+        "Rapid fund dispersion: 43 outgoing transfer targets"
+      ]
+    },
+    "cust_00444": {
+      "wallet_id": "cust_00444",
+      "in_degree": 14,
+      "out_degree": 34,
+      "unique_senders": 14,
+      "unique_receivers": 34,
+      "total_inflow": 25883.51,
+      "total_outflow": 83821.44,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 14 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets"
+      ]
+    },
+    "cust_01369": {
+      "wallet_id": "cust_01369",
+      "in_degree": 29,
+      "out_degree": 22,
+      "unique_senders": 29,
+      "unique_receivers": 22,
+      "total_inflow": 63876.22,
+      "total_outflow": 20702.05,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 29 distinct senders",
+        "Rapid fund dispersion: 22 outgoing transfer targets"
+      ]
+    },
+    "cust_01270": {
+      "wallet_id": "cust_01270",
+      "in_degree": 23,
+      "out_degree": 33,
+      "unique_senders": 23,
+      "unique_receivers": 33,
+      "total_inflow": 51544.07,
+      "total_outflow": 95159.2,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 33 outgoing transfer targets"
+      ]
+    },
+    "agent_0049": {
+      "wallet_id": "agent_0049",
+      "in_degree": 129,
+      "out_degree": 0,
+      "unique_senders": 129,
+      "unique_receivers": 0,
+      "total_inflow": 389580.18,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 129 distinct senders"
+      ]
+    },
+    "cust_01958": {
+      "wallet_id": "cust_01958",
+      "in_degree": 28,
+      "out_degree": 44,
+      "unique_senders": 28,
+      "unique_receivers": 44,
+      "total_inflow": 70857.13,
+      "total_outflow": 86920.89,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 28 distinct senders",
+        "Rapid fund dispersion: 44 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.82)"
+      ]
+    },
+    "cust_00728": {
+      "wallet_id": "cust_00728",
+      "in_degree": 18,
+      "out_degree": 34,
+      "unique_senders": 18,
+      "unique_receivers": 34,
+      "total_inflow": 17545.79,
+      "total_outflow": 223961.45,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets"
+      ]
+    },
+    "cust_01734": {
+      "wallet_id": "cust_01734",
+      "in_degree": 19,
+      "out_degree": 42,
+      "unique_senders": 19,
+      "unique_receivers": 42,
+      "total_inflow": 52155.56,
+      "total_outflow": 96589.69,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 19 distinct senders",
+        "Rapid fund dispersion: 42 outgoing transfer targets"
+      ]
+    },
+    "agent_0136": {
+      "wallet_id": "agent_0136",
+      "in_degree": 102,
+      "out_degree": 0,
+      "unique_senders": 102,
+      "unique_receivers": 0,
+      "total_inflow": 291491.23,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 102 distinct senders"
+      ]
+    },
+    "cust_01535": {
+      "wallet_id": "cust_01535",
+      "in_degree": 25,
+      "out_degree": 49,
+      "unique_senders": 25,
+      "unique_receivers": 49,
+      "total_inflow": 48401.75,
+      "total_outflow": 144277.92,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 49 outgoing transfer targets"
+      ]
+    },
+    "agent_0272": {
+      "wallet_id": "agent_0272",
+      "in_degree": 131,
+      "out_degree": 0,
+      "unique_senders": 131,
+      "unique_receivers": 0,
+      "total_inflow": 387264.17,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 131 distinct senders"
+      ]
+    },
+    "cust_02417": {
+      "wallet_id": "cust_02417",
+      "in_degree": 23,
+      "out_degree": 42,
+      "unique_senders": 23,
+      "unique_receivers": 42,
+      "total_inflow": 48279.78,
+      "total_outflow": 89853.4,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 42 outgoing transfer targets"
+      ]
+    },
+    "cust_01880": {
+      "wallet_id": "cust_01880",
+      "in_degree": 29,
+      "out_degree": 35,
+      "unique_senders": 29,
+      "unique_receivers": 35,
+      "total_inflow": 63605.59,
+      "total_outflow": 225016.41,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 29 distinct senders",
+        "Rapid fund dispersion: 35 outgoing transfer targets"
+      ]
+    },
+    "cust_01317": {
+      "wallet_id": "cust_01317",
+      "in_degree": 18,
+      "out_degree": 39,
+      "unique_senders": 18,
+      "unique_receivers": 39,
+      "total_inflow": 44819.68,
+      "total_outflow": 76924.83,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 39 outgoing transfer targets"
+      ]
+    },
+    "agent_0126": {
+      "wallet_id": "agent_0126",
+      "in_degree": 103,
+      "out_degree": 0,
+      "unique_senders": 103,
+      "unique_receivers": 0,
+      "total_inflow": 326147.13,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 103 distinct senders"
+      ]
+    },
+    "cust_02364": {
+      "wallet_id": "cust_02364",
+      "in_degree": 19,
+      "out_degree": 42,
+      "unique_senders": 19,
+      "unique_receivers": 42,
+      "total_inflow": 44121.88,
+      "total_outflow": 107804.8,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 19 distinct senders",
+        "Rapid fund dispersion: 42 outgoing transfer targets"
+      ]
+    },
+    "cust_01133": {
+      "wallet_id": "cust_01133",
+      "in_degree": 28,
+      "out_degree": 37,
+      "unique_senders": 28,
+      "unique_receivers": 37,
+      "total_inflow": 40773.57,
+      "total_outflow": 53688.48,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 28 distinct senders",
+        "Rapid fund dispersion: 37 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.76)"
+      ]
+    },
+    "cust_02070": {
+      "wallet_id": "cust_02070",
+      "in_degree": 16,
+      "out_degree": 29,
+      "unique_senders": 16,
+      "unique_receivers": 29,
+      "total_inflow": 17205.88,
+      "total_outflow": 69344.3,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 16 distinct senders",
+        "Rapid fund dispersion: 29 outgoing transfer targets"
+      ]
+    },
+    "cust_02055": {
+      "wallet_id": "cust_02055",
+      "in_degree": 27,
+      "out_degree": 51,
+      "unique_senders": 27,
+      "unique_receivers": 51,
+      "total_inflow": 43874.87,
+      "total_outflow": 147698.62,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 27 distinct senders",
+        "Rapid fund dispersion: 51 outgoing transfer targets"
+      ]
+    },
+    "cust_00387": {
+      "wallet_id": "cust_00387",
+      "in_degree": 26,
+      "out_degree": 48,
+      "unique_senders": 26,
+      "unique_receivers": 48,
+      "total_inflow": 55763.51,
+      "total_outflow": 93450.49,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 26 distinct senders",
+        "Rapid fund dispersion: 48 outgoing transfer targets"
+      ]
+    },
+    "cust_00131": {
+      "wallet_id": "cust_00131",
+      "in_degree": 21,
+      "out_degree": 40,
+      "unique_senders": 21,
+      "unique_receivers": 40,
+      "total_inflow": 59351.47,
+      "total_outflow": 97236.15,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 21 distinct senders",
+        "Rapid fund dispersion: 40 outgoing transfer targets"
+      ]
+    },
+    "cust_02257": {
+      "wallet_id": "cust_02257",
+      "in_degree": 15,
+      "out_degree": 51,
+      "unique_senders": 15,
+      "unique_receivers": 51,
+      "total_inflow": 21601.1,
+      "total_outflow": 102434.08,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 15 distinct senders",
+        "Rapid fund dispersion: 51 outgoing transfer targets"
+      ]
+    },
+    "cust_00741": {
+      "wallet_id": "cust_00741",
+      "in_degree": 23,
+      "out_degree": 36,
+      "unique_senders": 23,
+      "unique_receivers": 36,
+      "total_inflow": 50875.74,
+      "total_outflow": 68226.58,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 36 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.75)"
+      ]
+    },
+    "cust_01261": {
+      "wallet_id": "cust_01261",
+      "in_degree": 20,
+      "out_degree": 38,
+      "unique_senders": 20,
+      "unique_receivers": 38,
+      "total_inflow": 37802.5,
+      "total_outflow": 100381.32,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 20 distinct senders",
+        "Rapid fund dispersion: 38 outgoing transfer targets"
+      ]
+    },
+    "cust_00601": {
+      "wallet_id": "cust_00601",
+      "in_degree": 21,
+      "out_degree": 32,
+      "unique_senders": 21,
+      "unique_receivers": 32,
+      "total_inflow": 52949.63,
+      "total_outflow": 20487.09,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 21 distinct senders",
+        "Rapid fund dispersion: 32 outgoing transfer targets"
+      ]
+    },
+    "cust_02393": {
+      "wallet_id": "cust_02393",
+      "in_degree": 20,
+      "out_degree": 42,
+      "unique_senders": 20,
+      "unique_receivers": 42,
+      "total_inflow": 37277.32,
+      "total_outflow": 88974.1,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 20 distinct senders",
+        "Rapid fund dispersion: 42 outgoing transfer targets"
+      ]
+    },
+    "agent_0215": {
+      "wallet_id": "agent_0215",
+      "in_degree": 126,
+      "out_degree": 0,
+      "unique_senders": 126,
+      "unique_receivers": 0,
+      "total_inflow": 376209.25,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 126 distinct senders"
+      ]
+    },
+    "cust_00048": {
+      "wallet_id": "cust_00048",
+      "in_degree": 25,
+      "out_degree": 34,
+      "unique_senders": 25,
+      "unique_receivers": 34,
+      "total_inflow": 68209.98,
+      "total_outflow": 77929.86,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 25 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.88)"
+      ]
+    },
+    "cust_00030": {
+      "wallet_id": "cust_00030",
+      "in_degree": 30,
+      "out_degree": 27,
+      "unique_senders": 30,
+      "unique_receivers": 27,
+      "total_inflow": 80692.13,
+      "total_outflow": 674259.48,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 30 distinct senders",
+        "Rapid fund dispersion: 27 outgoing transfer targets"
+      ]
+    },
+    "cust_00228": {
+      "wallet_id": "cust_00228",
+      "in_degree": 15,
+      "out_degree": 45,
+      "unique_senders": 15,
+      "unique_receivers": 45,
+      "total_inflow": 27967.27,
+      "total_outflow": 112340.57,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 15 distinct senders",
+        "Rapid fund dispersion: 45 outgoing transfer targets"
+      ]
+    },
+    "cust_00970": {
+      "wallet_id": "cust_00970",
+      "in_degree": 29,
+      "out_degree": 34,
+      "unique_senders": 29,
+      "unique_receivers": 34,
+      "total_inflow": 93740.31,
+      "total_outflow": 89854.44,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 29 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.96)"
+      ]
+    },
+    "cust_02209": {
+      "wallet_id": "cust_02209",
+      "in_degree": 14,
+      "out_degree": 27,
+      "unique_senders": 14,
+      "unique_receivers": 27,
+      "total_inflow": 43130.51,
+      "total_outflow": 65624.67,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 14 distinct senders",
+        "Rapid fund dispersion: 27 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.66)"
+      ]
+    },
+    "agent_0031": {
+      "wallet_id": "agent_0031",
+      "in_degree": 124,
+      "out_degree": 0,
+      "unique_senders": 124,
+      "unique_receivers": 0,
+      "total_inflow": 355324.16,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 124 distinct senders"
+      ]
+    },
+    "cust_01659": {
+      "wallet_id": "cust_01659",
+      "in_degree": 33,
+      "out_degree": 41,
+      "unique_senders": 33,
+      "unique_receivers": 41,
+      "total_inflow": 60344.45,
+      "total_outflow": 85816.08,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 33 distinct senders",
+        "Rapid fund dispersion: 41 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.70)"
+      ]
+    },
+    "cust_01862": {
+      "wallet_id": "cust_01862",
+      "in_degree": 30,
+      "out_degree": 44,
+      "unique_senders": 30,
+      "unique_receivers": 44,
+      "total_inflow": 76579.66,
+      "total_outflow": 260462.2,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 30 distinct senders",
+        "Rapid fund dispersion: 44 outgoing transfer targets"
+      ]
+    },
+    "cust_00467": {
+      "wallet_id": "cust_00467",
+      "in_degree": 24,
+      "out_degree": 42,
+      "unique_senders": 24,
+      "unique_receivers": 42,
+      "total_inflow": 52212.04,
+      "total_outflow": 105627.38,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 24 distinct senders",
+        "Rapid fund dispersion: 42 outgoing transfer targets"
+      ]
+    },
+    "agent_0068": {
+      "wallet_id": "agent_0068",
+      "in_degree": 116,
+      "out_degree": 0,
+      "unique_senders": 116,
+      "unique_receivers": 0,
+      "total_inflow": 326882.84,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 116 distinct senders"
+      ]
+    },
+    "cust_01914": {
+      "wallet_id": "cust_01914",
+      "in_degree": 11,
+      "out_degree": 44,
+      "unique_senders": 11,
+      "unique_receivers": 44,
+      "total_inflow": 17131.85,
+      "total_outflow": 117600.86,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 11 distinct senders",
+        "Rapid fund dispersion: 44 outgoing transfer targets"
+      ]
+    },
+    "cust_00481": {
+      "wallet_id": "cust_00481",
+      "in_degree": 20,
+      "out_degree": 36,
+      "unique_senders": 20,
+      "unique_receivers": 36,
+      "total_inflow": 32066.35,
+      "total_outflow": 173702.96,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 20 distinct senders",
+        "Rapid fund dispersion: 36 outgoing transfer targets"
+      ]
+    },
+    "cust_01083": {
+      "wallet_id": "cust_01083",
+      "in_degree": 22,
+      "out_degree": 40,
+      "unique_senders": 22,
+      "unique_receivers": 40,
+      "total_inflow": 54053.25,
+      "total_outflow": 84466.5,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 22 distinct senders",
+        "Rapid fund dispersion: 40 outgoing transfer targets"
+      ]
+    },
+    "agent_0261": {
+      "wallet_id": "agent_0261",
+      "in_degree": 96,
+      "out_degree": 0,
+      "unique_senders": 96,
+      "unique_receivers": 0,
+      "total_inflow": 247340.58,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 96 distinct senders"
+      ]
+    },
+    "cust_02177": {
+      "wallet_id": "cust_02177",
+      "in_degree": 26,
+      "out_degree": 38,
+      "unique_senders": 26,
+      "unique_receivers": 38,
+      "total_inflow": 58452.48,
+      "total_outflow": 90270.28,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 26 distinct senders",
+        "Rapid fund dispersion: 38 outgoing transfer targets"
+      ]
+    },
+    "cust_01694": {
+      "wallet_id": "cust_01694",
+      "in_degree": 23,
+      "out_degree": 29,
+      "unique_senders": 23,
+      "unique_receivers": 29,
+      "total_inflow": 37652.93,
+      "total_outflow": 13414.87,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 29 outgoing transfer targets"
+      ]
+    },
+    "cust_01540": {
+      "wallet_id": "cust_01540",
+      "in_degree": 21,
+      "out_degree": 37,
+      "unique_senders": 21,
+      "unique_receivers": 37,
+      "total_inflow": 26331.29,
+      "total_outflow": 114396.25,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 21 distinct senders",
+        "Rapid fund dispersion: 37 outgoing transfer targets"
+      ]
+    },
+    "agent_0247": {
+      "wallet_id": "agent_0247",
+      "in_degree": 119,
+      "out_degree": 0,
+      "unique_senders": 119,
+      "unique_receivers": 0,
+      "total_inflow": 405307.17,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 119 distinct senders"
+      ]
+    },
+    "cust_00276": {
+      "wallet_id": "cust_00276",
+      "in_degree": 18,
+      "out_degree": 34,
+      "unique_senders": 18,
+      "unique_receivers": 34,
+      "total_inflow": 28337.89,
+      "total_outflow": 91625.47,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 34 outgoing transfer targets"
+      ]
+    },
+    "agent_0018": {
+      "wallet_id": "agent_0018",
+      "in_degree": 106,
+      "out_degree": 0,
+      "unique_senders": 106,
+      "unique_receivers": 0,
+      "total_inflow": 295981.54,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 106 distinct senders"
+      ]
+    },
+    "cust_01989": {
+      "wallet_id": "cust_01989",
+      "in_degree": 17,
+      "out_degree": 47,
+      "unique_senders": 17,
+      "unique_receivers": 47,
+      "total_inflow": 60869.79,
+      "total_outflow": 81023.71,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 17 distinct senders",
+        "Rapid fund dispersion: 47 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.75)"
+      ]
+    },
+    "cust_01534": {
+      "wallet_id": "cust_01534",
+      "in_degree": 20,
+      "out_degree": 37,
+      "unique_senders": 20,
+      "unique_receivers": 37,
+      "total_inflow": 47214.83,
+      "total_outflow": 85161.88,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 20 distinct senders",
+        "Rapid fund dispersion: 37 outgoing transfer targets"
+      ]
+    },
+    "agent_0166": {
+      "wallet_id": "agent_0166",
+      "in_degree": 95,
+      "out_degree": 0,
+      "unique_senders": 95,
+      "unique_receivers": 0,
+      "total_inflow": 282891.41,
+      "total_outflow": 0,
+      "risk_score": 45.0,
+      "is_mule_suspect": false,
+      "reasons": [
+        "High fan-in: received funds from 95 distinct senders"
+      ]
+    },
+    "cust_00082": {
+      "wallet_id": "cust_00082",
+      "in_degree": 20,
+      "out_degree": 35,
+      "unique_senders": 20,
+      "unique_receivers": 35,
+      "total_inflow": 53464.46,
+      "total_outflow": 175139.76,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 20 distinct senders",
+        "Rapid fund dispersion: 35 outgoing transfer targets"
+      ]
+    },
+    "cust_00825": {
+      "wallet_id": "cust_00825",
+      "in_degree": 16,
+      "out_degree": 29,
+      "unique_senders": 16,
+      "unique_receivers": 29,
+      "total_inflow": 48227.49,
+      "total_outflow": 64578.01,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 16 distinct senders",
+        "Rapid fund dispersion: 29 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.75)"
+      ]
+    },
+    "cust_00901": {
+      "wallet_id": "cust_00901",
+      "in_degree": 26,
+      "out_degree": 26,
+      "unique_senders": 26,
+      "unique_receivers": 26,
+      "total_inflow": 76630.78,
+      "total_outflow": 33243.18,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 26 distinct senders",
+        "Rapid fund dispersion: 26 outgoing transfer targets"
+      ]
+    },
+    "cust_02446": {
+      "wallet_id": "cust_02446",
+      "in_degree": 18,
+      "out_degree": 46,
+      "unique_senders": 18,
+      "unique_receivers": 46,
+      "total_inflow": 35184.55,
+      "total_outflow": 120505.55,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 46 outgoing transfer targets"
+      ]
+    },
+    "cust_01858": {
+      "wallet_id": "cust_01858",
+      "in_degree": 18,
+      "out_degree": 33,
+      "unique_senders": 18,
+      "unique_receivers": 33,
+      "total_inflow": 40568.11,
+      "total_outflow": 50256.0,
+      "risk_score": 95.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 18 distinct senders",
+        "Rapid fund dispersion: 33 outgoing transfer targets",
+        "Transit hub pattern: high flow-through ratio (0.81)"
+      ]
+    },
+    "cust_01032": {
+      "wallet_id": "cust_01032",
+      "in_degree": 23,
+      "out_degree": 32,
+      "unique_senders": 23,
+      "unique_receivers": 32,
+      "total_inflow": 46762.58,
+      "total_outflow": 170431.86,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 23 distinct senders",
+        "Rapid fund dispersion: 32 outgoing transfer targets"
+      ]
+    },
+    "cust_02130": {
+      "wallet_id": "cust_02130",
+      "in_degree": 15,
+      "out_degree": 38,
+      "unique_senders": 15,
+      "unique_receivers": 38,
+      "total_inflow": 23205.88,
+      "total_outflow": 99041.19,
+      "risk_score": 70.0,
+      "is_mule_suspect": true,
+      "reasons": [
+        "High fan-in: received funds from 15 distinct senders",
+        "Rapid fund dispersion: 38 outgoing transfer targets"
+      ]
+    }
+  }
+}

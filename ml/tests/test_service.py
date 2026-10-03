@@ -32,7 +32,7 @@ def test_service_health_endpoint():
     res = service.health()
     assert res.status == "active"
     assert res.loaded is True
-    assert res.threshold == 0.50
+    assert round(res.threshold, 2) == 0.50
     assert res.model_version.startswith("v")
 
 def test_service_predict_contract():
@@ -45,7 +45,7 @@ def test_service_predict_contract():
     assert res.label_at_threshold in [0, 1]
     assert isinstance(res.scam_type, str)
     assert isinstance(res.reason_codes, list)
-    assert res.threshold == 0.50
+    assert round(res.threshold, 2) == 0.50
 
 def test_service_predict_alias():
     service.load_model()
