@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "TakaBachao ScamShield ML Service",
-    "description": "Inference API providing TF-IDF char n-gram classification, probability calibration, scam type prediction, and n-gram attribution reason codes.",
+    "title": "TakaBondhu ML Service",
+    "description": "Upay AI Financial-Safety Microservice: Real-time transaction scoring, message intelligence, behavioral anomaly detection, mule network discovery, and agent risk benchmarking.",
     "version": "1.0.0"
   },
   "paths": {
@@ -65,7 +65,6 @@
     "/predict": {
       "post": {
         "summary": "Predict Alias",
-        "description": "Alias for /v1/predict",
         "operationId": "predict_alias_predict_post",
         "requestBody": {
           "content": {
@@ -85,6 +84,192 @@
                 "schema": {
                   "$ref": "#/components/schemas/PredictResponse"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyze-message": {
+      "post": {
+        "summary": "Analyze Message Alias",
+        "operationId": "analyze_message_alias_v1_analyze_message_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/score-transaction": {
+      "post": {
+        "summary": "Score Transaction Endpoint",
+        "operationId": "score_transaction_endpoint_v1_score_transaction_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Payload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/screen": {
+      "post": {
+        "summary": "Screen Endpoint",
+        "operationId": "screen_endpoint_v1_screen_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionScreenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mule-network/{wallet}": {
+      "get": {
+        "summary": "Mule Network Endpoint",
+        "operationId": "mule_network_endpoint_v1_mule_network__wallet__get",
+        "parameters": [
+          {
+            "name": "wallet",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Wallet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agents/{agent_id}/risk": {
+      "get": {
+        "summary": "Agent Risk Endpoint",
+        "operationId": "agent_risk_endpoint_v1_agents__agent_id__risk_get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -129,26 +314,24 @@
           },
           "model_version": {
             "type": "string",
-            "title": "Model Version"
+            "title": "Model Version",
+            "default": "v1.0.0-char-wb-lr"
           },
           "threshold": {
             "type": "number",
-            "title": "Threshold"
+            "title": "Threshold",
+            "default": 0.5
+          },
+          "models": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Models",
+            "default": {}
           },
           "sklearn_version": {
             "type": "string",
-            "title": "Sklearn Version"
-          },
-          "feature_count": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Feature Count"
+            "title": "Sklearn Version",
+            "default": ""
           },
           "message": {
             "anyOf": [
@@ -165,10 +348,7 @@
         "type": "object",
         "required": [
           "status",
-          "loaded",
-          "model_version",
-          "threshold",
-          "sklearn_version"
+          "loaded"
         ],
         "title": "HealthResponse"
       },
@@ -251,6 +431,45 @@
           "contribution"
         ],
         "title": "ReasonCode"
+      },
+      "TransactionScreenRequest": {
+        "properties": {
+          "transaction": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Transaction",
+            "description": "Transaction payload containing amount, sender, receiver, etc."
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message",
+            "description": "Optional associated SMS or chat message"
+          },
+          "session_context": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transaction"
+        ],
+        "title": "TransactionScreenRequest"
       },
       "ValidationError": {
         "properties": {

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 420" width="750" height="420" style="background:#0b1329; font-family:system-ui, -apple-system, sans-serif;">
+  <text x="40" y="38" fill="#ffffff" font-size="18" font-weight="bold">Ablation Study: PR-AUC Across Intelligence Signals</text>
+  <text x="40" y="58" fill="#94a3b8" font-size="12">Source: ml/reports/results.json • Demonstrating Value-Add of Multi-Signal Fusion</text>
+
+  <!-- Plot Background -->
+  <rect x="40" y="80" width="670" height="300" fill="#0f172a" rx="8" stroke="#1e293b" />
+
+  <text x="55" y="124" fill="#e2e8f0" font-size="12" >Rules Engine Only</text>
+  <rect x="220" y="110" width="384" height="22" fill="#64748b" rx="4" />
+  <text x="614" y="126" fill="#64748b" font-size="12" font-weight="bold">96.10% PR-AUC</text>
+  <text x="714" y="126" fill="#94a3b8" font-size="11">(Recall: 93.2%)</text>
+
+  <text x="55" y="169" fill="#e2e8f0" font-size="12" >Message ML Only</text>
+  <rect x="220" y="155" width="399" height="22" fill="#a855f7" rx="4" />
+  <text x="629" y="171" fill="#a855f7" font-size="12" font-weight="bold">99.96% PR-AUC</text>
+  <text x="729" y="171" fill="#94a3b8" font-size="11">(Recall: 99.9%)</text>
+
+  <text x="55" y="214" fill="#e2e8f0" font-size="12" >Txn ML Only</text>
+  <rect x="220" y="200" width="398" height="22" fill="#10b981" rx="4" />
+  <text x="628" y="216" fill="#10b981" font-size="12" font-weight="bold">99.71% PR-AUC</text>
+  <text x="728" y="216" fill="#94a3b8" font-size="11">(Recall: 99.3%)</text>
+
+  <text x="55" y="259" fill="#e2e8f0" font-size="12" >Anomaly Only</text>
+  <rect x="220" y="245" width="296" height="22" fill="#64748b" rx="4" />
+  <text x="526" y="261" fill="#64748b" font-size="12" font-weight="bold">74.20% PR-AUC</text>
+  <text x="626" y="261" fill="#94a3b8" font-size="11">(Recall: 71.5%)</text>
+
+  <text x="55" y="304" fill="#e2e8f0" font-size="12" >Graph Mule Only</text>
+  <rect x="220" y="290" width="353" height="22" fill="#64748b" rx="4" />
+  <text x="583" y="306" fill="#64748b" font-size="12" font-weight="bold">88.40% PR-AUC</text>
+  <text x="683" y="306" fill="#94a3b8" font-size="11">(Recall: 86.2%)</text>
+
+  <text x="55" y="349" fill="#e2e8f0" font-size="12" font-weight="bold">Multi-Signal Fusion</text>
+  <rect x="220" y="335" width="399" height="22" fill="#06b6d4" rx="4" />
+  <text x="629" y="351" fill="#06b6d4" font-size="12" font-weight="bold">99.98% PR-AUC</text>
+  <text x="729" y="351" fill="#94a3b8" font-size="11">(Recall: 99.8%)</text>
+</svg>

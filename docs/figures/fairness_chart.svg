@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 380" width="700" height="380" style="background:#0b1329; font-family:system-ui, -apple-system, sans-serif;">
+  <text x="40" y="38" fill="#ffffff" font-size="18" font-weight="bold">Empirical Fairness Audit Across Languages (Held-Out Benchmark)</text>
+  <text x="40" y="58" fill="#94a3b8" font-size="12">Source: ml/reports/results.json • Max FPR Disparity: 2.22% (Threshold: &lt;= 5.0%)</text>
+
+  <rect x="40" y="80" width="620" height="260" fill="#0f172a" rx="8" stroke="#1e293b" />
+
+  <!-- Columns: Bengali, Banglish, English -->
+  <!-- Bengali -->
+  <text x="140" y="115" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">Bengali (বাংলা)</text>
+  <text x="140" y="132" fill="#94a3b8" font-size="11" text-anchor="middle">900 samples (450/450)</text>
+  <!-- Recall 99.78% -->
+  <rect x="90" y="150" width="40" height="150" fill="#10b981" rx="4" />
+  <text x="110" y="142" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle">99.8%</text>
+  <!-- FPR 0.22% -->
+  <rect x="145" y="296" width="40" height="4" fill="#f59e0b" rx="2" />
+  <text x="165" y="290" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">0.2%</text>
+
+  <!-- Banglish -->
+  <text x="350" y="115" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">Banglish</text>
+  <text x="350" y="132" fill="#94a3b8" font-size="11" text-anchor="middle">898 samples (448/450)</text>
+  <!-- Recall 100.0% -->
+  <rect x="300" y="150" width="40" height="150" fill="#10b981" rx="4" />
+  <text x="320" y="142" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle">100.0%</text>
+  <!-- FPR 0.00% -->
+  <rect x="355" y="298" width="40" height="2" fill="#f59e0b" rx="1" />
+  <text x="375" y="290" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">0.0%</text>
+
+  <!-- English -->
+  <text x="550" y="115" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">English (en)</text>
+  <text x="550" y="132" fill="#94a3b8" font-size="11" text-anchor="middle">901 samples (450/451)</text>
+  <!-- Recall 100.0% -->
+  <rect x="500" y="150" width="40" height="150" fill="#10b981" rx="4" />
+  <text x="520" y="142" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle">100.0%</text>
+  <!-- FPR 2.22% -->
+  <rect x="555" y="270" width="40" height="30" fill="#f59e0b" rx="4" />
+  <text x="575" y="262" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">2.2%</text>
+
+  <!-- Ground Line -->
+  <line x1="70" y1="300" x2="630" y2="300" stroke="#334155" stroke-width="2" />
+
+  <!-- Legend -->
+  <rect x="430" y="315" width="12" height="12" fill="#10b981" rx="2" />
+  <text x="448" y="325" fill="#cbd5e1" font-size="11">Fraud Recall (% caught)</text>
+  <rect x="560" y="315" width="12" height="12" fill="#f59e0b" rx="2" />
+  <text x="578" y="325" fill="#cbd5e1" font-size="11">False Positive Rate (%)</text>
+</svg>

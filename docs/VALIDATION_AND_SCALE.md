@@ -1,114 +1,141 @@
-# Validation & Scale Strategy: Path from POC to Upay Core Integration
+# TakaBondhu — Post-Hackathon Validation & Enterprise Scaling Strategy
 
-> **AI Hackathon 2026 (DIU CPC x upay)**  
-> **Track 01: Trust & Risk**
-
----
-
-## 1. Executive Summary
-
-ScamShield is designed from day one as an embeddable, low-latency microservice architecture rather than a detached chatbot. This document outlines how upay can safely validate, govern, and scale this technology from a synthetic local prototype to an enterprise transaction screening engine.
+> **Product:** TakaBondhu (টাকাবন্ধু)  
+> **Framework:** Section 13 ("From Project to Product") — AI Hackathon 2026 Guidelines  
+> **Target System:** Upay Core Transaction Engine & Fraud Operations Infrastructure  
 
 ---
 
-## 2. Phase 1: Shadow-Mode Validation on Governed Upay Data
+## 1. Post-Hackathon Development Pathway
 
-Before any automated intervention touches an end user, the system must undergo **Shadow Mode Deployment**:
+As outlined in the official hackathon playbook, moving from a hackathon prototype to a deployed banking capability requires a disciplined, multi-stage governance pipeline:
 
 ```
-[Upay App / Core Switch] 
-          │
-          ├──▶ [Core Payment Processing] ──▶ (Transaction Completes Normally)
-          │
-          └──▶ [Asynchronous Mirror Stream]
-                       │
-                       ▼
-             [POST /v1/screen] (Shadow Mode)
-                       │
-                       ▼
-             [Log Risk Score & Case Card]
-                       │
-                       ▼
-             [Offline Comparison with Reported Fraud Cases]
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│ 1. Competition  │ ───►  │ 2. Tech Review  │ ───►  │ 3. Bus. Review  │
+│ Working MVP +   │       │ Architecture &  │       │ ROI Validation  │
+│ Evidence Dossier│       │ Security Audit  │       │ & Economics     │
+└─────────────────┘       └─────────────────┘       └─────────────────┘
+                                                             │
+                                                             ▼
+┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+│ 6. Pilot Prod   │ ◄───  │  5. Live POC    │ ◄───  │ 4. Controlled   │
+│ Gradual Rollout │       │ Sandboxed Staff │       │ Validation      │
+│ (5% Volume)     │       │ Testing         │       │ (Shadow Mode)   │
+└─────────────────┘       └─────────────────┘       └─────────────────┘
 ```
 
-### Key Objectives in Shadow Mode:
-1. **Zero Customer Impact:** The transaction flow completes without latency or friction; ScamShield runs asynchronously in the background.
-2. **Empirical Precision at Review Capacity:**
-   - In production, fraud operations teams have fixed human review capacity (e.g., 500 cases per analyst per shift).
-   - In shadow mode, we measure **Precision @ Top-K Capacity**: What percentage of the top $K$ highest-scoring transactions correspond to actual reported complaints or confirmed fraudulent mule accounts?
-3. **Prevalence Adjustment:**
-   - In our synthetic test set, scams represent ~50% of the sample. In real-world MFS networks, true fraudulent attempts represent $\le 1\%$ to $5\%$ of total messages.
-   - Shadow mode allows calibrating the threshold $T$ so that false alarm rates remain operationally sustainable ($\le 0.5\%$ of clean volume).
-
 ---
 
-## 3. What Changes When Moving from Synthetic Data to Real Data?
+## 2. Phase 1: 30-Day Passive Shadow Mode Plan
 
-| Dimension | Synthetic Prototype (Current) | Production on Real Governed Upay Data |
-|:----------|:------------------------------|:---------------------------------------|
-| **Data Source** | Generated templates with slot-filled noise | Real transaction memos, customer-support chats, SMS complaints |
-| **Data Privacy** | Labeled `source="synthetic"` | Anonymized & pseudonymized under Bangladesh Data Protection Act & BB regulations |
-| **Noise Profile** | Programmatic typos, emoji, spacing errors | Genuine colloquial slang, evolving regional dialects (Sylheti, Chittagonian, etc.) |
-| **Multimodal Signals** | Text only | Text + Transaction Metadata (account age, velocity, new device login, geographic hop) |
-| **Labeling Feedback** | Static ground truth | Active analyst feedback loops from resolved dispute tickets |
+Before any automated system influences live financial transactions, it must prove its stability and calibration in **Shadow Mode**:
 
----
-
-## 4. Operational Analyst Feedback Loop (HITL)
-
-As demonstrated in the local `/review` UI:
-1. **Flagged Queue:** Any transaction or interaction with `riskScore >= 50` or `needs_human_review = true` is placed in the Analyst Review Queue.
-2. **Decision Logging:** The analyst reviews the deterministic case card, inspects the verbatim evidence, and records:
-   - **Confirm Scam:** Account flagged across agent network; transaction reversed if pending.
-   - **False Alarm:** Benign pattern noted; feedback recorded.
-   - **Escalate:** Routed to senior AML / legal fraud compliance.
-3. **Retraining Governance (No Auto-Retraining):**
-   - Decisions are dumped via the export script to a governed CSV (`reviewed_cases_export.csv`).
-   - Retraining is strictly manual, auditable, and requires a shadow validation run before model promotion to prevent adversarial data poisoning.
-
----
-
-## 5. Drift Monitoring & Ongoing Calibration
-
-In digital financial fraud, attackers adapt within weeks (concept drift and covariate shift). Production governance requires:
-1. **Population Stability Index (PSI):** Monitor weekly shift in incoming text length and character n-gram distribution.
-2. **Score Distribution Tracking:** Alert if the percentage of messages flagged as HIGH/CRITICAL jumps beyond $3\sigma$ of historical baseline.
-3. **Analyst Agreement Rate:** Track inter-rater reliability between ML flags and final analyst verdicts.
-
----
-
-## 6. The Integration Blueprint: `POST /v1/screen`
-
-The integration hook in `backend/server.js` and `backend/integration/upayAdapter.js` provides the exact contract for upay engineering:
-
-```http
-POST /v1/screen HTTP/1.1
-Host: scamshield.upay.internal
-Content-Type: application/json
-
-{
-  "message_text": "জরুরি নোটিশ: আপনার একাউন্ট স্থগিত করা হয়েছে। অবিলম্বে পিন পাঠান।",
-  "recipient_is_new": true,
-  "amount": 15000
-}
+```
+[Upay Core Transaction Switch]
+              │
+              ├── (Synchronous Ledger Commit - Normal Path)
+              │
+              └──► [Async Kafka Event Queue]
+                           │
+                           ▼
+                 [TakaBondhu Shadow Worker]
+                 - Evaluates Multi-Signal Model
+                 - Records Risk Score & Rule Trace
+                 - Zero Intervention on Live Money
+                           │
+                           ▼
+                 [Shadow Evaluation Store]
+                 (Compare Predictions vs. Later Customer Disputes)
 ```
 
-### JSON Response:
-```json
-{
-  "screening_id": "scr-m3k8a-9f42",
-  "allowed": false,
-  "friction": "hold_for_human_review",
-  "risk_score": 86,
-  "risk_level": "CRITICAL",
-  "needs_human_review": true,
-  "case_card": {
-    "what_happened": "Urgent account suspension or NID block threat demanding immediate compliance.",
-    "why_risky": "Triggered 2 deterministic security rule(s): Account Threat, Credential Harvesting. ML model predicts 92.4% fraud probability.",
-    "upay_action": "RECOMMENDATION (Human Approval Required): Promptly display high-friction red warning banner to user; temporarily hold outgoing transfers to target number pending human fraud-ops review; flag target phone number across agent network."
-  }
-}
+### Objectives & Success Criteria:
+1. **Zero Impact on Production SLA:** The shadow evaluation is consumed asynchronously via Apache Kafka / RabbitMQ. Live transaction commits are never delayed.
+2. **Real-World Threshold Calibration:** Validate the optimal operating threshold ($T = 0.50$) against real-world customer dispute filings and confirmed fraud cases.
+3. **Data Drift Detection:** Compare distribution shifts between our synthetic training baseline and live production telemetry using Population Stability Index (PSI).
+4. **Target Criteria to Proceed to Pilot:**
+   - Real-world False Positive Rate $\le 0.10\%$.
+   - Real-world Fraud Interception Recall $\ge 95\%$.
+   - Zero infrastructure crashes over 30 consecutive days.
+
+---
+
+## 3. Integration Architecture with Upay Core Systems
+
+TakaBondhu is designed to slot into modern MFS core transaction architectures:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Customer as Upay Mobile App
+    participant Switch as Upay Transaction Switch
+    participant TB as TakaBondhu Gateway (:5000)
+    participant ML as TakaBondhu ML Service (:8001)
+    participant Core as Core Banking Ledger
+
+    Customer->>Switch: Initiates Send Money (Amount, Recipient, Device)
+    Switch->>TB: POST /v1/screen (mTLS + JWT, x-idempotency-key)
+    TB->>ML: POST /v1/screen (Internal RPC)
+    ML-->>TB: Composite Risk Score (3.8ms) + Case Card
+    
+    alt Risk Score < 50 (Low Risk)
+        TB-->>Switch: Recommendation: ALLOW
+        Switch->>Core: Commit Ledger Immediately
+        Switch-->>Customer: Transaction Success
+    else Risk Score 50 - 74 (Medium Risk)
+        TB-->>Switch: Recommendation: SOFT_FRICTION
+        Switch-->>Customer: Display In-App Safety Advisory + 10s Pause
+        Customer->>Switch: User Acknowledges & Confirms
+        Switch->>Core: Commit Ledger
+    else Risk Score >= 75 (High Risk)
+        TB-->>Switch: Recommendation: HOLD_FOR_REVIEW
+        Switch->>Core: Place Temporary Escrow Hold (5 min SLA)
+        TB->>TB: Route Case Card to Fraud Ops Console
+    end
 ```
 
-This clean JSON contract decouples risk scoring from the upay transactional core, allowing instant rollout across upay mobile apps, agent USSD gateways, and customer support portals.
+### Enterprise Security & Integration Checklist:
+- **Mutual TLS (mTLS):** Enforce strict client certificate authentication between Upay core transaction switches and TakaBondhu API nodes.
+- **JWT Claims & Scope Validation:** Verify cryptographically signed tokens containing role claims (`mfs_switch`, `analyst`, `compliance_admin`).
+- **Idempotency Protection:** Enforced via `UpayTransactionAdapter` using Redis-backed SHA-256 key deduplication (TTL: 120 seconds).
+- **Hardware Security Module (HSM):** In production, hash chains in `auditLog.js` will be anchored to Upay's existing HSM or AWS CloudHSM.
+
+---
+
+## 4. Throughput, Scaling, & Hardware Economics
+
+All performance metrics below derive from our empirical CPU latency benchmarks ([ml/reports/results.json](../ml/reports/results.json)):
+
+### Single-Node Benchmark (Standard 4-Core Laptop CPU, No GPU):
+- **Message Risk Classification:** $0.65\text{ ms}$ (p50) / $1.15\text{ ms}$ (p95)
+- **Transaction GBDT Classification:** $1.20\text{ ms}$ (p50) / $2.10\text{ ms}$ (p95)
+- **Full Multi-Signal Pipeline:** **$3.80\text{ ms}$ (p50)** / **$7.40\text{ ms}$ (p95)**
+- **Single-Core Throughput:** $\sim 260\text{ transactions/second}$ per CPU core.
+
+### Production Capacity Sizing for 15,000,000 Monthly Transactions:
+- **Average Traffic:** $5.8\text{ transactions/second}$.
+- **Peak Hour Surge (5x):** $29\text{ transactions/second}$.
+- **Festival / Eid Surge (15x):** $87\text{ transactions/second}$.
+- **Required Production Sizing:**
+  - **Only 2 Standard Kubernetes Pods** (2 vCPU, 4GB RAM each) with an active-passive load balancer.
+  - Estimated Cloud Infrastructure Cost: **$80–$150 USD/month** on Google Cloud Run or AWS ECS.
+  - Zero expensive GPU instances required!
+
+---
+
+## 5. Data Governance, Ethics, & Regulatory Alignment
+
+*(Note: Regulatory considerations must be formally verified with Upay Legal & Compliance teams prior to live deployment).*
+
+1. **Customer Consent & Transparency:**
+   - Pre-send soft friction warnings operate under Upay's standard Terms of Service for customer account protection.
+   - The UI clearly labels when an analysis is algorithmic versus advisory.
+2. **Customer Appeal & Recourse Mechanism:**
+   - If an innocent customer has a high-risk transfer held for review, they can tap an in-app **"Request Immediate Helpline Review"** button connected to Upay Call Center (16268).
+   - SLA for human analyst queue review: **$\le 5\text{ minutes}$**.
+3. **BFIU & Bangladesh Bank Compliance:**
+   - All agent structuring patterns ($Z \ge 3.0$) and high-value mule clusters automatically generate formatted draft Suspicious Transaction Reports (STRs).
+   - TakaBondhu strictly adheres to the principle that AI **never** submits reports autonomously; a certified compliance officer must sign off on any regulatory filing.
+4. **Data Minimization & Retention:**
+   - Redacted PII is scrubbed before processing.
+   - Transaction feature vectors are stored for 90 days in compliance with anti-money laundering (AML) audit trail standards.
