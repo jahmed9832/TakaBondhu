@@ -100,6 +100,9 @@ async function dev() {
     const line = d.toString().trim();
     if (line) console.error(`\x1b[32m[BACKEND]\x1b[0m ${line}`);
   });
+  backendProc.on('error', (err) => {
+    console.error(`\x1b[31m[BACKEND ERROR]\x1b[0m`, err.message);
+  });
 
   // 3. Frontend Service
   console.log('🎨 [3/3] Starting React + Vite Frontend (:5173)...');
@@ -128,27 +131,46 @@ async function dev() {
     const line = d.toString().trim();
     if (line) console.error(`\x1b[35m[FRONTEND]\x1b[0m ${line}`);
   });
+  frontendProc.on('error', (err) => {
+    console.error(`\x1b[31m[FRONTEND ERROR]\x1b[0m`, err.message);
+  });
 
-  // 4. Voice Agent Service (Auto-started in background)
+  // 4. Voice Agent Service (Built-in Autonomous Voice active on Express :5000; LiveKit Cloud worker is optional)
   const voiceAgentScript = path.join(BACKEND_DIR, 'voice-agent', 'agent.js');
-  if (fs.existsSync(voiceAgentScript)) {
-    console.log('🎙️ [4/4] Starting Voice AI Agent Worker (:8089)...');
-    const voiceProc = spawn('node', ['--max-old-space-size=512', 'voice-agent/agent.js', 'start'], {
-      cwd: BACKEND_DIR,
-      stdio: ['ignore', 'pipe', 'pipe']
-    });
-    children.push(voiceProc);
+  const shouldStartLiveKitWorker = process.env.START_VOICE_WORKER === 'true';
 
-    voiceProc.stdout.on('data', (d) => {
-      const line = d.toString().trim();
-      if (line) console.log(`\x1b[34m[VOICE]\x1b[0m ${line}`);
-    });
-    voiceProc.stderr.on('data', (d) => {
-      const line = d.toString().trim();
-      if (line && !line.includes('Missing required LiveKit') && !line.includes('wmic') && !line.includes('failed to check supervised process')) {
-        console.error(`\x1b[34m[VOICE]\x1b[0m ${line}`);
-      }
-    });
+  if (fs.existsSync(voiceAgentScript) && shouldStartLiveKitWorker) {
+    console.log('🎙️ [4/4] Starting LiveKit Cloud Voice AI Worker (:8089)...');
+    try {
+      const voiceProc = spawn('node', ['--max-old-space-size=512', 'voice-agent/agent.js', 'start'], {
+        cwd: BACKEND_DIR,
+        stdio: ['ignore', 'pipe', 'pipe']
+      });
+      children.push(voiceProc);
+
+      voiceProc.stdout.on('data', (d) => {
+        const line = d.toString().trim();
+        if (line) console.log(`\x1b[34m[VOICE]\x1b[0m ${line}`);
+      });
+      voiceProc.stderr.on('data', (d) => {
+        const line = d.toString().trim();
+        if (line && !line.includes('Missing required LiveKit') && !line.includes('wmic') && !line.includes('failed to check supervised process')) {
+          console.error(`\x1b[34m[VOICE]\x1b[0m ${line}`);
+        }
+      });
+      voiceProc.on('error', (err) => {
+        console.warn(`\x1b[33m[VOICE] LiveKit worker notice:\x1b[0m`, err.message);
+      });
+      voiceProc.on('exit', (code) => {
+        if (code !== 0 && code !== null) {
+          console.warn(`\x1b[33m[VOICE] Note: LiveKit Cloud worker exited (code ${code}). Autonomous Browser Voice AI remains 100% active on Express.\x1b[0m`);
+        }
+      });
+    } catch (e) {
+      console.warn(`\x1b[33m[VOICE] Could not launch LiveKit worker:\x1b[0m`, e.message);
+    }
+  } else {
+    console.log('🎙️ [4/4] Voice AI Assistant: Built-in & Autonomous (Browser + Express /api/voice/ active)');
   }
 
   console.log('\n======================================================');
@@ -156,11 +178,18 @@ async function dev() {
   console.log('   • Frontend Web App:   http://localhost:5173');
   console.log('   • Backend API:        http://localhost:5000');
   console.log('   • ML Microservice:    http://localhost:8001');
-  console.log('   • Voice AI Assistant: Built-in & Autonomous (Browser + Worker)');
+  console.log('   • Voice AI Assistant: Built-in & Autonomous (/api/voice/chat + /api/voice/tts)');
   console.log('------------------------------------------------------');
   console.log('Press Ctrl+C to stop all services.');
   console.log('======================================================\n');
+
+  // Keep event loop alive indefinitely
+  process.stdin.resume();
 }
+
+process.on('uncaughtException', (err) => {
+  console.warn('⚠️ Process caught unhandled error:', err.message);
+});
 
 dev().catch((err) => {
   console.error('Failed to start dev orchestrator:', err);
