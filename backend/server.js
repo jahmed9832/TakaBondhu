@@ -435,13 +435,32 @@ app.get(['/api/health', '/health'], async (req, res) => {
   }
 });
 
+let lastVoiceWorkerPing = 0;
+app.post(['/api/voice/worker-ping', '/v1/voice/worker-ping'], (req, res) => {
+  lastVoiceWorkerPing = Date.now();
+  return res.json({ status: 'ok', timestamp: lastVoiceWorkerPing });
+});
+
+// GET /api/voice/status
+app.get(['/api/voice/status', '/v1/voice/status'], (req, res) => {
+  const configured = Boolean(livekitUrl && livekitApiKey && livekitApiSecret);
+  const workerSeen = (Date.now() - lastVoiceWorkerPing) < 60000;
+  return res.json({
+    browserVoice: true,
+    realtime: Boolean(configured && workerSeen),
+    configured,
+    workerSeen
+  });
+});
+
 // GET /api/livekit/status
 app.get('/api/livekit/status', (req, res) => {
   try {
     const configured = Boolean(livekitUrl && livekitApiKey && livekitApiSecret);
+    const workerSeen = (Date.now() - lastVoiceWorkerPing) < 60000;
     return res.json({
       configured,
-      agentReady: configured,
+      agentReady: Boolean(configured && workerSeen),
       livekitUrlConfigured: Boolean(livekitUrl),
       voiceModel: process.env.GEMINI_VOICE_MODEL || 'gemini-3.1-flash-live-preview',
       language: 'bn (Bangla)',

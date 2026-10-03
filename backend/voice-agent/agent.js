@@ -5,6 +5,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import http from 'node:http';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 import { cli, defineAgent, voice, ServerOptions } from '@livekit/agents';
@@ -190,6 +191,43 @@ Speak aloud immediately to the user in natural, polite Bengali (বাংলা)
     }
   }
 });
+
+// Tiny HTTP health endpoint for standalone / remote host health checks
+const HEALTH_PORT = Number(process.env.VOICE_WORKER_PORT || process.env.WORKER_HEALTH_PORT || 8089);
+try {
+  const healthServer = http.createServer((req, res) => {
+    if (req.url === '/health' || req.url === '/') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok', worker: 'takabondhu-voice', uptime: process.uptime() }));
+    } else {
+      res.writeHead(404);
+      res.end();
+    }
+  });
+  healthServer.listen(HEALTH_PORT, () => {
+    console.log(`[Voice Agent Worker] Health check endpoint active on port ${HEALTH_PORT}`);
+  });
+  healthServer.on('error', (err) => {
+    console.warn('[Voice Agent Worker] Health server notice:', err.message);
+  });
+} catch (e) {
+  console.warn('[Voice Agent Worker] Could not start health server:', e.message);
+}
+
+// Background heartbeat to backend /api/voice/worker-ping
+const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
+setInterval(async () => {
+  try {
+    await fetch(`${backendUrl}/api/voice/worker-ping`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ worker: 'takabondhu-voice' }),
+      signal: AbortSignal.timeout(3000)
+    });
+  } catch {
+    // Ignore ping error if backend is offline
+  }
+}, 25000);
 
 // Run as a standalone worker CLI when invoked directly
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

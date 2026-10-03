@@ -176,6 +176,46 @@ gcloud run deploy takabondhu \
 
 ---
 
+---
+
+## 🎙️ Voice Architecture: Browser Voice & Optional Realtime Worker
+
+TakaBondhu provides a dual-tier voice architecture engineered specifically for resilient live deployments:
+
+### Tier 1: Browser Voice (Default & Universal)
+- **Zero Server RAM Footprint:** Operates completely within client browsers without consuming container memory.
+- **Natural Bangla Support:** Uses Web Speech API (`SpeechRecognition` in `bn-BD`) + `POST /api/analyze` + `speechSynthesis` with native Bangla TTS voice.
+- **Typing Fallback:** On browsers without microphone speech recognition (e.g. Firefox/iOS), an intuitive typing fallback is automatically active.
+
+### Tier 2: Realtime LiveKit AI Worker (Optional)
+The LiveKit Voice Agent is a separate realtime audio pipeline. The 512 MB free Render container does not run this worker in-container to prevent out-of-memory restarts.
+
+#### How to run the Voice Agent on a laptop for the submission video:
+1. Ensure your `backend/.env` has:
+   ```env
+   LIVEKIT_URL=wss://your-project.livekit.cloud
+   LIVEKIT_API_KEY=your_key
+   LIVEKIT_API_SECRET=your_secret
+   GEMINI_API_KEY=your_google_ai_key
+   ```
+2. Configure the exact same `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` in your Render Web Service Environment Variables.
+3. On your laptop, open a terminal and run:
+   ```bash
+   npm run voice-agent
+   ```
+4. The worker connects to your LiveKit cloud project and registers with identity `takabondhu-voice`.
+5. Open your live website: `GET /api/voice/status` will report `{ realtime: true }`, unlocking the optional LiveKit Realtime voice path!
+6. If the worker is offline, the site automatically uses **Browser Voice** with a transparent, friendly notice.
+
+#### Hosting the worker on a dedicated server (>= 1GB RAM):
+- The worker includes a built-in lightweight HTTP health check endpoint on port `8089`:
+  ```bash
+  curl http://localhost:8089/health
+  # Response: {"status":"ok","worker":"takabondhu-voice","uptime":123.4}
+  ```
+
+---
+
 ## 📋 Post-Deployment Checklist
 
 After your live URL is active:
@@ -183,8 +223,10 @@ After your live URL is active:
 2. Click through the 6 official hackathon demo scenarios in the top bar:
    - Scenario 1 (Fake Agent): Flags **CRITICAL (90/100)**.
    - Scenario 2 (OTP Harvest): Flags **CRITICAL (94/100)**.
-   - Scenario 3 (ATO Transfer): Triggers **SOFT_FRICTION** reflection pause.
+   - Scenario 3 (ATO Transfer): Triggers **HOLD_FOR_REVIEW**.
    - Scenario 4 (Mule Network Ring): Shows ego-subgraph visualization.
    - Scenario 5 (Agent Structuring): Shows peer z-score distribution.
    - Scenario 6 (Benign Advisory): Confirms **LOW (10/100)**.
-3. Copy the live URL and update `LIVE_URL` in `README.md`.
+3. Verify Voice: Test the default Browser Voice mic or typing input.
+4. Copy the live URL and update `LIVE_URL` in `README.md`.
+
