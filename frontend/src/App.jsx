@@ -143,15 +143,11 @@ export default function App() {
     if (scenario.id === 'demo-fake-agent' || scenario.id === 'demo-otp-harvest' || scenario.id === 'demo-benign-lookalike') {
       setCurrentPage('scam-shield');
       setOriginalMessage(scenario.inputText);
-      setReport(scenario.deterministicReport);
+      handleAnalyze(scenario.inputText);
       setToast({
         type: 'success',
         message: `Demo Active: ${scenario.name}`
       });
-      setTimeout(() => {
-        const resultsEl = document.getElementById('results');
-        if (resultsEl) resultsEl.scrollIntoView({ behavior: 'smooth' });
-      }, 150);
     } else if (scenario.id === 'demo-account-takeover') {
       setPreSendInitialTx(scenario.transactionData);
       setCurrentPage('pre-send');

@@ -113,12 +113,14 @@ TakaBondhu features an interactive Demo Bar at the top of the screen allowing in
 
 | Scenario | Pattern Type | Target View | Expected Invariant / Output |
 |:---|:---|:---|:---|
-| **1. Fake Agent** | Upfront fee impersonation | Screener | High Risk (88/100) • Reason: Upay official impersonation • Soft Friction |
-| **2. OTP Harvest** | Credential theft | Screener | Critical Risk (96/100) • Hold for review • PII auto-redacted |
-| **3. Account Takeover** | Unusual hour + new device | Pre-Send | Risk Score (92/100) • 10-second countdown pause triggered |
+| **1. Fake Agent** | Upfront fee impersonation | Screener | Flagged HIGH / CRITICAL • Reason: Upay official impersonation • Soft Friction |
+| **2. OTP Harvest** | Credential theft | Screener | Flagged CRITICAL • Hold for review • PII auto-redacted |
+| **3. Account Takeover** | Unusual hour + new device | Pre-Send | ATO Risk flagged • 10-second countdown pause triggered |
 | **4. Mule Ring** | Rapid fan-in / fan-out | Fraud Ops | Top Wallet `01700999001` • SVG Graph shows 12 victims $\rightarrow$ 4 agents |
 | **5. Agent Anomaly** | ৳24,900 structuring | Fraud Ops | Agent `01800999001` • Z-score $5.2$ std dev vs district peer baseline |
-| **6. Benign Notice** | Official security advisory | Screener | Low Risk (4/100) • Recommendation: ALLOW (no false alarm) |
+| **6. Benign Notice** | Official security advisory | Screener | Evaluated LOW (Safe) • Recommendation: ALLOW (no false alarm) |
+
+*(Note: Exact live scores and decisions are dynamically computed by the API; run `npm run demo:check` to inspect current output).*
 
 ---
 

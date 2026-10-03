@@ -37,7 +37,7 @@
   2. The input immediately populates with:  
      `"আসসালামু আলাইকুম, আমি উপায় প্রধান কার্যালয় থেকে বলছি... ২,৫০০ টাকা সিকিউরিটি ফি ক্যাশ-আউট করুন।"`
   3. The Risk Report card instantly expands below, displaying:
-     - **Block A: Prediction** (Risk Score: `88/100`, Level: `HIGH`, Calibrated ML: `94%`, Top N-Grams: `"উপায় প্রধান"`, `"সিকিউরিটি ফি"`).
+     - **Block A: Prediction** (Dynamic Risk Score and Level returned by API; see output of `npm run demo:check`).
      - **Block B: System Assumptions** (Prevalence: 5%, Threshold: T=50, Human-in-the-loop guarantee).
      - **Block C: AI Explanation** (*"উপায় কর্মকর্তার ভুয়া পরিচয় ব্যবহার করে অগ্রিম ফি চাওয়ার প্রতারণামূলক প্যাটার্ন সনাক্ত হয়েছে।"*).
 - **English Narration:**
