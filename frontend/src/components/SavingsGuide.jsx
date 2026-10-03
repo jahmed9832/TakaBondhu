@@ -29,12 +29,14 @@ const QUICK_PROMPTS = [
   "I want to build an emergency fund."
 ];
 
-export default function SavingsGuide() {
+export default function SavingsGuide({ lang = 'bn' }) {
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       role: 'assistant',
-      content: "স্বাগতম TakaBondhu-তে! আমি আপনার Savings Guide। আপনার আয়, খরচ ও লক্ষ্য বুঝে একটি practical savings plan তৈরি করতে সাহায্য করব। আপনি মাসে কত টাকা সঞ্চয় করতে চান, বা কীসের জন্য টাকা জমাতে চান?",
+      content: lang === 'bn' 
+        ? "স্বাগতম টাকাবন্ধুতে! আমি আপনার টাকা-পরিকল্পনা সহকারী। আপনার আয়, খরচ ও লক্ষ্য বুঝে একটি সহজ সঞ্চয় পরিকল্পনা তৈরি করতে সাহায্য করব। আপনি মাসে কত টাকা সঞ্চয় করতে চান, বা কীসের জন্য টাকা জমাতে চান?"
+        : "Welcome to TakaBondhu! I am your Savings Guide. Tell me what you're trying to save for, or how much you want to set aside each month, and I will help you build a practical plan.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -203,15 +205,17 @@ export default function SavingsGuide() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-semibold uppercase tracking-wider mb-3">
             <PiggyBank className="w-3.5 h-3.5 text-violet-400" />
-            <span>TAKABONDHU SAVINGS GUIDE</span>
+            <span>{lang === 'bn' ? 'টাকা-পরিকল্পনা' : 'Taka Plan'}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-            Build a savings plan that fits your life.
+            {lang === 'bn' ? 'আপনার জীবনের সাথে মানানসই সঞ্চয় পরিকল্পনা' : 'Build a savings plan that fits your life.'}
           </h1>
 
           <p className="mt-2.5 text-sm sm:text-base text-slate-300 max-w-xl mx-auto">
-            Tell me what you're trying to save for. I'll ask a few questions and help you build a realistic plan.
+            {lang === 'bn' 
+              ? 'কীসের জন্য টাকা জমাতে চান জানান। আপনার আয় ও খরচের হিসাব বুঝে একটি বাস্তবসম্মত পরিকল্পনা বানিয়ে দেব।' 
+              : "Tell me what you're trying to save for. I'll ask a few questions and help you build a realistic plan."}
           </p>
         </div>
 
@@ -226,10 +230,12 @@ export default function SavingsGuide() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white flex items-center space-x-2">
-                  <span>TakaBondhu Savings Guide</span>
+                  <span>{lang === 'bn' ? 'টাকাবন্ধু সঞ্চয় নির্দেশিকা' : 'TakaBondhu Savings Guide'}</span>
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 </h3>
-                <p className="text-[11px] text-slate-400">Conversational Financial Planning</p>
+                <p className="text-[11px] text-slate-400">
+                  {lang === 'bn' ? 'সহজ কথোপকথনে সঞ্চয় পরিকল্পনা' : 'Conversational Financial Planning'}
+                </p>
               </div>
             </div>
 

@@ -10,6 +10,8 @@ import {
   ToggleRight
 } from 'lucide-react';
 
+import { apiUrl } from '../apiConfig';
+
 export default function ImpactSimulator({ lang = 'bn', isLargeText = false }) {
   // 3 user inputs with plain labels
   const [attempts, setAttempts] = useState(10000);
@@ -27,7 +29,7 @@ export default function ImpactSimulator({ lang = 'bn', isLargeText = false }) {
     let isMounted = true;
     async function loadConfig() {
       try {
-        const res = await fetch('/v1/impact/config');
+        const res = await fetch(apiUrl('/v1/impact/config'));
         if (res.ok) {
           const data = await res.json();
           if (isMounted) {
@@ -41,28 +43,11 @@ export default function ImpactSimulator({ lang = 'bn', isLargeText = false }) {
           }
           return;
         }
-      } catch {
-        // Retry with backend url if running on Vite dev port
-        try {
-          const res2 = await fetch('http://127.0.0.1:5000/v1/impact/config');
-          if (res2.ok) {
-            const data = await res2.json();
-            if (isMounted) {
-              setCatchRate(data.metrics?.catch_rate_pct ?? null);
-              setYearlyRunningCost(data.metrics?.yearly_running_cost_bdt ?? null);
-              setAvgLoss(data.defaults?.avg_loss_per_scam_bdt ?? 8500);
-              setSuccessRate(data.defaults?.attempt_success_rate_pct ?? 35);
-              setAttempts(data.defaults?.scam_attempts_per_month ?? 10000);
-              setScenariosData(data.scenarios ?? null);
-              setIsLoading(false);
-            }
-            return;
-          }
-        } catch {
-          // Keep loading state until connected
-        }
+      } catch (err) {
+        console.warn('Could not load impact config from API:', err);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
-      if (isMounted) setIsLoading(false);
     }
     loadConfig();
     return () => { isMounted = false; };
