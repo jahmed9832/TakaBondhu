@@ -43,7 +43,7 @@
 
 ## Model Benchmark Summary (Derived Directly from `results.json`)
 
-- **Message Classifier:** PR-AUC = **0.9996** on held-out unseen templates.
+- **Message Classifier:** PR-AUC = **1.0000** on held-out unseen templates.
 - **Transaction Risk Classifier:** PR-AUC = **0.9804**, Recall = **98.32%**, FPR = **0.41%** on temporal holdout (`test_time`, N=58,345).
 - **Decision Fusion Engine:** PR-AUC = **0.9982**, Recall = **97.88%** on test cohort (weights tuned strictly on validation split).
 - **Fairness Audit:** Max language FPR gap = **1.68%**, Max recall gap = **2.22%**.
@@ -121,7 +121,7 @@ takabondhu/
 │   │   ├── graph_analyzer.py        # NetworkX mule network fan-in/fan-out miner
 │   │   └── agent_benchmarker.py     # Agent structuring Z-score peer benchmarker
 │   ├── models/                      # Serialized model artifacts
-│   │   ├── model.joblib             # Message classifier (PR-AUC 0.9996)
+│   │   ├── model.joblib             # Message classifier (PR-AUC 1.0000)
 │   │   ├── txn_model.joblib         # Transaction classifier (PR-AUC 0.9804)
 │   │   ├── anomaly_model.joblib     # Behavioral anomaly detector
 │   │   ├── graph_cache.json         # Ego-subgraphs for suspect mule wallets
@@ -187,12 +187,12 @@ Navigate to `http://localhost:5173` in your browser.
 
 ### Step 3: Walk Through the 6 Demo Scenarios
 Click each button on the top **Demo Bar**:
-1. **"1. Fake Agent"** $\rightarrow$ See instant high-risk detection (88/100) and plain-Bangla advice.
-2. **"2. OTP Harvest"** $\rightarrow$ See critical-risk credential theft flag (96/100) and PII redaction.
+1. **"1. Fake Agent"** $\rightarrow$ See instant high-risk detection (HIGH/CRITICAL; see output of `npm run demo:check`) and plain-Bangla advice.
+2. **"2. OTP Harvest"** $\rightarrow$ See critical-risk credential theft flag (HIGH/CRITICAL; see output of `npm run demo:check`) and PII redaction.
 3. **"3. Account Takeover"** $\rightarrow$ Switch to Pre-Send Check; see 10-second soft-friction countdown on anomalous 03:15 AM transfer.
 4. **"4. Mule Ring"** $\rightarrow$ Switch to Fraud Ops; view interactive SVG graph of wallet `01700999001` showing 12 victims fanning in and 4 agents cashing out.
 5. **"5. Agent Anomaly"** $\rightarrow$ View agent `01800999001` structuring repetitive ৳24,900 cash-outs ($Z = 5.2$ std dev).
-6. **"6. Benign Notice"** $\rightarrow$ Test official advisory; see safe Low Risk score (4/100) and zero false alarm.
+6. **"6. Benign Notice"** $\rightarrow$ Test official advisory; see safe Low Risk score (LOW; see output of `npm run demo:check`) and zero false alarm.
 
 ### Step 4: Executive Business Impact
 Click **"Impact Simulator"** in navbar; adjust sliders to see illustrative, assumption-driven unit economics (**৳20.8 Lakh / $17.4k net benefit per 100k txns**).

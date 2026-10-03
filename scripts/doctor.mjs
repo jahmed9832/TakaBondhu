@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { execFileSync } from 'child_process';
 import { ROOT_DIR, BACKEND_DIR, ML_DIR, getVenvPython, getSystemPython, isPortAvailable } from './utils.mjs';
 import { runSecretAudit } from './check-secrets.mjs';
 
@@ -137,15 +138,29 @@ async function runDoctor() {
     }
   }
 
+  // 8. Metric Consistency Audit
+  try {
+    execFileSync(process.execPath, [path.join(ROOT_DIR, 'scripts', 'verify-metrics.mjs')], { encoding: 'utf8', stdio: 'pipe' });
+    addResult('PASS', 'Metrics Consistency', 'All documentation & checklist numbers match results.json');
+  } catch (err) {
+    addResult('FAIL', 'Metrics Consistency', 'Stale numbers or metric mismatch detected! Run node scripts/verify-metrics.mjs --fix');
+  }
+
   // Print Formatted Report Table
   console.log('| Status | Component            | Details');
   console.log('|:-------|:---------------------|:-------------------------------------------------------');
   for (const r of results) {
-    const statusTag = r.status === 'PASS' ? '✅ PASS' : r.status === 'WARN' ? '⚠️  WARN' : 'ℹ️  INFO';
+    const statusTag = r.status === 'PASS' ? '✅ PASS' : r.status === 'WARN' ? '⚠️  WARN' : r.status === 'FAIL' ? '❌ FAIL' : 'ℹ️  INFO';
     const compPadded = r.component.padEnd(20, ' ');
     console.log(`| ${statusTag.padEnd(6, ' ')} | ${compPadded} | ${r.details}`);
   }
   console.log('----------------------------------------------------------------\n');
+
+  const hasFailures = results.some(r => r.status === 'FAIL');
+  if (hasFailures) {
+    console.error('❌ System Doctor found critical failure(s). Please resolve them before proceeding.\n');
+    process.exit(1);
+  }
 }
 
 runDoctor().catch((err) => {

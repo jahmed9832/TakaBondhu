@@ -12,7 +12,7 @@
 |:---|:---:|:---|:---|:---|
 | **1. Problem Relevance** | **20%** | Real MFS social engineering, ATO, and mule fraud prevention | [IDEA_ONE_PAGER.md](IDEA_ONE_PAGER.md) | `npm run demo:check` |
 | **2. AI/ML Depth** | **20%** | Multi-signal ML (Char n-grams, GBDT, IsoForest, Graph, Peer Z) | [ml/eval.py](../ml/eval.py), [ml/reports/results.md](../ml/reports/results.md) | `npm run bench` |
-| **3. Business Impact** | **20%** | ৳1,016+ Cr ($84.7M) loss prevented; 48.6k analyst hrs saved | [BUSINESS_CASE.md](BUSINESS_CASE.md), [impact/simulator.py](../impact/simulator.py) | `python impact/simulator.py` |
+| **3. Business Impact** | **20%** | ৳352.4 Crore ($29.4M) annual loss prevented; ৳20.8 Lakh net/100k txns; 48.6k analyst hrs saved | [BUSINESS_CASE.md](BUSINESS_CASE.md), [impact/simulator.py](../impact/simulator.py) | `python impact/simulator.py` |
 | **4. Prototype Quality** | **15%** | End-to-end working app with 6 deterministic demo scenarios | [frontend/src/App.jsx](../frontend/src/App.jsx), [backend/server.js](../backend/server.js) | `npm run dev` |
 | **5. Innovation** | **10%** | Pre-send soft friction, ego-subgraph visualization, Taka Plan | [PreSendChecker.jsx](../frontend/src/components/PreSendChecker.jsx) | UI Pre-Send Screen |
 | **6. Scalability & Integration** | **10%** | Sub-millisecond CPU latency, Upay core adapter, OpenAPI 3.1 | [upayAdapter.js](../backend/integration/upayAdapter.js), [openapi.json](openapi.json) | `npm test` |

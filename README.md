@@ -71,7 +71,7 @@ All numbers below are generated programmatically by running `npm run bench` and 
 | **Message Model (`model.joblib`)** | 0.9996 | 0.9997 | 99.89% | 99.55% | **0.46%** | 0.65 ms | Frozen Unseen Test (72 quarantined families) |
 | **Transaction Classifier (`txn_model.joblib`)** | 0.9804 | 0.9995 | 98.32% | 85.15% | **0.41%** | 1.20 ms | Temporal Split (Days 61–90, N=58,345) |
 | **Multi-Signal Fusion Layer** | **0.9982** | **0.9996** | **97.88%** | **98.46%** | **0.52%** | **3.80 ms** | Full Composite Pipeline (Val Tuned) |
-| **Handwritten Paraphrase Benchmark** | — | — | **98.75%** | **87.78%** | **13.75%** | 0.70 ms | 160 natural non-template human messages |
+| **Handwritten Paraphrase Benchmark** | — | — | **98.75%** | **90.80%** | **10.00%** | 0.70 ms | 160 natural non-template human messages |
 
 ### Key Figures for Report & Presentation:
 - **Precision-Recall Curve:** [docs/figures/pr_curve.svg](docs/figures/pr_curve.svg)
@@ -211,7 +211,7 @@ takabondhu/  (project root)
 ## ⚠️ Known Limitations & Honest Disclosures
 
 1. **Synthetic Data Simplification:** All training transactions and attack patterns are simulated (`SEED=42`). While realistic distributions, USSD channels, sub-2000 micro-scams, and seasonal spikes are modeled, synthetic data cannot capture the full entropy, non-stationary fraud evolution, and label ambiguity of live banking traffic.
-2. **Handwritten vs Template Generalization:** On template-derived test sets, the message classifier achieves near-perfect metrics (99.8% PR-AUC). However, on our independently evaluated 160-message natural handwritten benchmark, precision drops to **87.78%** and False Positive Rate rises to **13.75%** (recall remains strong at **98.75%**). Colloquial human conversation introduces genuine linguistic ambiguity that template generators underestimate.
+2. **Handwritten vs Template Generalization:** On template-derived test sets, the message classifier achieves near-perfect metrics (99.8% PR-AUC). However, on our independently evaluated 160-message natural handwritten benchmark, precision drops to **90.80%** and False Positive Rate rises to **10.00%** (recall remains strong at **98.75%**). Colloquial human conversation introduces genuine linguistic ambiguity that template generators underestimate.
 3. **Graph Cold-Start Weakness:** The NetworkX ego-subgraph analyzer requires multiple transaction hops to detect fan-in / fan-out velocity. On cold-start, single-hop, or first-time transactions to previously unseen wallets, graph intelligence yields zero discriminatory signal; the pipeline falls back entirely on transaction tabular features and message NLP.
 4. **No Live Bank Ledger Validation:** TakaBondhu has been rigorously validated on held-out synthetic partitions but has not yet run against proprietary, confidential upay core banking records. We explicitly mandate a 30-day passive shadow-mode deployment to calibrate thresholds against real dispute logs before activating user-facing friction.
 5. **Calibrated Feature Attributions vs Full SHAP:** For production latency (<4ms on laptop CPU), TakaBondhu implements fast, deterministic tree feature contributions and rule traces rather than full runtime Shapley value sampling (TreeSHAP).

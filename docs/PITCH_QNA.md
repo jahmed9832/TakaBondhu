@@ -34,7 +34,7 @@ We enforced a double-partition anti-leakage architecture:
 
 #### Q6: "How did you validate your models outside of synthetic template generators?"
 **Answer:**
-We created a separate, handwritten non-template benchmark dataset ([ml/data/handwritten_eval.csv](../ml/data/handwritten_eval.csv)) consisting of 160 realistic, colloquial messages written without template syntax across Bengali, Banglish, and English. On this independent benchmark, our frozen model achieved **98.75% recall**, while precision was **87.78%** and False Positive Rate was **13.75%**. This honestly demonstrates that colloquial, handwritten communications have higher entropy and linguistic noise than structured synthetic templates—reinforcing why TakaBondhu combines message text with transaction velocity and graph signals rather than relying on NLP alone.
+We created a separate, handwritten non-template benchmark dataset ([ml/data/handwritten_eval.csv](../ml/data/handwritten_eval.csv)) consisting of 160 realistic, colloquial messages written without template syntax across Bengali, Banglish, and English. On this independent benchmark, our frozen model achieved **98.75% recall**, while precision was **90.80%** and False Positive Rate was **10.00%**. This honestly demonstrates that colloquial, handwritten communications have higher entropy and linguistic noise than structured synthetic templates—reinforcing why TakaBondhu combines message text with transaction velocity and graph signals rather than relying on NLP alone.
 
 ---
 
@@ -150,7 +150,7 @@ Our code is production-structured, typed, and fully tested with 47 passing tests
 **Answer:**
 We believe scientific credibility requires honest disclosures:
 1. **Synthetic Data is Cleaner Than Live Traffic:** Real fraud exhibits higher label noise, delayed dispute confirmations, and non-stationary drift.
-2. **Handwritten Generalization Drop:** On our natural handwritten benchmark, precision drops to 87.78% and FPR rises to 13.75% (vs <0.5% on synthetic templates), showing that human conversational ambiguity is harder than synthetic grammar.
+2. **Handwritten Generalization Drop:** On our natural handwritten benchmark, precision drops to 90.80% and FPR rises to 10.00% (vs <0.5% on synthetic templates), showing that human conversational ambiguity is harder than synthetic grammar.
 3. **Graph Cold-Start:** Ego-subgraphs have zero discriminative power on brand-new, first-time transfers where no transaction topology exists yet.
 4. **No Real Bank Ledger Access:** We have not validated against proprietary upay core records, which is why a 30-day passive shadow mode is mandatory before enabling live friction.
 5. **Calibrated Attributions vs Full SHAP:** For production latency (<4ms on laptop CPU), we implement fast, deterministic tree feature contributions and rule traces rather than full runtime Shapley value sampling (TreeSHAP).
