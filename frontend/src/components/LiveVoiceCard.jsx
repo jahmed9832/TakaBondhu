@@ -17,6 +17,7 @@ import {
   Info
 } from 'lucide-react';
 import { Room, RoomEvent, Track } from 'livekit-client';
+import { apiUrl } from '../apiConfig';
 
 export default function LiveVoiceCard({ onScrollToAnalyzer }) {
   // Connection & Room state
@@ -44,7 +45,7 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
 
   // Fetch LiveKit status on mount
   useEffect(() => {
-    fetch('/api/livekit/status')
+    fetch(apiUrl('/api/livekit/status'))
       .then(res => res.json())
       .then(data => {
         setLivekitConfig(data);
@@ -215,7 +216,7 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
     try {
       const roomName = `takabondhu-${Date.now().toString(36)}`;
       console.log('[VOICE DEBUG] Token requested');
-      const res = await fetch('/api/livekit/token', {
+      const res = await fetch(apiUrl('/api/livekit/token'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roomName })

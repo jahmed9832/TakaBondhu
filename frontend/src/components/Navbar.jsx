@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Mic, Menu, X, Sparkles, Globe, Type, BarChart3, AlertOctagon, PiggyBank, Search } from 'lucide-react';
+import { apiUrl } from '../apiConfig';
 
 export default function Navbar({ 
   currentPage = 'scam-shield', 
@@ -15,7 +16,7 @@ export default function Navbar({
 
   useEffect(() => {
     // Lightweight background health check to set AI Protected status
-    fetch('/api/health')
+    fetch(apiUrl('/api/health'))
       .then(res => res.json())
       .then(data => {
         setIsProtected(data.status === 'ok' || data.status === 'degraded');

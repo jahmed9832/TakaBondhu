@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: takabondhu
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DEMO_OFFLINE
+        value: "true"
+      - key: NODE_ENV
+        value: "production"
+      - key: PORT
+        value: "10000"
+    healthCheckPath: /health
+    autoDeploy: true

@@ -18,6 +18,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 import MuleNetworkGraph from './MuleNetworkGraph';
+import { apiUrl } from '../apiConfig';
 
 export default function ReviewQueue({ onBackToAnalyzer, lang = 'bn' }) {
   const [cases, setCases] = useState([]);
@@ -31,7 +32,7 @@ export default function ReviewQueue({ onBackToAnalyzer, lang = 'bn' }) {
   const fetchQueue = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/review/queue');
+      const res = await fetch(apiUrl('/api/review/queue'));
       const data = await res.json();
       setCases(data.cases || []);
       if (data.cases?.length > 0 && !expandedCaseId) {
@@ -51,7 +52,7 @@ export default function ReviewQueue({ onBackToAnalyzer, lang = 'bn' }) {
   const handleDecision = async (caseId, decision) => {
     setSubmittingId(caseId);
     try {
-      const res = await fetch('/v1/feedback', {
+      const res = await fetch(apiUrl('/v1/feedback'), {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

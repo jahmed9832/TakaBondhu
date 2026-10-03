@@ -19,6 +19,7 @@ import {
   Clock,
   Target
 } from 'lucide-react';
+import { apiUrl } from '../apiConfig';
 
 const QUICK_PROMPTS = [
   "আমি প্রতি মাসে ৳৫,০০০ save করতে চাই",
@@ -76,7 +77,7 @@ export default function SavingsGuide() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/savings/chat', {
+      const response = await fetch(apiUrl('/api/savings/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

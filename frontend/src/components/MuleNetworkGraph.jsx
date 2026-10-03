@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Network, ShieldAlert, ArrowRight, RefreshCw, AlertTriangle, Users, DollarSign } from 'lucide-react';
+import { apiUrl } from '../apiConfig';
 
 export default function MuleNetworkGraph({ targetWallet = 'cust_mule_01', lang = 'bn' }) {
   const [wallet, setWallet] = useState(targetWallet);
@@ -12,7 +13,7 @@ export default function MuleNetworkGraph({ targetWallet = 'cust_mule_01', lang =
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/v1/mule-network/${encodeURIComponent(walletId)}`);
+      const res = await fetch(apiUrl(`/v1/mule-network/${encodeURIComponent(walletId)}`));
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to fetch mule network');
       setData(json);

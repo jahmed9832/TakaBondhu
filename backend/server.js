@@ -34,25 +34,30 @@ export function generateTraceId() {
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const IS_DEMO_OFFLINE = process.env.DEMO_OFFLINE === 'true';
+const IS_DEMO_OFFLINE = process.env.DEMO_OFFLINE !== 'false';
 const LOG_RAW_MESSAGES = process.env.LOG_RAW_MESSAGES === 'true';
 
-// CORS ALLOW-LIST: Localhost only
+// CORS Configuration
 const allowedOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:5000',
   'http://127.0.0.1:5000',
   'http://localhost:3000',
-  'http://127.0.0.1:3000'
+  'http://127.0.0.1:3000',
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()) : [])
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) return callback(null, true);
+    if (process.env.NODE_ENV === 'production' && !process.env.ALLOWED_ORIGINS) {
       return callback(null, true);
     }
-    return callback(new Error('CORS policy: origin not allowed'));
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    return callback(null, true);
   },
   credentials: true
 }));
@@ -1355,6 +1360,18 @@ app.get('/api/review/export', (req, res) => {
   res.setHeader('Content-Disposition', 'attachment; filename="analyst_reviewed_feedback.csv"');
   return res.send(csvRows.join('\n'));
 });
+
+// Serve frontend static build if available
+const distPath = path.resolve(__dirname, '../frontend/dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/v1') || req.path === '/health') {
+      return next();
+    }
+    return res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 const server = app.listen(PORT, () => {
   console.log(`===============================================`);

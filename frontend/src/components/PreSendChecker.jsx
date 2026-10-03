@@ -14,6 +14,7 @@ import {
   AlertOctagon,
   FileCheck
 } from 'lucide-react';
+import { apiUrl } from '../apiConfig';
 
 export default function PreSendChecker({ lang = 'bn', isLargeText = false }) {
   const [sender, setSender] = useState('01811000001');
@@ -138,7 +139,7 @@ export default function PreSendChecker({ lang = 'bn', isLargeText = false }) {
     };
 
     try {
-      const res = await fetch('/v1/screen', {
+      const res = await fetch(apiUrl('/v1/screen'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

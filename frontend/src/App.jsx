@@ -13,6 +13,7 @@ import MicroTips from './components/MicroTips';
 import Footer from './components/Footer';
 import Toast from './components/Toast';
 import { OFFICIAL_DEMO_SCENARIOS } from './data/sampleScenarios';
+import { apiUrl } from './apiConfig';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -83,7 +84,7 @@ export default function App() {
     setOriginalMessage(messageText);
 
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch(apiUrl('/api/analyze'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: messageText }),

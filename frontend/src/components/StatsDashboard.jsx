@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquareText, ShieldAlert, AlertTriangle, Users, Info, TrendingUp, RefreshCw, Cpu, Activity } from 'lucide-react';
+import { apiUrl } from '../apiConfig';
 
 export default function StatsDashboard() {
   const [runtimeData, setRuntimeData] = useState(null);
@@ -11,8 +12,8 @@ export default function StatsDashboard() {
     try {
       setLoading(true);
       const [rtRes, bmRes] = await Promise.all([
-        fetch('/api/metrics/runtime').catch(() => null),
-        fetch('/api/metrics').catch(() => null)
+        fetch(apiUrl('/api/metrics/runtime')).catch(() => null),
+        fetch(apiUrl('/api/metrics')).catch(() => null)
       ]);
 
       if (rtRes && rtRes.ok) {
