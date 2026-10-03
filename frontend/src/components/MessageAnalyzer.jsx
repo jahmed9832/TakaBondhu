@@ -31,13 +31,28 @@ const iconMap = {
   Link: LinkIcon
 };
 
-export default function MessageAnalyzer({ onAnalyze, isLoading, error, analyzerRef, activeTab = 'text', setActiveTab }) {
+export default function MessageAnalyzer({ 
+  onAnalyze, 
+  isLoading, 
+  error, 
+  analyzerRef, 
+  activeTab = 'text', 
+  setActiveTab,
+  initialText = '',
+  lang = 'en'
+}) {
   const [internalTab, setInternalTab] = useState('text');
   const currentTab = setActiveTab ? activeTab : internalTab;
   const setTab = setActiveTab || setInternalTab;
 
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(initialText);
   const [selectedScenarioId, setSelectedScenarioId] = useState(null);
+
+  React.useEffect(() => {
+    if (initialText) {
+      setInputText(initialText);
+    }
+  }, [initialText]);
 
   const handleSelectScenario = (scenario) => {
     setSelectedScenarioId(scenario.id);
@@ -262,7 +277,7 @@ export default function MessageAnalyzer({ onAnalyze, isLoading, error, analyzerR
                     }`}
                   >
                     <ShieldAlert className="w-4 h-4" />
-                    <span>{isLoading ? 'Analyzing...' : 'Analyze with Scam Shield'}</span>
+                    <span>{isLoading ? (lang === 'bn' ? 'যাচাই হচ্ছে...' : 'Analyzing...') : (lang === 'bn' ? 'যাচাই করুন (টাকাবন্ধু)' : 'Analyze with TakaBondhu')}</span>
                   </button>
                 </div>
 

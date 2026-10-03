@@ -198,7 +198,7 @@ export default function ScamSimulatorModal({ isOpen, onClose, onTransferToAnalyz
               <p className="leading-relaxed text-slate-300">{feedback.message}</p>
               
               <div className="mt-2 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
-                <strong>Scam Shield Rule:</strong> {currentScenario.analysisHint}
+                <strong>TakaBondhu Safety Rule:</strong> {currentScenario.analysisHint}
               </div>
             </div>
           )}

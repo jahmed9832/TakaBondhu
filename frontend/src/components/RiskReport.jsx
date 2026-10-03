@@ -106,7 +106,7 @@ export default function RiskReport({ report, originalMessage, onReset }) {
   };
 
   const handleCopyFullReport = () => {
-    const reportText = `[TakaBondhu — Scam Shield Risk Report]
+    const reportText = `[TakaBondhu — Financial Safety & Risk Intelligence Report]
 Risk Level: ${riskLevel} RISK (${riskScore}/100)
 Tactic: ${case_card?.what_happened || summary}
 Assessment: ${theme.headline}
@@ -126,7 +126,7 @@ Trace ID: ${trace_id}
 [3] Recommended Safe Actions:
 ${recommendedActions.map((a, i) => `${i + 1}. ${a.replace(/^[❌✅]\s*/, '')}`).join('\n')}
 
-Protected by TakaBondhu (Scam Shield — AI Hackathon 2026).`;
+Protected by TakaBondhu (AI Hackathon 2026 — DIU CPC × upay).`;
 
     navigator.clipboard.writeText(reportText);
     setCopiedReport(true);

@@ -24,8 +24,8 @@ export default function Footer({ onNavigate }) {
             </p>
           </div>
 
-          {/* Clean 2-Product Navigation */}
-          <div className="flex items-center space-x-6">
+          {/* Multi-Product Navigation */}
+          <div className="flex flex-wrap items-center gap-4 text-xs">
             <button
               type="button"
               onClick={() => {
@@ -35,7 +35,18 @@ export default function Footer({ onNavigate }) {
               className="text-slate-300 hover:text-cyan-400 transition-colors font-medium flex items-center space-x-1.5"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Scam Shield</span>
+              <span>Screener</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                onNavigate?.('pre-send');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-slate-300 hover:text-teal-400 transition-colors font-medium flex items-center space-x-1.5"
+            >
+              <span>Pre-Send</span>
             </button>
 
             <button
@@ -47,7 +58,29 @@ export default function Footer({ onNavigate }) {
               className="text-slate-300 hover:text-violet-400 transition-colors font-medium flex items-center space-x-1.5"
             >
               <PiggyBank className="w-3.5 h-3.5 text-violet-400" />
-              <span>Savings Guide</span>
+              <span>Taka Plan</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                onNavigate?.('review');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-slate-300 hover:text-amber-400 transition-colors font-medium flex items-center space-x-1.5"
+            >
+              <span>Fraud Ops</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                onNavigate?.('impact');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-slate-300 hover:text-emerald-400 transition-colors font-medium flex items-center space-x-1.5"
+            >
+              <span>Impact</span>
             </button>
           </div>
 

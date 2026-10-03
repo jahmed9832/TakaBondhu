@@ -213,7 +213,7 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
 
     // 2. Fetch temporary token from backend
     try {
-      const roomName = `scamshield-${Date.now().toString(36)}`;
+      const roomName = `takabondhu-${Date.now().toString(36)}`;
       console.log('[VOICE DEBUG] Token requested');
       const res = await fetch('/api/livekit/token', {
         method: 'POST',
@@ -281,19 +281,64 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
         if (track.kind === Track.Kind.Audio) {
           console.log('[VOICE DEBUG] Agent audio track subscribed:', participant.identity);
           const audioElement = track.attach();
+          audioElement.autoplay = true;
           audioElementsRef.current.push(audioElement);
           setAgentState('speaking');
+        }
+      });
 
-          // Hook into audio playback for visualizer if possible
-          if (audioContextRef.current && analyserRef.current) {
-            try {
-              const audioSrc = audioContextRef.current.createMediaElementSource(audioElement);
-              audioSrc.connect(analyserRef.current);
-              analyserRef.current.connect(audioContextRef.current.destination);
-            } catch {
-              // Browser may restrict multiple source connections
+      // Listen for LiveKit Data Messages (scam analysis, transcripts, agent state from worker)
+      room.on(RoomEvent.DataReceived, (payload, participant) => {
+        try {
+          const text = new TextDecoder().decode(payload);
+          const msg = JSON.parse(text);
+
+          if (msg.type === 'scam_analysis' && msg.data) {
+            console.log('[VOICE DEBUG] Received scam analysis payload:', msg.data);
+            if (Array.isArray(msg.data.signalsDetected) && msg.data.signalsDetected.length > 0) {
+              setDetectedSignals(msg.data.signalsDetected.map(s => ({
+                name: s.type,
+                severity: s.severity || 'HIGH',
+                evidence: s.evidence
+              })));
             }
+            if (msg.data.safestPracticalNextStep) {
+              setAiTranscript(msg.data.safestPracticalNextStep);
+            }
+            setRagStatus({
+              available: Boolean(msg.data.ragAvailable),
+              count: msg.data.retrievedSafetyGuidance?.length || 0
+            });
+          } else if (msg.type === 'rag_status' && msg.data) {
+            setRagStatus({
+              available: Boolean(msg.data.available),
+              count: msg.data.count || 0
+            });
+          } else if (msg.type === 'agent_transcript' && msg.text) {
+            setAiTranscript(msg.text);
+          } else if (msg.type === 'user_transcript' && msg.text) {
+            setUserTranscript(msg.text);
+          } else if (msg.type === 'agent_state' && msg.state) {
+            setAgentState(msg.state);
           }
+        } catch (dataErr) {
+          console.warn('[VOICE DEBUG] Error parsing room data packet:', dataErr);
+        }
+      });
+
+      // Listen for LiveKit native transcription stream
+      room.on(RoomEvent.TranscriptionReceived, (segments, participant) => {
+        if (!Array.isArray(segments) || segments.length === 0) return;
+        const fullText = segments.map(s => s.text).join(' ').trim();
+        if (!fullText) return;
+
+        const isAgent = participant?.isAgent || participant?.identity?.includes('agent');
+        if (isAgent) {
+          setAiTranscript(fullText);
+          setAgentState('speaking');
+        } else {
+          setUserTranscript(fullText);
+          setAgentState('listening');
         }
       });
 
@@ -389,7 +434,7 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
                   <Radio className="w-5 h-5 animate-pulse" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center space-x-2">
-                  <span>Scam Shield Voice Assistant</span>
+                  <span>TakaBondhu Voice Companion</span>
                 </h3>
               </div>
               <p className="text-sm font-medium text-slate-300 mt-1">

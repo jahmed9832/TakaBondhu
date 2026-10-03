@@ -38,10 +38,12 @@ export default function StatsDashboard() {
   }, []);
 
   const totalRequests = runtimeData?.total_requests ?? 0;
-  const flaggedScams = runtimeData?.flagged_scams ?? 0;
-  const needsReview = runtimeData?.needs_review ?? 0;
-  const reviewsDone = runtimeData?.review_decisions?.total_reviewed ?? 0;
-  const p50 = runtimeData?.latency_ms?.p50;
+  const flaggedScams = runtimeData?.flagged_scams ?? runtimeData?.flagged_risky ?? 0;
+  const needsReview = runtimeData?.needs_review ?? runtimeData?.needs_human_review_count ?? 0;
+  const reviewsDone = runtimeData?.review_decisions?.total_reviewed ??
+    ((runtimeData?.review_decisions?.confirmed_scam || 0) + (runtimeData?.review_decisions?.false_alarm || 0) + (runtimeData?.review_decisions?.escalated || 0));
+  const p50 = runtimeData?.latency_ms?.p50 ?? runtimeData?.latency_p50_ms;
+  const p95 = runtimeData?.latency_ms?.p95 ?? runtimeData?.latency_p95_ms;
   const isDemoEmpty = totalRequests === 0;
 
   const testUnseen = benchmarkData?.evaluation?.test_unseen?.hybrid;
@@ -165,7 +167,7 @@ export default function StatsDashboard() {
                 Pipeline Latency
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">
-                p95: {runtimeData?.latency_ms?.p95 !== null && runtimeData?.latency_ms?.p95 !== undefined ? `${runtimeData.latency_ms.p95} ms` : 'not run'}
+                p95: {p95 !== null && p95 !== undefined ? `${p95} ms` : 'not run'}
               </div>
             </div>
           </div>
