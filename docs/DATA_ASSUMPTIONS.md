@@ -1,6 +1,6 @@
 # Data Assumptions & Synthetic Generation Specification
-**Project:** TakaBachao / ScamShield  
-**Event:** AI Hackathon 2026 (DIU CPC x upay), Track 01 Trust & Risk  
+**Project:** TakaBondhu (টাকাবন্ধু) — "Upay's friend that keeps your money safe."  
+**Event:** AI Hackathon 2026 (DIU CPC × upay), Track 01 Trust & Risk Intelligence  
 **Dataset Artifact:** `ml/data/dataset.csv` (7,061 records)  
 **Robustness Artifact:** `ml/data/robustness.csv` (2,099 records)  
 **Generator:** `ml/generate_dataset.py` (Fixed seed: `42`)
@@ -86,3 +86,55 @@ Additional operational assumptions:
 1. **Scam Prevalence Assumption:** In results reporting (`results.md`), precision at an assumed **5% scam prevalence** is analytically derived to reflect realistic mobile banking inbox conditions where >95% of traffic is benign.
 2. **Channel Format:** Assumed SMS and instant messaging character limits (median 80–120 characters).
 3. **Phone & TrxID Format:** Synthetic phone numbers use reserved test blocks (`01711-001122`, etc.) and fake alphanumeric TrxIDs.
+
+---
+
+## 7. Synthetic MFS Transaction Ecosystem Specification (Phase 2)
+
+**Artifact Directory:** `ml/data/transactions/`  
+**Total Records:** 200,000 transactions across 90 simulated days  
+**Generator:** `ml/transactions/generate_transactions.py` (Fixed seed: `42`)  
+**Hard Rule 3 Compliance:** 100% of rows contain `source="synthetic"`.
+
+### 7.1 Entity & Persona Assumptions
+
+| Entity Persona | Share | Mean Balance | Mean Tx Amount | Primary Channels | Primary Transaction Behaviors |
+| :--- | :---: | :---: | :---: | :--- | :--- |
+| **`student`** | 25% | ৳500–৳3,500 | ৳450 | App (85%), USSD (15%) | Frequent mobile recharges, peer-to-peer dinner splits, late-evening activity |
+| **`rural_retail`** | 30% | ৳1,500–৳12,000 | ৳1,800 | USSD (50%), App (30%), Agent (20%) | Daytime cash-in/cash-out at local agents, family remittances, utility payments |
+| **`salaried`** | 25% | ৳10,000–৳60,000 | ৳4,200 | App (90%), USSD (10%) | Bank-to-wallet `add_money` on 1st–5th of month, scheduled bill payments, high merchant QR spend |
+| **`elderly`** | 10% | ৳1,000–৳15,000 | ৳2,500 | USSD (60%), Agent (25%), App (15%) | Infrequent transactions, high reliance on agent assistance, vulnerable to urgency deception |
+| **`small_merchant`** | 10% | ৳15,000–৳100,000 | ৳1,200 | App (70%), USSD (30%) | High daily merchant receipts, periodic supplier transfers, regular cash-outs |
+
+### 7.2 Seasonality & Diurnal Distribution Assumptions
+1. **Diurnal Cycle:** Normal waking hours (07:00–23:00) account for >98% of regular activity. Night-time (00:00–05:59) represents <2% of baseline volume.
+2. **Salary Inflow Seasonality:** Salaried persona receives monthly deposits on days 1–5, causing a 1.4x volume surge in subsequent transfers and payments.
+3. **Month-End Outflows:** Days 25–30 experience a 1.15x lift in bill payments and domestic remittances.
+4. **Festival (Eid) Surge:** Simulated days 45–52 feature a 1.8x volume increase in gifts (`send_money`) and retail merchant payments.
+
+### 7.3 Injected Fraud Patterns (Ground Truth)
+
+| Pattern Name | Share of Fraud | Injected Behavioral Signature | Attack Vector Description |
+| :--- | :---: | :--- | :--- |
+| **`social_engineering`** | 30% | Outgoing transfer within 15–45 min of scam message; amount 3x–6x above customer baseline; first-time recipient. | Victim responds to coercive SMS/call by transferring money to attacker's collection wallet. |
+| **`account_takeover` (ATO)** | 25% | `device_age_days = 0`; unusual geo-district; dead-of-night timestamp (02:00–04:30); rapid drain (৳12,000–৳24,900). | Attacker logs into victim account from unauthorized device and drains funds. |
+| **`mule_network`** | 25% | Multi-victim fan-in (4–8 senders) to central mule wallet in <2 hours, followed by rapid fan-out or cash-out. | Organized syndicate laundering stolen funds through intermediary recipient accounts. |
+| **`agent_anomaly`** | 10% | Cash-outs structured just below ৳25,000 regulatory reporting threshold (৳24,500, ৳24,800, ৳24,950); 5x–10x peer volume. | Rogue or compromised agent colluding with criminal rings to bypass compliance screening. |
+| **`wrong_transfer_refund`** | 10% | Immediate refund transfer without corresponding verified incoming credit; first-time recipient. | Attacker falsely claims accidental transfer and tricks victim into sending money. |
+
+### 7.4 Anti-Leakage Partitioning Guarantees
+- **Temporal Holdout (`test_time`):** Days 61 through 90 (the final 30 days of the 90-day simulation, ~58k transactions) are held out chronologically. No future temporal signals exist in training.
+- **Entity & Network Holdout (`test_unseen_entity`):** Complete mule rings (Rings 4 and 5) and quarantined customer cohorts (last 250 customers) are quarantined exclusively into `test_unseen_entity`. Unit test `test_anti_leakage_unseen_entity` formally asserts 0 entity overlap with the training set.
+
+### 7.5 Multi-Channel & Multi-Tier Fraud Representation Assumptions
+In early synthetic iterations, fraud patterns were clustered predominantly on the `app` channel with amounts > ৳2,000. In accordance with the credibility pass:
+1. **Multi-Channel Ground Truth:** Fraud occurs across all supported channels:
+   - **`ussd`:** Dialed USSD ATO (session hijack, PIN entry from stolen device), USSD wrong-transfer refund scam responses, and USSD mule forwarding hops (~28% of fraud volume).
+   - **`app`:** Modern mobile app credential drains, fake agent app transfers, and mule hub coordination (~65% of fraud volume).
+   - **`agent_pos`:** Direct agent collusion, rogue structuring, and rapid mule cash-out points (~7% of fraud volume).
+2. **Multi-Tier Amount Distribution:** Fraud encompasses all transaction sizes:
+   - **Sub-৳2,000 (`< ৳2,000`):** Small-value social engineering (advance processing fees ৳400–৳1,800), classic wrong-transfer refund claims (৳400–৳1,950), initial ATO probe drains (৳500–৳1,900), and micro-structuring.
+   - **Mid-Tier (`৳2,000–৳10,000`):** Routine social engineering lures, intermediate mule relay hops, and secondary ATO drains.
+   - **High-Tier (`> ৳10,000`):** Aggressive account drain attempts, high-value mule collection hubs, and regulatory structuring just below the ৳25,000 ceiling.
+3. **Formal Test Guarantee:** Validated by `test_fraud_representation_across_channels_and_amounts` in `ml/tests/test_transactions.py` asserting non-zero fraud support across all channels and tiers in all 4 data splits.
+

@@ -1,0 +1,27 @@
+{
+  "dataset_name": "TakaBondhu Synthetic MFS Transaction Ecosystem",
+  "version": "1.0.0",
+  "generated_at": "2026-10-03T11:50:58.291925",
+  "random_seed": 42,
+  "source": "synthetic",
+  "sha256_hash": "3f713fbb25346e674e6e3888f675b1f86d5b0033a596ace1d465b6c5c99cb57c",
+  "total_transactions": 200000,
+  "total_customers": 2500,
+  "total_agents": 300,
+  "total_merchants": 400,
+  "overall_fraud_rate": 0.025,
+  "splits": {
+    "train": 92617,
+    "val": 23253,
+    "test_time": 58345,
+    "test_unseen_entity": 25785
+  },
+  "fraud_patterns": {
+    "social_engineering": 1466,
+    "mule_network": 1256,
+    "account_takeover": 1255,
+    "wrong_transfer_refund": 519,
+    "agent_anomaly": 504
+  },
+  "assumptions_reference": "docs/DATA_ASSUMPTIONS.md"
+}

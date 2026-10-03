@@ -1,0 +1,52 @@
+{
+  "mule_ring_1": {
+    "hub": "cust_mule_01",
+    "victims": [
+      "cust_00010",
+      "cust_00011",
+      "cust_00012",
+      "cust_00013"
+    ],
+    "holdout": false
+  },
+  "mule_ring_2": {
+    "hub": "cust_mule_02",
+    "victims": [
+      "cust_00020",
+      "cust_00021",
+      "cust_00022",
+      "cust_00023"
+    ],
+    "holdout": false
+  },
+  "mule_ring_3": {
+    "hub": "cust_mule_03",
+    "victims": [
+      "cust_00030",
+      "cust_00031",
+      "cust_00032",
+      "cust_00033"
+    ],
+    "holdout": false
+  },
+  "mule_ring_4": {
+    "hub": "cust_mule_04_unseen",
+    "victims": [
+      "cust_00040",
+      "cust_00041",
+      "cust_00042",
+      "cust_00043"
+    ],
+    "holdout": true
+  },
+  "mule_ring_5": {
+    "hub": "cust_mule_05_unseen",
+    "victims": [
+      "cust_00050",
+      "cust_00051",
+      "cust_00052",
+      "cust_00053"
+    ],
+    "holdout": true
+  }
+}
