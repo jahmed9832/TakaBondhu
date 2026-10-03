@@ -28,7 +28,7 @@ if (fs.existsSync(backendEnv)) {
 }
 
 // Ensure worker processes use lean heap suitable for constrained local Windows memory & cloud containers
-const heapLimit = process.env.NODE_MAX_MEM || '256';
+const heapLimit = process.env.NODE_MAX_MEM || '512';
 if (!process.env.NODE_OPTIONS || !process.env.NODE_OPTIONS.includes('--max-old-space-size')) {
   process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ''} --max-old-space-size=${heapLimit}`.trim();
 }

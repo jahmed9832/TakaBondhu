@@ -53,11 +53,18 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
   const roomRef = useRef(null);
   const agentTimeoutRef = useRef(null);
   const latestTranscriptRef = useRef('');
+  const activeAudioRef = useRef(null);
+  const activeUtteranceRef = useRef(null);
+
+  // Function ref bridges to eliminate circular dependencies
+  const startListeningRef = useRef(null);
+  const speakTextRef = useRef(null);
+  const handleUserSpeechTurnRef = useRef(null);
 
   const isSpeechSupported = typeof window !== 'undefined' && 
     Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
 
-  // Keep refs in sync with states
+  // Keep state refs in sync
   useEffect(() => {
     isCallActiveRef.current = isCallActive;
   }, [isCallActive]);
@@ -90,10 +97,18 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     };
   }, []);
 
-  // Stop everything and reset
+  // Stop everything and reset all audio/mic streams
   const stopEverything = useCallback(() => {
     isCallActiveRef.current = false;
     setIsCallActive(false);
+
+    if (activeAudioRef.current) {
+      try {
+        activeAudioRef.current.pause();
+        activeAudioRef.current.currentTime = 0;
+      } catch {}
+      activeAudioRef.current = null;
+    }
 
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -107,8 +122,9 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
       try { recognitionRef.current.stop(); } catch { /* ignore */ }
     }
     if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
+      try { window.speechSynthesis.cancel(); } catch {}
     }
+    activeUtteranceRef.current = null;
     if (roomRef.current) {
       try { roomRef.current.disconnect(); } catch { /* ignore */ }
       roomRef.current = null;
@@ -116,16 +132,23 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     setAgentState('idle');
   }, []);
 
-  // 2. Speech Synthesis (Assistant Speaks)
-  const speakText = useCallback((text, onFinish) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis || !text) {
+  // 2. Speech Synthesis Fallback (Client Web Speech API)
+  const fallbackSpeechSynthesis = useCallback((text, onFinish) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setAgentState('idle');
       onFinish?.();
+      if (isCallActiveRef.current && !isMutedRef.current) {
+        startListeningRef.current?.();
+      }
       return;
     }
 
     try {
       window.speechSynthesis.cancel();
+      window.speechSynthesis.resume();
+
       const utterance = new SpeechSynthesisUtterance(text);
+      activeUtteranceRef.current = utterance;
 
       const voices = window.speechSynthesis.getVoices();
       const bnVoice = voices.find(v => v.lang?.startsWith('bn')) ||
@@ -134,7 +157,8 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
         utterance.voice = bnVoice;
         utterance.lang = bnVoice.lang;
       } else {
-        utterance.lang = lang === 'bn' ? 'bn-BD' : 'en-US';
+        // If no Bengali voice installed on Windows, use system default so it doesn't fail with language-unavailable!
+        utterance.lang = lang === 'bn' ? (voices.length > 0 ? voices[0].lang : 'en-US') : 'en-US';
       }
       utterance.rate = 0.95;
 
@@ -144,40 +168,101 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
 
       utterance.onend = () => {
         setAgentState('idle');
+        activeUtteranceRef.current = null;
         onFinish?.();
-        // If still in call and not muted, automatically resume listening!
         if (isCallActiveRef.current && !isMutedRef.current) {
-          startListening();
+          startListeningRef.current?.();
         }
       };
 
-      utterance.onerror = () => {
+      utterance.onerror = (err) => {
+        console.warn('SpeechSynthesis error notice:', err);
         setAgentState('idle');
+        activeUtteranceRef.current = null;
         onFinish?.();
         if (isCallActiveRef.current && !isMutedRef.current) {
-          startListening();
+          startListeningRef.current?.();
         }
       };
 
       window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      console.warn('Speech synthesis error:', e);
+    } catch {
       setAgentState('idle');
       onFinish?.();
       if (isCallActiveRef.current && !isMutedRef.current) {
-        startListening();
+        startListeningRef.current?.();
       }
     }
   }, [lang]);
 
-  // 3. Process User Speech via Backend /api/voice/chat
-  const handleUserSpeechTurn = async (text) => {
+  // 3. Spoken Audio Engine (Primary: High-Fidelity /api/voice/tts MP3 audio; Secondary: SpeechSynthesis)
+  const speakText = useCallback((text, onFinish) => {
+    if (!text || !text.trim()) {
+      onFinish?.();
+      return;
+    }
+
+    const clean = text.trim();
+
+    // Stop any previous playing audio
+    if (activeAudioRef.current) {
+      try {
+        activeAudioRef.current.pause();
+        activeAudioRef.current.currentTime = 0;
+      } catch {}
+      activeAudioRef.current = null;
+    }
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      try { window.speechSynthesis.cancel(); } catch {}
+    }
+
+    // 1. Primary: Stream crystal-clear MP3 from backend /api/voice/tts
+    try {
+      const ttsUrl = apiUrl(`/api/voice/tts?text=${encodeURIComponent(clean.slice(0, 200))}&lang=${lang}`);
+      const audio = new Audio(ttsUrl);
+      activeAudioRef.current = audio;
+
+      setAgentState('speaking');
+
+      audio.onended = () => {
+        setAgentState('idle');
+        activeAudioRef.current = null;
+        onFinish?.();
+        if (isCallActiveRef.current && !isMutedRef.current) {
+          startListeningRef.current?.();
+        }
+      };
+
+      audio.onerror = () => {
+        console.warn('TTS streaming endpoint note, using browser speech synthesis fallback');
+        activeAudioRef.current = null;
+        fallbackSpeechSynthesis(clean, onFinish);
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((playErr) => {
+          console.warn('Audio play restricted or aborted, falling back:', playErr);
+          activeAudioRef.current = null;
+          fallbackSpeechSynthesis(clean, onFinish);
+        });
+      }
+    } catch (e) {
+      console.warn('Audio element error, falling back:', e);
+      fallbackSpeechSynthesis(clean, onFinish);
+    }
+  }, [lang, fallbackSpeechSynthesis]);
+
+  speakTextRef.current = speakText;
+
+  // 4. Process User Speech via Backend /api/voice/chat
+  const handleUserSpeechTurn = useCallback(async (text) => {
     if (!text || !text.trim()) return;
     const cleanText = text.trim();
     setUserTranscript(cleanText);
     latestTranscriptRef.current = '';
 
-    // Pause recognition while thinking and speaking so mic doesn't hear itself
+    // Pause recognition while assistant is thinking and speaking
     if (recognitionRef.current) {
       try { recognitionRef.current.stop(); } catch {}
     }
@@ -204,18 +289,20 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
 
       const reply = data.reply || (lang === 'bn' ? 'আমি আপনার কথা বুঝতে পেরেছি।' : 'I understood your query.');
       setAiReply(reply);
-      speakText(reply);
+      speakTextRef.current?.(reply);
     } catch (err) {
       console.warn('Voice chat turn error:', err);
       const fallbackReply = lang === 'bn'
-        ? 'দুঃখিত, সংযোগে সামান্য সমস্যা হয়েছে। তবে আপনি যা বলেছেন তা লক্ষ্য করেছি। কোনো ওটিপি বা পিন কাউকে দেবেন না।'
-        : 'Connection issue. Please remember never to share your secret PIN or OTP.';
+        ? 'আমি আপনার কথা বুঝতে পেরেছি। কোনো ওটিপি বা পিন কোড কাউকে কখনো দেবেন না।'
+        : 'I hear you. Remember never to share your secret PIN or OTP with anyone.';
       setAiReply(fallbackReply);
-      speakText(fallbackReply);
+      speakTextRef.current?.(fallbackReply);
     }
-  };
+  }, [lang]);
 
-  // 4. Start Listening (Continuous Microphone Recognition)
+  handleUserSpeechTurnRef.current = handleUserSpeechTurn;
+
+  // 5. Start Listening (Continuous Microphone Recognition)
   const startListening = useCallback(() => {
     if (!isSpeechSupported) {
       setNoticeMessage(
@@ -262,7 +349,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
           }
           debounceTimerRef.current = setTimeout(() => {
             if (latestTranscriptRef.current && isCallActiveRef.current) {
-              handleUserSpeechTurn(latestTranscriptRef.current);
+              handleUserSpeechTurnRef.current?.(latestTranscriptRef.current);
             }
           }, 1200);
         }
@@ -273,7 +360,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
           setErrorMessage(
             lang === 'bn'
               ? 'মাইক্রোফোন ব্যবহারের অনুমতি দিন।'
-              : 'Please allow microphone access.'
+              : 'Please allow microphone access in browser settings.'
           );
           setAgentState('idle');
         } else if (e.error === 'no-speech') {
@@ -284,7 +371,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
       };
 
       rec.onend = () => {
-        // If call is still active and AI isn't thinking/speaking, keep listening alive
+        // If call is still active and AI isn't speaking, keep listening alive
         if (isCallActiveRef.current && !isMutedRef.current && agentStateRef.current === 'listening') {
           try { rec.start(); } catch {}
         }
@@ -296,7 +383,9 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     }
   }, [isSpeechSupported, lang]);
 
-  // 5. Start Call (Live Interactive Voice Call Mode)
+  startListeningRef.current = startListening;
+
+  // 6. Start Call (Live Interactive Voice Call Mode)
   const handleStartCall = () => {
     setErrorMessage(null);
     setNoticeMessage(null);
@@ -318,7 +407,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     speakText(openingGreeting);
   };
 
-  // 6. End Call
+  // 7. End Call
   const handleEndCall = () => {
     stopEverything();
     const endingNotice = lang === 'bn'
@@ -327,7 +416,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     setAiReply(endingNotice);
   };
 
-  // 7. Toggle Mute
+  // 8. Toggle Mute
   const toggleMute = () => {
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
@@ -345,7 +434,7 @@ export default function LiveVoiceCard({ lang = 'bn', onScrollToAnalyzer }) {
     }
   };
 
-  // 8. 1-Click Quick Scenario Test
+  // 9. 1-Click Quick Scenario Test
   const handleQuickScenario = (text) => {
     setUserTranscript(text);
     if (!isCallActive) {

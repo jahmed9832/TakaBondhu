@@ -647,6 +647,43 @@ app.post(['/api/voice/chat', '/v1/voice/chat'], async (req, res) => {
   }
 });
 
+// GET /api/voice/tts and /v1/voice/tts (Native High-Fidelity Audio Streaming)
+app.get(['/api/voice/tts', '/v1/voice/tts'], async (req, res) => {
+  try {
+    const text = (req.query.text || '').trim();
+    const lang = (req.query.lang || 'bn').toLowerCase().startsWith('en') ? 'en' : 'bn';
+    if (!text) {
+      return res.status(400).send('Text parameter is required');
+    }
+
+    // Google Translate TTS accepts up to 200 chars per audio request
+    const spokenText = text.length > 200 ? text.slice(0, 197) + '...' : text;
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${encodeURIComponent(spokenText)}`;
+
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).send('Upstream TTS error');
+    }
+
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Cache-Control': 'public, max-age=86400',
+      'Accept-Ranges': 'bytes'
+    });
+
+    const arrayBuffer = await response.arrayBuffer();
+    return res.end(Buffer.from(arrayBuffer));
+  } catch (err) {
+    console.warn('TTS fetch error:', err.message);
+    return res.status(500).send('TTS processing failed');
+  }
+});
+
 // GET /api/livekit/status
 app.get('/api/livekit/status', (req, res) => {
   try {

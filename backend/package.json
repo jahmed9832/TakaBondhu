@@ -8,9 +8,9 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "ingest-knowledge": "node ingestKnowledge.js",
-    "voice-agent": "node --max-old-space-size=256 voice-agent/agent.js dev",
-    "voice-agent:start": "node --max-old-space-size=256 voice-agent/agent.js start",
-    "voice-agent:dev": "node --max-old-space-size=256 voice-agent/agent.js dev"
+    "voice-agent": "node --max-old-space-size=512 voice-agent/agent.js start",
+    "voice-agent:start": "node --max-old-space-size=512 voice-agent/agent.js start",
+    "voice-agent:dev": "node --max-old-space-size=512 voice-agent/agent.js start"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",

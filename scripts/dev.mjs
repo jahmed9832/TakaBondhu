@@ -133,7 +133,7 @@ async function dev() {
   const voiceAgentScript = path.join(BACKEND_DIR, 'voice-agent', 'agent.js');
   if (fs.existsSync(voiceAgentScript)) {
     console.log('🎙️ [4/4] Starting Voice AI Agent Worker (:8089)...');
-    const voiceProc = spawn('node', ['--max-old-space-size=256', 'voice-agent/agent.js', 'dev'], {
+    const voiceProc = spawn('node', ['--max-old-space-size=512', 'voice-agent/agent.js', 'start'], {
       cwd: BACKEND_DIR,
       stdio: ['ignore', 'pipe', 'pipe']
     });
