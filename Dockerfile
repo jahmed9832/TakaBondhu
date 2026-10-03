@@ -55,8 +55,8 @@ ENV NODE_ENV=production \
 
 EXPOSE 5000
 
-# Ensure entrypoint is executable
-RUN chmod +x ./scripts/docker-entrypoint.sh
+# Ensure entrypoint has LF line endings and is executable
+RUN sed -i 's/\r$//' ./scripts/docker-entrypoint.sh && chmod +x ./scripts/docker-entrypoint.sh
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
   CMD curl -f http://localhost:${PORT}/health || exit 1

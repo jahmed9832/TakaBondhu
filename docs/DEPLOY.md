@@ -101,15 +101,78 @@ Hugging Face provides free 2 vCPU / 16GB RAM Docker spaces:
 
 ---
 
-## 🌐 Alternative Option C: Decoupled Frontend (Vercel / Netlify)
+## 🐳 Local Container Testing with Docker Compose
 
-If you prefer to host the Vite frontend on Vercel/Netlify while hosting the backend on Render/Railway:
-1. Deploy the backend Docker container on Render/Railway as described above.
-2. In your Vercel or Netlify project settings for the frontend, add the environment variable:
-   ```bash
-   VITE_API_BASE=https://takabondhu.onrender.com
-   ```
-3. The frontend will automatically route all `/api/*` and `/v1/*` requests to your remote backend.
+To test the entire production container stack locally on your computer with a single command:
+
+```bash
+# Build and start container
+docker compose up --build
+
+# In detached mode (background):
+docker compose up -d --build
+```
+
+- **App & Frontend:** [http://localhost:5000](http://localhost:5000)
+- **Health Check:** [http://localhost:5000/health](http://localhost:5000/health)
+- **Container Name:** `takabondhu-core`
+- **To stop:** `docker compose down`
+
+---
+
+## 🌐 Deploy Frontend to Vercel (Step-by-Step)
+
+You can easily deploy the frontend to Vercel and connect it to your deployed Render or Railway backend.
+
+### Step 1: Push Project to GitHub
+Ensure your repository is pushed to GitHub:
+```bash
+git add .
+git commit -m "feat: complete production ready build"
+git push origin main
+```
+
+### Step 2: Import into Vercel
+1. Go to [https://vercel.com](https://vercel.com) and log in with your GitHub account.
+2. Click **"Add New..."** -> **"Project"**.
+3. Select your repository `jahmed9832/TakaBondhu` and click **"Import"**.
+
+### Step 3: Configure Project Settings in Vercel
+- **Framework Preset:** `Vite`
+- **Root Directory:** Click "Edit" and select `frontend` (or leave as root; the included `vercel.json` handles both!).
+- **Build Command:** `npm run build` (automatic)
+- **Output Directory:** `dist` (automatic)
+
+### Step 4: Add Environment Variables in Vercel
+In the **Environment Variables** panel, add:
+| Key | Value | Purpose |
+|:---|:---|:---|
+| `VITE_API_BASE` | `https://takabondhu.onrender.com` | URL of your deployed backend on Render (or Railway). Replace with your actual backend URL. |
+
+*(Note: During initial frontend launch, if your backend is not yet deployed, the frontend will automatically use its built-in offline demo engine and fallback gracefully!)*
+
+### Step 5: Click Deploy
+Click **"Deploy"**. Vercel will build and deploy the React 19 + Vite frontend in ~30 seconds, providing you with a live URL like:
+`https://takabondhu.vercel.app`
+
+---
+
+## ☁️ Backend Deployment on Google Cloud Run (Alternative)
+
+If you prefer Google Cloud Run:
+```bash
+# Build and submit container image
+gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/takabondhu
+
+# Deploy to Cloud Run
+gcloud run deploy takabondhu \
+  --image gcr.io/YOUR_PROJECT_ID/takabondhu \
+  --platform managed \
+  --region asia-southeast1 \
+  --allow-unauthenticated \
+  --port 5000 \
+  --set-env-vars="DEMO_OFFLINE=true,NODE_ENV=production"
+```
 
 ---
 

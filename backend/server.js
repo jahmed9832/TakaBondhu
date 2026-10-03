@@ -342,7 +342,7 @@ const HEALTH_CACHE_TTL_MS = 30000; // 30 seconds
 /**
  * Health check endpoint - tests live Gemini connectivity, ML microservice & RAG status
  */
-app.get('/api/health', async (req, res) => {
+app.get(['/api/health', '/health'], async (req, res) => {
   try {
     const now = Date.now();
     if (cachedHealthResponse && (now - lastHealthCheckTimestamp) < HEALTH_CACHE_TTL_MS) {

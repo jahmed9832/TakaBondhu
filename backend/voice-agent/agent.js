@@ -3,6 +3,8 @@
  * Speaks natural Bangla and assists users in detecting financial scams in realtime.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 import { cli, defineAgent, voice, ServerOptions } from '@livekit/agents';
@@ -11,7 +13,18 @@ import { VOICE_AGENT_INSTRUCTIONS } from './instructions.js';
 import { scamAnalysisTool } from './scamTool.js';
 import { ragKnowledgeTool } from './ragTool.js';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const backendEnv = path.resolve(__dirname, '../.env');
+const rootEnv = path.resolve(__dirname, '../../.env');
+
+if (fs.existsSync(backendEnv)) {
+  dotenv.config({ path: backendEnv });
+} else if (fs.existsSync(rootEnv)) {
+  dotenv.config({ path: rootEnv });
+} else {
+  dotenv.config();
+}
 
 // Ensure child worker processes have sufficient V8 heap on Windows
 if (!process.env.NODE_OPTIONS || !process.env.NODE_OPTIONS.includes('--max-old-space-size')) {
@@ -135,6 +148,16 @@ export default defineAgent({
 
 // Run as a standalone worker CLI when invoked directly
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const missingKeys = [];
+  if (!process.env.LIVEKIT_URL) missingKeys.push('LIVEKIT_URL');
+  if (!process.env.LIVEKIT_API_KEY) missingKeys.push('LIVEKIT_API_KEY');
+  if (!process.env.LIVEKIT_API_SECRET) missingKeys.push('LIVEKIT_API_SECRET');
+  if (missingKeys.length > 0) {
+    console.error(`\x1b[31m[Voice Agent] Error: Missing required LiveKit environment variables: ${missingKeys.join(', ')}\x1b[0m`);
+    console.error('[Voice Agent] Please ensure backend/.env or .env contains these keys.');
+    process.exit(1);
+  }
+
   cli.runApp(new ServerOptions({ 
     agent: fileURLToPath(import.meta.url),
     agentName: 'takabondhu-voice',
