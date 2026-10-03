@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { ROOT_DIR, BACKEND_DIR, ML_DIR, getVenvPython, getSystemPython, isPortAvailable } from './utils.mjs';
+import { runSecretAudit } from './check-secrets.mjs';
 
 // Parse backend/.env safely without external dependencies and NEVER printing values
 const envPath = path.join(BACKEND_DIR, '.env');
@@ -22,13 +23,21 @@ if (fs.existsSync(envPath)) {
 
 async function runDoctor() {
   console.log('================================================================');
-  console.log('🩺 TakaBondhu / ScamShield - System Health Doctor');
+  console.log('🩺 TakaBondhu - System Health Doctor');
   console.log('================================================================\n');
 
   const results = [];
 
   function addResult(status, component, details) {
     results.push({ status, component, details });
+  }
+
+  // 0. Pre-commit Repository Secrets Scan
+  const secretViolations = runSecretAudit();
+  if (secretViolations.length === 0) {
+    addResult('PASS', 'Repo Secrets Scan', 'Zero credentials detected in source');
+  } else {
+    addResult('FAIL', 'Repo Secrets Scan', `ALERT: ${secretViolations.length} credential(s) exposed in repo!`);
   }
 
   // 1. Node.js Version
@@ -115,7 +124,8 @@ async function runDoctor() {
   const portsToCheck = [
     { port: 5000, name: 'Backend API' },
     { port: 5173, name: 'Frontend (Vite)' },
-    { port: 8001, name: 'ML Service' }
+    { port: 8001, name: 'ML Service' },
+    { port: 8081, name: 'LiveKit Voice Agent' }
   ];
 
   for (const { port, name } of portsToCheck) {

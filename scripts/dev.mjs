@@ -6,7 +6,7 @@ import { ROOT_DIR, BACKEND_DIR, FRONTEND_DIR, ML_DIR, getVenvPython } from './ut
 const children = [];
 
 function killAll() {
-  console.log('\n🛑 Shutting down ScamShield dev services...');
+  console.log('\n🛑 Shutting down TakaBondhu dev services...');
   for (const child of children) {
     try {
       if (process.platform === 'win32') {
@@ -46,7 +46,7 @@ async function waitForHealth(url, timeoutMs = 6000) {
 
 async function dev() {
   console.log('======================================================');
-  console.log('⚡ TakaBondhu / ScamShield - Local Dev Orchestrator');
+  console.log('⚡ TakaBondhu - Local Dev Orchestrator');
   console.log('======================================================\n');
 
   const venvPython = getVenvPython();
@@ -70,7 +70,7 @@ async function dev() {
       if (line) console.error(`\x1b[36m[ML]\x1b[0m ${line}`);
     });
 
-    const mlReady = await waitForHealth('http://127.0.0.1:8001/health', 8000);
+    const mlReady = await waitForHealth('http://127.0.0.1:8001/health', 14000);
     if (mlReady) {
       console.log('✅ ML service active and healthy on http://127.0.0.1:8001\n');
     } else {
@@ -85,7 +85,7 @@ async function dev() {
   }
 
   // 2. Backend Service
-  console.log('⚙️ [2/3] Starting Express Backend API (:5000)...');
+  console.log('⚙️ [2/4] Starting Express Backend API (:5000)...');
   const backendProc = spawn('node', ['server.js'], {
     cwd: BACKEND_DIR,
     stdio: ['ignore', 'pipe', 'pipe']
@@ -131,9 +131,14 @@ async function dev() {
 
   console.log('\n======================================================');
   console.log('🎉 TakaBondhu is running locally:');
-  console.log('   • Frontend Web App: http://localhost:5173');
-  console.log('   • Backend API:      http://localhost:5000');
-  console.log('   • ML Microservice:  http://localhost:8001');
+  console.log('   • Frontend Web App:  http://localhost:5173');
+  console.log('   • Backend API:       http://localhost:5000');
+  console.log('   • ML Microservice:   http://localhost:8001');
+  console.log('------------------------------------------------------');
+  console.log('🎙️ Realtime Voice AI Agent:');
+  console.log('   To enable the Voice Assistant, open a 2nd terminal:');
+  console.log('   > npm run voice-agent');
+  console.log('------------------------------------------------------');
   console.log('Press Ctrl+C to stop all services.');
   console.log('======================================================\n');
 }

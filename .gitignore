@@ -28,9 +28,10 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 
-# Build outputs
+# Build outputs & archives
 dist/
 dist-ssr/
+*.zip
 
 # IDE & OS
 .vscode/

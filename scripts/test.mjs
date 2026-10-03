@@ -4,7 +4,7 @@ import { ROOT_DIR, BACKEND_DIR, ML_DIR, getVenvPython, execLive } from './utils.
 
 async function runTests() {
   console.log('======================================================');
-  console.log('🧪 TakaBondhu / ScamShield - Comprehensive Test Suite');
+  console.log('🧪 TakaBondhu - Comprehensive Test Suite');
   console.log('======================================================\n');
 
   let failed = false;
@@ -28,7 +28,10 @@ async function runTests() {
   const venvPython = getVenvPython();
   if (venvPython) {
     try {
-      await execLive(venvPython, ['-m', 'pytest', 'tests', '-v'], { cwd: ML_DIR });
+      await execLive(venvPython, ['-m', 'pytest', 'tests', '-v'], {
+        cwd: ML_DIR,
+        env: { ...process.env, OPENBLAS_NUM_THREADS: '1', MKL_NUM_THREADS: '1', OMP_NUM_THREADS: '1' }
+      });
       console.log('✅ Python tests passed.\n');
     } catch (err) {
       console.error('❌ Python tests failed:\n', err.message);

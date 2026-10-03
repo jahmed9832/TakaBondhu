@@ -56,14 +56,19 @@ export function getSystemPython() {
  */
 export function isPortAvailable(port) {
   return new Promise((resolve) => {
-    const server = net.createServer();
-    server.once('error', () => {
-      resolve(false);
+    const client = net.createConnection({ port, host: '127.0.0.1' });
+    client.setTimeout(400);
+    client.on('connect', () => {
+      client.destroy();
+      resolve(false); // Connected means port is IN USE
     });
-    server.once('listening', () => {
-      server.close(() => resolve(true));
+    client.on('timeout', () => {
+      client.destroy();
+      resolve(true); // Timed out means port is free
     });
-    server.listen(port, '127.0.0.1');
+    client.on('error', () => {
+      resolve(true); // Connection refused means port is free
+    });
   });
 }
 
@@ -74,13 +79,15 @@ export function execLive(cmd, args, options = {}) {
   return new Promise((resolve, reject) => {
     const isWindows = process.platform === 'win32';
     let resolvedCmd = cmd;
-    if (isWindows && cmd === 'npm') {
-      resolvedCmd = 'npm.cmd';
+    let useShell = options.shell !== undefined ? options.shell : false;
+    if (isWindows && (cmd === 'npm' || cmd === 'npx' || cmd.endsWith('.cmd') || cmd.endsWith('.bat'))) {
+      resolvedCmd = cmd.endsWith('.cmd') || cmd.endsWith('.bat') ? cmd : `${cmd}.cmd`;
+      useShell = true;
     }
     const child = spawn(resolvedCmd, args, {
       stdio: 'inherit',
-      shell: false,
-      ...options
+      ...options,
+      shell: useShell
     });
     child.on('close', (code) => {
       if (code === 0) resolve(code);

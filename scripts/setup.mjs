@@ -4,7 +4,7 @@ import { ROOT_DIR, BACKEND_DIR, FRONTEND_DIR, ML_DIR, getVenvPython, getSystemPy
 
 async function setup() {
   console.log('======================================================');
-  console.log('🚀 TakaBondhu / ScamShield - Cross-Platform Setup');
+  console.log('🚀 TakaBondhu - Cross-Platform Setup');
   console.log('======================================================\n');
 
   // 1. Install Node Dependencies
@@ -80,7 +80,7 @@ async function setup() {
   console.log('\n======================================================');
   console.log('🔑 API KEY CONFIGURATION STATUS');
   console.log('======================================================');
-  console.log('ScamShield runs 100% LOCALLY without any cloud API keys:');
+  console.log('TakaBondhu runs 100% LOCALLY without any cloud API keys:');
   console.log('  - Rule Engine + ML Model: Fully offline');
   console.log('  - DEMO_OFFLINE=true allows complete offline execution');
   console.log('\nOptional external services (configure in backend/.env if desired):');

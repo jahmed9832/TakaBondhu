@@ -19,7 +19,7 @@ function percentile(arr, p) {
 
 async function runBenchmark() {
   console.log('======================================================');
-  console.log('⚡ TakaBondhu / ScamShield - Performance Benchmark');
+  console.log('⚡ TakaBondhu - Performance Benchmark');
   console.log('======================================================\n');
 
   const venvPython = getVenvPython();

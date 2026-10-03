@@ -1,8 +1,8 @@
 {
-  "name": "scamshield-live",
+  "name": "takabondhu",
   "version": "1.0.0",
   "private": true,
-  "description": "TakaBondhu - Protect. Save. Plan. Your AI companion for safer financial decisions.",
+  "description": "TakaBondhu (টাকাবন্ধু) — Upay's friend that keeps your money safe.",
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "train": "node scripts/train.mjs",
@@ -11,6 +11,8 @@
     "demo:check": "node scripts/demo-check.mjs",
     "bench": "node scripts/bench.mjs",
     "test": "node scripts/test.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "export:clean": "node scripts/export-clean.mjs",
     "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev",
     "voice-agent": "cd backend && npm run voice-agent",
