@@ -3,7 +3,7 @@
  * Connects the voice pipeline to the existing Supabase pgvector safety knowledge base.
  */
 
-import { tool } from '@livekit/agents';
+import { tool, getJobContext } from '@livekit/agents';
 import { retrieveRelevantKnowledge } from '../ragService.js';
 
 export const ragKnowledgeTool = tool({
@@ -36,6 +36,21 @@ export const ragKnowledgeTool = tool({
 
       console.log(`[Voice Agent] RAG documents retrieved: ${ragResult.documents.length}`);
       
+      try {
+        const jobCtx = getJobContext(false);
+        if (jobCtx?.room?.localParticipant) {
+          const payload = new TextEncoder().encode(JSON.stringify({
+            type: 'rag_status',
+            data: {
+              available: true,
+              count: ragResult.documents.length,
+              guidelines: ragResult.documents.map(d => ({ title: d.title, category: d.category }))
+            }
+          }));
+          jobCtx.room.localParticipant.publishData(payload, { reliable: true }).catch(() => {});
+        }
+      } catch {}
+
       return {
         available: true,
         documentCount: ragResult.documents.length,

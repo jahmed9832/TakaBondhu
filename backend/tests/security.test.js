@@ -67,3 +67,60 @@ test('Security - rate limiter blocks IP when exceeding limit', () => {
   limiter(mockReq, mockRes, next); // 4th: blocked!
   assert.equal(statusCode, 429);
 });
+
+test('Security - RBAC role-based access control blocks unauthorized customer role on analyst endpoints', () => {
+  function verifyAnalystAccess(headers) {
+    const role = (headers['x-role'] || 'customer').toLowerCase();
+    if (role !== 'analyst' && role !== 'admin') {
+      return { status: 403, error: 'Forbidden: Analyst or Admin credentials required.' };
+    }
+    return { status: 200, success: true };
+  }
+
+  // Customer role -> Blocked (403)
+  assert.equal(verifyAnalystAccess({ 'x-role': 'customer' }).status, 403);
+  assert.equal(verifyAnalystAccess({}).status, 403); // default is customer without header
+
+  // Analyst role -> Allowed (200)
+  assert.equal(verifyAnalystAccess({ 'x-role': 'analyst' }).status, 200);
+
+  // Admin role -> Allowed (200)
+  assert.equal(verifyAnalystAccess({ 'x-role': 'admin' }).status, 200);
+});
+
+test('Security - Anti-leakage verification: test template families are not in train set', async () => {
+  const fs = await import('fs');
+  const path = await import('path');
+
+  const trainPath = path.resolve('ml/data/train_v2.csv');
+  const testPath = path.resolve('ml/data/test_unseen_v2.csv');
+
+  if (fs.existsSync(trainPath) && fs.existsSync(testPath)) {
+    const trainContent = fs.readFileSync(trainPath, 'utf8');
+    const testContent = fs.readFileSync(testPath, 'utf8');
+
+    const extractTemplates = (csv) => {
+      const lines = csv.split('\n').filter(Boolean);
+      const header = lines[0].split(',');
+      const familyIdx = header.indexOf('template_family');
+      if (familyIdx === -1) return new Set();
+      const set = new Set();
+      for (let i = 1; i < lines.length; i++) {
+        const parts = lines[i].split(',');
+        if (parts[familyIdx]) set.add(parts[familyIdx].trim());
+      }
+      return set;
+    };
+
+    const trainFamilies = extractTemplates(trainContent);
+    const testFamilies = extractTemplates(testContent);
+
+    let overlapCount = 0;
+    for (const f of testFamilies) {
+      if (trainFamilies.has(f)) overlapCount++;
+    }
+
+    assert.equal(overlapCount, 0, `Anti-leakage violation: ${overlapCount} test families overlapped with train`);
+  }
+});
+

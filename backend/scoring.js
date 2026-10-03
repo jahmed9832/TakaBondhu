@@ -1,5 +1,5 @@
 /**
- * Pure, unit-testable scoring module for TakaBachao / ScamShield.
+ * Pure, unit-testable scoring module for TakaBondhu.
  * Combines:
  * 1. Deterministic Rule Engine score (0-100)
  * 2. Calibrated ML probability (0-1) scaled to 0-100

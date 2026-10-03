@@ -1,8 +1,7 @@
 -- ====================================================================
--- ScamShield Live — Pre-Computed Safety Knowledge Base Seed
+-- TakaBondhu — Pre-Computed Safety Knowledge Base Seed
 -- Contains all 9 curated safety documents with real 768-dimensional
 -- embeddings generated via Google Gemini (gemini-embedding-001).
--- Run this in your Supabase SQL Editor: https://supabase.com/dashboard/project/ptznbkjjnekuqfwunufp/sql/new
 -- ====================================================================
 
 -- 1. Ensure table and pgvector extension exist
@@ -30,7 +29,7 @@ VALUES (
   'kb-acc-01',
   'Account Suspension & Threat Scam Defense',
   'ACCOUNT_SECURITY',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'Financial institutions never demand money or immediate transfers under the threat of permanent account closure.',
   'Account Suspension Scam Defense Protocol:
 1. Threat of Immediate Closure: Scammers frequently generate artificial panic by claiming an account has been flagged for suspicious activity and will be permanently blocked within hours.
@@ -54,7 +53,7 @@ VALUES (
   'kb-otp-01',
   'OTP & Authentication Credential Safety',
   'OTP_AND_CREDENTIAL_SAFETY',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'One-Time Passwords (OTPs) and PINs are secret keys. Legitimate representatives will never request your OTP or PIN.',
   'One-Time Password (OTP) & PIN Confidentiality Standard:
 1. Universal Non-Disclosure Rule: An OTP is equivalent to your digital signature and authorizes funds withdrawal. Never disclose an OTP, PIN, CVV, or password to anyone under any circumstances.
@@ -78,7 +77,7 @@ VALUES (
   'kb-pay-01',
   'Advance-Fee & Coerced Payment Scam Prevention',
   'PAYMENT_SCAMS',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'Requests for advance fees to unlock funds, release prizes, or reverse unauthorized transactions are fraudulent.',
   'Advance-Fee & P2P Payment Fraud Prevention:
 1. Advance Processing Fees: Any demand to transfer money (e.g. ৳500 or $50) to unlock a prize, receive a government grant, or claim an inheritance is a hallmark of advance-fee fraud.
@@ -102,7 +101,7 @@ VALUES (
   'kb-phi-01',
   'Phishing Links & Malicious Domain Detection',
   'PHISHING_AND_SUSPICIOUS_LINKS',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'Inspect URLs carefully. Fake login portals mimic legitimate financial institutions using deceptive domains.',
   'Phishing Links & Domain Security Guidance:
 1. Lookalike & Typosquatted Domains: Attackers register domains like ''secure-bank-verify.xyz'', ''bkash-bonus.net'', or ''login-portal.site'' to impersonate official institutions.
@@ -126,7 +125,7 @@ VALUES (
   'kb-sup-01',
   'Fake Customer Support & Authority Impersonation',
   'FAKE_CUSTOMER_SUPPORT',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'Scammers spoof caller IDs and pose as bank managers, telecom agents, or police to demand compliance.',
   'Authority & Customer Support Impersonation Guidelines:
 1. Social Engineering by Title: Fraudsters invoke authority (e.g., "Central Bank Compliance Officer", "Cyber Crime Unit", "MFS Senior Manager") to create compliance and fear.
@@ -150,7 +149,7 @@ VALUES (
   'kb-prz-01',
   'Lottery, Reward & Prize Scam Indicators',
   'PRIZE_AND_REWARD_SCAMS',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'You cannot win a contest or lottery you never entered. Demands for fees to claim prizes are scams.',
   'Lottery & Unsolicited Prize Scam Recognition:
 1. Unsolicited Winnings: Messages announcing you have won ৳50,000, a car, or an international lottery without entering any competition are fraudulent.
@@ -174,7 +173,7 @@ VALUES (
   'kb-soc-01',
   'Social Engineering & Psychological Manipulation',
   'SOCIAL_ENGINEERING',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'Scammers manipulate emotions such as urgency, fear, greed, and obligation to prevent critical thinking.',
   'Social Engineering Defense Principles:
 1. Urgency Manipulation: Setting strict countdowns ("within 2 hours", "within 15 minutes") forces victims into panic mode where critical judgment is compromised.
@@ -198,7 +197,7 @@ VALUES (
   'kb-ver-01',
   'Safe Account Verification & KYC Guidelines',
   'SAFE_VERIFICATION',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'Official account verification only occurs via authenticated in-app flows or physical branches.',
   'Safe Account Verification & Identity Protocol:
 1. Authorized In-App Channels: Up-to-date KYC (Know Your Customer) updates are submitted strictly through the verified mobile banking application with biometric or cryptographic safeguards.
@@ -222,7 +221,7 @@ VALUES (
   'kb-gen-01',
   'General Financial Cybersecurity Hygiene',
   'GENERAL_FINANCIAL_SAFETY',
-  'ScamShield Safety Knowledge Base',
+  'TakaBondhu Safety Knowledge Base',
   'Adopt multi-factor authentication, secure device habits, and regular account balance monitoring.',
   'General Financial Cybersecurity Hygiene:
 1. Multi-Factor Authentication: Ensure your email, banking, and mobile wallet apps have biometric or app-based 2FA enabled wherever possible.

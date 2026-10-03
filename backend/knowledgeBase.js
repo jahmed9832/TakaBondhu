@@ -1,7 +1,7 @@
 /**
- * ScamShield Safety Knowledge Base
+ * TakaBondhu Safety Knowledge Base
  * Curated financial fraud prevention and cybersecurity guidance for the prototype.
- * NOTE: These documents represent synthetic educational safety guidelines for ScamShield Live.
+ * NOTE: These documents represent synthetic educational safety guidelines for TakaBondhu.
  * They are not official bank or MFS policies unless explicitly marked as such.
  */
 
@@ -10,7 +10,7 @@ export const KNOWLEDGE_DOCUMENTS = [
     id: 'kb-acc-01',
     title: 'Account Suspension & Threat Scam Defense',
     category: 'ACCOUNT_SECURITY',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'Financial institutions never demand money or immediate transfers under the threat of permanent account closure.',
     content: `
 Account Suspension Scam Defense Protocol:
@@ -24,7 +24,7 @@ Account Suspension Scam Defense Protocol:
     id: 'kb-otp-01',
     title: 'OTP & Authentication Credential Safety',
     category: 'OTP_AND_CREDENTIAL_SAFETY',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'One-Time Passwords (OTPs) and PINs are secret keys. Legitimate representatives will never request your OTP or PIN.',
     content: `
 One-Time Password (OTP) & PIN Confidentiality Standard:
@@ -38,7 +38,7 @@ One-Time Password (OTP) & PIN Confidentiality Standard:
     id: 'kb-pay-01',
     title: 'Advance-Fee & Coerced Payment Scam Prevention',
     category: 'PAYMENT_SCAMS',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'Requests for advance fees to unlock funds, release prizes, or reverse unauthorized transactions are fraudulent.',
     content: `
 Advance-Fee & P2P Payment Fraud Prevention:
@@ -52,7 +52,7 @@ Advance-Fee & P2P Payment Fraud Prevention:
     id: 'kb-phi-01',
     title: 'Phishing Links & Malicious Domain Detection',
     category: 'PHISHING_AND_SUSPICIOUS_LINKS',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'Inspect URLs carefully. Fake login portals mimic legitimate financial institutions using deceptive domains.',
     content: `
 Phishing Links & Domain Security Guidance:
@@ -66,7 +66,7 @@ Phishing Links & Domain Security Guidance:
     id: 'kb-sup-01',
     title: 'Fake Customer Support & Authority Impersonation',
     category: 'FAKE_CUSTOMER_SUPPORT',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'Scammers spoof caller IDs and pose as bank managers, telecom agents, or police to demand compliance.',
     content: `
 Authority & Customer Support Impersonation Guidelines:
@@ -80,7 +80,7 @@ Authority & Customer Support Impersonation Guidelines:
     id: 'kb-prz-01',
     title: 'Lottery, Reward & Prize Scam Indicators',
     category: 'PRIZE_AND_REWARD_SCAMS',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'You cannot win a contest or lottery you never entered. Demands for fees to claim prizes are scams.',
     content: `
 Lottery & Unsolicited Prize Scam Recognition:
@@ -94,7 +94,7 @@ Lottery & Unsolicited Prize Scam Recognition:
     id: 'kb-soc-01',
     title: 'Social Engineering & Psychological Manipulation',
     category: 'SOCIAL_ENGINEERING',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'Scammers manipulate emotions such as urgency, fear, greed, and obligation to prevent critical thinking.',
     content: `
 Social Engineering Defense Principles:
@@ -108,7 +108,7 @@ Social Engineering Defense Principles:
     id: 'kb-ver-01',
     title: 'Safe Account Verification & KYC Guidelines',
     category: 'SAFE_VERIFICATION',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'Official account verification only occurs via authenticated in-app flows or physical branches.',
     content: `
 Safe Account Verification & Identity Protocol:
@@ -122,7 +122,7 @@ Safe Account Verification & Identity Protocol:
     id: 'kb-gen-01',
     title: 'General Financial Cybersecurity Hygiene',
     category: 'GENERAL_FINANCIAL_SAFETY',
-    source: 'ScamShield Safety Knowledge Base',
+    source: 'TakaBondhu Safety Knowledge Base',
     excerpt: 'Adopt multi-factor authentication, secure device habits, and regular account balance monitoring.',
     content: `
 General Financial Cybersecurity Hygiene:

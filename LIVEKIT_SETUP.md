@@ -1,13 +1,13 @@
 # 🎙️ LiveKit Realtime Voice AI Setup Guide (Phase 4)
 
-This guide walks you through configuring and running the **LiveKit Realtime Voice AI** for TakaBondhu (Scam Shield feature).
+This guide walks you through configuring and running the **LiveKit Realtime Voice AI** for TakaBondhu.
 
 ---
 
 ## 1. Create a LiveKit Cloud Project
 
 1. Visit [LiveKit Cloud](https://cloud.livekit.io/) and create an account or sign in with GitHub / Google.
-2. Click **Create Project** and name it (e.g. `scamshield-live`).
+2. Click **Create Project** and name it (e.g. `takabondhu-live`).
 3. Select your preferred cloud region (e.g., Singapore or US).
 4. Once created, navigate to **Project Settings** -> **Keys**.
 
@@ -16,7 +16,7 @@ This guide walks you through configuring and running the **LiveKit Realtime Voic
 ## 2. Retrieve Your LiveKit Credentials
 
 Under **Project Settings -> Keys**, you will find:
-- **WebSocket URL**: e.g., `wss://scamshield-live-xxxxxx.livekit.cloud`
+- **WebSocket URL**: e.g., `wss://takabondhu-live-xxxxxx.livekit.cloud`
 - **API Key**: e.g., `APIxxxxxxxxxxxx`
 - **API Secret**: e.g., `secretxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 

@@ -10,10 +10,14 @@ import { retrieveRelevantKnowledge, checkRagHealth, isRagConfigured, getSupabase
 import { runDeterministicRuleEngine, extractSnippet } from './ruleEngine.js';
 import { AccessToken, RoomServiceClient, AgentDispatchClient, RoomConfiguration, RoomAgentDispatch } from 'livekit-server-sdk';
 import { handleSavingsConversation, calculateFinancialPlan } from './savingsService.js';
-import { predictScam, checkMLHealth } from './mlClient.js';
+import {
+  predictScam, checkMLHealth, scoreTransactionML,
+  screenPreSendML, getMuleNetworkML, getAgentRiskML
+} from './mlClient.js';
 import { computeHybridScore, SCORING_CONFIG, generateCaseCard, getRiskLevel } from './scoring.js';
 import { redactPII, validateVerbatimEvidence, createRateLimiter, SimpleLRUCache } from './security.js';
 import { UpayTransactionAdapter } from './integration/upayAdapter.js';
+import { recordAuditDecision, verifyAuditLogIntegrity } from './auditLog.js';
 
 dotenv.config();
 
@@ -451,7 +455,7 @@ app.post('/api/livekit/token', async (req, res) => {
     }
 
     const { roomName: requestedRoom, participantName } = req.body || {};
-    const roomName = (requestedRoom && requestedRoom.trim()) || `scamshield-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+    const roomName = (requestedRoom && requestedRoom.trim()) || `takabondhu-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
     const identity = `user-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
     const name = (participantName && participantName.trim()) || 'TakaBondhu User';
 
@@ -474,7 +478,7 @@ app.post('/api/livekit/token', async (req, res) => {
     at.roomConfig = new RoomConfiguration({
       agents: [
         new RoomAgentDispatch({
-          agentName: 'scamshield-voice'
+          agentName: 'takabondhu-voice'
         })
       ]
     });
@@ -485,7 +489,7 @@ app.post('/api/livekit/token', async (req, res) => {
         name: roomName,
         agents: [
           new RoomAgentDispatch({
-            agentName: 'scamshield-voice'
+            agentName: 'takabondhu-voice'
           })
         ]
       });
@@ -493,7 +497,7 @@ app.post('/api/livekit/token', async (req, res) => {
     } catch {
       try {
         const adc = new AgentDispatchClient(livekitUrl, livekitApiKey, livekitApiSecret);
-        await adc.createDispatch(roomName, 'scamshield-voice');
+        await adc.createDispatch(roomName, 'takabondhu-voice');
         console.log(`[VOICE DEBUG] Explicit agent dispatch sent for room: ${roomName}`);
       } catch {
         // Handled via token roomConfig
@@ -939,33 +943,272 @@ app.post('/api/analyze', async (req, res) => {
 });
 
 /**
- * PRE-SEND SAFETY SCREENING HOOK (Step 8: upay Integration)
- * POST /v1/screen
+ * UPAY-READY V1 APIS (Track 01 & System Integration)
  */
 const upayAdapter = new UpayTransactionAdapter();
 
+// 1. POST /v1/screen (Pre-Send Safety Screening)
 app.post('/v1/screen', async (req, res) => {
+  const startTime = Date.now();
+  const traceId = generateTraceId();
+
   try {
-    const { message_text, recipient_is_new, amount } = req.body || {};
-    if (!message_text || typeof message_text !== 'string') {
-      return res.status(400).json({ error: 'message_text is required' });
+    const body = req.body || {};
+    // Support both rich schema and legacy parameters
+    let tx = body.transaction;
+    const msg = body.message || body.message_text || '';
+    const session = body.session_context || {};
+
+    if (!tx) {
+      if (typeof body.amount !== 'undefined' || typeof body.message_text !== 'undefined') {
+        tx = {
+          amount: Number(body.amount) || 0,
+          is_new_recipient: Boolean(body.recipient_is_new),
+          type: body.type || 'send_money',
+          channel: body.channel || 'app',
+          hour: new Date().getHours()
+        };
+      } else {
+        return res.status(400).json({
+          error: 'Invalid request: "transaction" object or "amount"/"message_text" is required.',
+          trace_id: traceId
+        });
+      }
     }
 
-    const result = await upayAdapter.screenTransaction({
-      message_text,
-      recipient_is_new: Boolean(recipient_is_new),
-      amount: Number(amount) || 0
+    const result = await upayAdapter.screenPreSend({
+      transaction: tx,
+      message: msg,
+      session_context: session
     });
 
     return res.json(result);
   } catch (err) {
-    const traceId = generateTraceId();
-    console.error(`[${traceId}] Error in /v1/screen:`, err);
+    console.error(`[${traceId}] Error in /v1/screen:`, err.message);
     return res.status(500).json({
-      error: 'Pre-send screening failed',
+      error: 'Pre-send screening failed. Operating in fail-safe mode.',
       trace_id: traceId
     });
   }
+});
+
+// 2. POST /v1/score-transaction (Direct transaction risk scoring)
+app.post('/v1/score-transaction', async (req, res) => {
+  const traceId = generateTraceId();
+  try {
+    const tx = req.body.transaction || req.body;
+    if (!tx || typeof tx !== 'object') {
+      return res.status(400).json({ error: 'Valid transaction object is required.', trace_id: traceId });
+    }
+    const scoreRes = await scoreTransactionML(tx);
+    return res.json({
+      trace_id: traceId,
+      ...scoreRes
+    });
+  } catch (err) {
+    console.error(`[${traceId}] Error in /v1/score-transaction:`, err.message);
+    return res.status(500).json({ error: 'Transaction scoring failed.', trace_id: traceId });
+  }
+});
+
+// 3. POST /v1/analyze-message (Direct message intelligence)
+app.post('/v1/analyze-message', async (req, res, next) => {
+  // Forward to /api/analyze handler
+  req.url = '/api/analyze';
+  return app._router.handle(req, res, next);
+});
+
+// 4. GET /v1/mule-network/:wallet (Network graph mule discovery)
+app.get('/v1/mule-network/:wallet', async (req, res) => {
+  const traceId = generateTraceId();
+  try {
+    const wallet = req.params.wallet;
+    if (!wallet) return res.status(400).json({ error: 'Wallet identifier required.' });
+    const graphData = await getMuleNetworkML(wallet);
+    return res.json({
+      trace_id: traceId,
+      ...graphData
+    });
+  } catch (err) {
+    console.error(`[${traceId}] Error in /v1/mule-network:`, err.message);
+    return res.status(500).json({ error: 'Mule network query failed.', trace_id: traceId });
+  }
+});
+
+// 5. GET /v1/agents/:id/risk (Agent peer benchmarking)
+app.get('/v1/agents/:id/risk', async (req, res) => {
+  const traceId = generateTraceId();
+  try {
+    const agentId = req.params.id;
+    if (!agentId) return res.status(400).json({ error: 'Agent ID required.' });
+    const riskData = await getAgentRiskML(agentId);
+    return res.json({
+      trace_id: traceId,
+      ...riskData
+    });
+  } catch (err) {
+    console.error(`[${traceId}] Error in /v1/agents/risk:`, err.message);
+    return res.status(500).json({ error: 'Agent risk lookup failed.', trace_id: traceId });
+  }
+});
+
+// 6. POST /v1/feedback (Analyst triage decision feed with RBAC)
+const FEEDBACK_LOG_FILE = path.join(DATA_DIR, 'analyst_feedback.jsonl');
+app.post('/v1/feedback', (req, res) => {
+  const traceId = generateTraceId();
+  try {
+    // RBAC verification: check for analyst or admin role header
+    const role = (req.headers['x-role'] || 'analyst').toLowerCase();
+    if (role !== 'analyst' && role !== 'admin') {
+      return res.status(403).json({
+        error: 'Forbidden: Analyst or Admin credentials required to submit feedback.',
+        trace_id: traceId
+      });
+    }
+
+    const { case_id, caseId, decision, notes, analyst_id = 'analyst_sandbox' } = req.body || {};
+    const targetCase = case_id || caseId;
+    if (!targetCase || !decision) {
+      return res.status(400).json({ error: 'case_id and decision are required.', trace_id: traceId });
+    }
+
+    const validDecisions = ['confirmed_scam', 'false_alarm', 'escalated', 'confirm_scam'];
+    if (!validDecisions.includes(decision)) {
+      return res.status(400).json({ error: `Invalid decision '${decision}'.`, trace_id: traceId });
+    }
+
+    const normalizedDecision = decision === 'confirm_scam' ? 'confirmed_scam' : decision;
+    const timestamp = new Date().toISOString();
+
+    // 1. Update review queue
+    const queue = loadReviewQueue();
+    const item = queue.find(c => c.id === targetCase);
+    if (item) {
+      item.status = 'reviewed';
+      item.decision = normalizedDecision;
+      item.notes = notes || '';
+      item.reviewed_at = timestamp;
+      saveReviewQueue(queue);
+    }
+
+    // 2. Append to retraining review buffer
+    const feedbackEntry = {
+      timestamp,
+      case_id: targetCase,
+      analyst_id,
+      decision: normalizedDecision,
+      notes: notes || '',
+      trace_id: traceId
+    };
+    fs.appendFileSync(FEEDBACK_LOG_FILE, JSON.stringify(feedbackEntry) + '\n', 'utf-8');
+
+    // 3. Append to tamper-evident audit log
+    recordAuditDecision({
+      decision_type: 'analyst_feedback',
+      trace_id: traceId,
+      risk_score: item ? item.risk_score : 50,
+      recommendation: normalizedDecision,
+      metadata: { case_id: targetCase, analyst_id }
+    });
+
+    // 4. Update live telemetry counters
+    if (normalizedDecision === 'confirmed_scam') runtimeTelemetry.reviewDecisions.confirmed_scam++;
+    else if (normalizedDecision === 'false_alarm') runtimeTelemetry.reviewDecisions.false_alarm++;
+    else if (normalizedDecision === 'escalated') runtimeTelemetry.reviewDecisions.escalated++;
+
+    return res.json({
+      success: true,
+      case_id: targetCase,
+      decision: normalizedDecision,
+      recorded_at: timestamp,
+      trace_id: traceId
+    });
+  } catch (err) {
+    console.error(`[${traceId}] Error in /v1/feedback:`, err.message);
+    return res.status(500).json({ error: 'Failed to record analyst feedback.', trace_id: traceId });
+  }
+});
+
+// 7. POST /v1/investigate (Grounded AI Investigation Assistant)
+app.post('/v1/investigate', async (req, res) => {
+  const traceId = generateTraceId();
+  try {
+    const { case_card, rule_trace = [], ml_attributions = [], transaction = {}, risk_score = 50 } = req.body || {};
+
+    const cleanWhat = redactPII(case_card?.what_happened || 'Suspicious financial activity detected.');
+    const cleanWhy = redactPII(case_card?.why_risky || 'Deviations from customer baseline.');
+    const cleanAction = case_card?.what_upay_should_do || 'Hold for review.';
+
+    // Deterministic fallback
+    const offlineNarrative = `Analyst Case Summary: Transaction evaluated with composite risk score ${risk_score}/100. ${cleanWhy} Recommended action: ${cleanAction}`;
+    const offlineWarningBn = risk_score >= 70
+      ? 'সতর্কতা: এই লেনদেনটিতে উচ্চ ঝুঁকির লক্ষণ পাওয়া গেছে। পিন বা ওটিপি কারো সাথে শেয়ার করবেন না এবং অপরিচিত অ্যাকাউন্টে টাকা পাঠানোর আগে যাচাই করুন।'
+      : 'উপায় বন্ধু পরামর্শ: লেনদেন করার আগে প্রাপকের নম্বর ও তথ্য ভালো করে নিশ্চিত হয়ে নিন।';
+
+    if (!isKeyConfigured || !genAI || IS_DEMO_OFFLINE) {
+      return res.json({
+        trace_id: traceId,
+        source: 'deterministic-fallback',
+        analyst_narrative: offlineNarrative,
+        customer_warning_bn: offlineWarningBn,
+        llm_adjustment: 0
+      });
+    }
+
+    const prompt = `You are TakaBondhu's Grounded AI Investigation Assistant for Upay Fraud Operations.
+You strictly receive structured, redacted evidence JSON:
+- Evidence What Happened: "${cleanWhat}"
+- Evidence Why Risky: "${cleanWhy}"
+- Upay Action: "${cleanAction}"
+- Risk Score: ${risk_score}/100
+
+INSTRUCTIONS:
+1. Synthesize a concise 2-sentence investigation narrative for the fraud analyst console explaining the risk topology.
+2. Produce a friendly, plain-Bangla warning for the customer ("customer_warning_bn") advising them with empathy and zero technical jargon.
+3. Suggest an integer adjustment in [-10, 10] ONLY for subtle context. You can NEVER alter the decision recommendation.
+Output JSON only:
+{
+  "analyst_narrative": "...",
+  "customer_warning_bn": "...",
+  "llm_adjustment": 0
+}`;
+
+    const model = genAI.getGenerativeModel({
+      model: activeGeminiModel,
+      generationConfig: { responseMimeType: 'application/json', temperature: 0.1, maxOutputTokens: 300 }
+    });
+    const genRes = await model.generateContent(prompt);
+    const parsed = JSON.parse(genRes.response.text());
+    const adj = Math.max(-10, Math.min(10, Math.round(Number(parsed.llm_adjustment) || 0)));
+
+    return res.json({
+      trace_id: traceId,
+      source: 'grounded-gemini-ai',
+      analyst_narrative: parsed.analyst_narrative || offlineNarrative,
+      customer_warning_bn: parsed.customer_warning_bn || offlineWarningBn,
+      llm_adjustment: adj
+    });
+  } catch (err) {
+    return res.json({
+      trace_id: traceId,
+      source: 'fallback',
+      analyst_narrative: 'Analyst Case Summary: Composite risk flags detected across transaction behavior.',
+      customer_warning_bn: 'সতর্কতা: লেনদেন করার আগে প্রাপকের তথ্য ভালোভাবে নিশ্চিত করুন।',
+      llm_adjustment: 0
+    });
+  }
+});
+
+// 8. GET /v1/metrics/runtime (Canonical alias)
+app.get('/v1/metrics/runtime', (req, res, next) => {
+  req.url = '/api/metrics/runtime';
+  return app._router.handle(req, res, next);
+});
+
+// 9. Root Health Alias
+app.get('/health', (req, res, next) => {
+  req.url = '/api/health';
+  return app._router.handle(req, res, next);
 });
 
 /**
@@ -975,17 +1218,26 @@ app.get('/api/metrics/runtime', (req, res) => {
   const latencies = [...runtimeTelemetry.latencies].sort((a, b) => a - b);
   const p50 = latencies.length > 0 ? latencies[Math.floor(latencies.length * 0.5)] : 0;
   const p95 = latencies.length > 0 ? latencies[Math.floor(latencies.length * 0.95)] : 0;
+  const totalReviewed = (runtimeTelemetry.reviewDecisions.confirmed_scam || 0) +
+                        (runtimeTelemetry.reviewDecisions.false_alarm || 0) +
+                        (runtimeTelemetry.reviewDecisions.escalated || 0);
 
   res.json({
     uptime_seconds: Math.round(process.uptime()),
     started_at: runtimeTelemetry.startedAt,
     total_requests: runtimeTelemetry.totalRequests,
     flagged_risky: runtimeTelemetry.flaggedRisky,
+    flagged_scams: runtimeTelemetry.flaggedRisky,
     needs_human_review_count: runtimeTelemetry.needsHumanReviewCount,
+    needs_review: runtimeTelemetry.needsHumanReviewCount,
     latency_p50_ms: p50,
     latency_p95_ms: p95,
+    latency_ms: { p50, p95 },
     score_distribution: runtimeTelemetry.scoreBuckets,
-    review_decisions: runtimeTelemetry.reviewDecisions,
+    review_decisions: {
+      ...runtimeTelemetry.reviewDecisions,
+      total_reviewed: totalReviewed
+    },
     cache_entries: analyzeCache.cache.size
   });
 });
@@ -1015,6 +1267,30 @@ app.get('/api/metrics', (req, res) => {
       test_unseen_fpr: 'not run'
     }
   });
+});
+
+/**
+ * BUSINESS IMPACT RESULTS (Step 6)
+ */
+app.get('/api/impact', (req, res) => {
+  const impactPath = path.join(__dirname, '..', 'impact', 'impact_results.json');
+  if (fs.existsSync(impactPath)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(impactPath, 'utf-8'));
+      return res.json(data);
+    } catch (err) {
+      console.warn('Could not parse impact_results.json:', err.message);
+    }
+  }
+  return res.json({
+    status: 'unavailable',
+    notice: 'Run `python impact/simulator.py` to generate business impact metrics.'
+  });
+});
+
+app.get('/v1/impact', (req, res, next) => {
+  req.url = '/api/impact';
+  return app._router.handle(req, res, next);
 });
 
 /**

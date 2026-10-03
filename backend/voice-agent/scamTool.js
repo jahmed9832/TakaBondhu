@@ -5,7 +5,7 @@
  * Uses the exact same scoring pipeline (backend/scoring.js) as the text API.
  */
 
-import { tool } from '@livekit/agents';
+import { tool, getJobContext } from '@livekit/agents';
 import { runDeterministicRuleEngine } from '../ruleEngine.js';
 import { retrieveRelevantKnowledge } from '../ragService.js';
 import { predictScam } from '../mlClient.js';
@@ -110,6 +110,21 @@ export const scamAnalysisTool = tool({
 
     console.log(`[Voice Agent] Scam analysis complete. Status: ${isPotentialScam ? 'POTENTIAL SCAM' : 'SAFE'}, Risk: ${riskLevel} (${riskScore}/100)`);
     console.log(`======================================================\n`);
+
+    // Broadcast analysis results to the room so frontend UI updates live
+    try {
+      const jobCtx = getJobContext(false);
+      if (jobCtx?.room?.localParticipant) {
+        const payloadBytes = new TextEncoder().encode(JSON.stringify({
+          type: 'scam_analysis',
+          data: resultPayload
+        }));
+        jobCtx.room.localParticipant.publishData(payloadBytes, { reliable: true }).catch(() => {});
+        console.log(`[Voice Agent] Published scam analysis to room: ${jobCtx.room.name}`);
+      }
+    } catch (e) {
+      // Non-fatal if context is outside room lifecycle
+    }
 
     return resultPayload;
   }

@@ -1,5 +1,5 @@
 -- ====================================================================
--- ScamShield Live — Supabase pgvector RAG Schema Migration
+-- TakaBondhu — Supabase pgvector RAG Schema Migration
 -- ====================================================================
 -- INSTRUCTIONS FOR SETUP:
 -- 1. Open your Supabase Project Dashboard (https://supabase.com/dashboard)
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.knowledge_documents (
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     category TEXT NOT NULL,
-    source TEXT NOT NULL DEFAULT 'ScamShield Safety Knowledge Base',
+    source TEXT NOT NULL DEFAULT 'TakaBondhu Safety Knowledge Base',
     excerpt TEXT,
     content TEXT NOT NULL,
     embedding VECTOR(768), -- Matches Google gemini-embedding-001 (768-dim output)
@@ -28,7 +28,7 @@ CREATE INDEX IF NOT EXISTS knowledge_documents_embedding_idx
 ON public.knowledge_documents
 USING hnsw (embedding vector_cosine_ops);
 
--- 4. Create the similarity search function (RPC) for ScamShield RAG retrieval
+-- 4. Create the similarity search function (RPC) for TakaBondhu RAG retrieval
 CREATE OR REPLACE FUNCTION public.search_knowledge(
     query_embedding VECTOR(768),
     match_count INT DEFAULT 3,

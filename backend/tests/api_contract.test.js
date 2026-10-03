@@ -75,3 +75,54 @@ test('API Contract - LRU Cache stores and retrieves analysis by text hash', () =
   assert.equal(cached.riskScore, 88);
   assert.equal(cached.riskLevel, 'CRITICAL');
 });
+
+test('Upay Core Adapter - Pre-send screening with soft friction & no autonomous block', async () => {
+  const { UpayTransactionAdapter } = await import('../integration/upayAdapter.js');
+  const adapter = new UpayTransactionAdapter();
+
+  const screening = await adapter.screenPreSend({
+    transaction: {
+      amount: 15000,
+      sender: '01811000001',
+      receiver: '01811000002',
+      type: 'send_money',
+      is_new_recipient: 1
+    },
+    message: 'জরুরি! আপনার অ্যাকাউন্ট ব্লক হয়েছে, পিন ও ওটিপি পাঠান'
+  });
+
+  assert.ok(screening.trace_id);
+  assert.equal(typeof screening.risk_score, 'number');
+  assert.ok(['ALLOW', 'SOFT_FRICTION', 'HOLD_FOR_REVIEW'].includes(screening.decision_recommendation));
+  assert.notEqual(screening.decision_recommendation, 'AUTO_BLOCK');
+  assert.ok(screening.case_card);
+  assert.ok(screening.case_card.what_happened);
+  assert.ok(screening.case_card.why_risky);
+  assert.ok(screening.case_card.what_upay_should_do || screening.case_card.upay_action);
+
+  // Idempotency check
+  const auth1 = adapter.validateCoreAuth({ 'x-idempotency-key': 'idem-test-key-001' });
+  assert.equal(auth1.valid, true);
+  const auth2 = adapter.validateCoreAuth({ 'x-idempotency-key': 'idem-test-key-001' });
+  assert.equal(auth2.valid, false);
+  assert.ok(auth2.error.includes('IDEMPOTENCY_REPLAY'));
+});
+
+test('Audit Log - Tamper-evident hash chaining and verification', async () => {
+  const { recordAuditDecision, verifyAuditLogIntegrity } = await import('../auditLog.js');
+
+  const entry = recordAuditDecision({
+    decision_type: 'screen_transaction',
+    trace_id: 'test-trace-123',
+    risk_score: 82,
+    recommendation: 'HOLD_FOR_REVIEW',
+    metadata: { test: true }
+  });
+
+  assert.ok(entry.entry_hash);
+  assert.ok(entry.prev_hash);
+
+  const verification = verifyAuditLogIntegrity();
+  assert.equal(verification.valid, true);
+  assert.ok(verification.records_checked > 0);
+});

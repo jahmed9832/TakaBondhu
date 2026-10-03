@@ -13,8 +13,13 @@ import { ragKnowledgeTool } from './ragTool.js';
 
 dotenv.config();
 
+// Ensure child worker processes have sufficient V8 heap on Windows
+if (!process.env.NODE_OPTIONS || !process.env.NODE_OPTIONS.includes('--max-old-space-size')) {
+  process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ''} --max-old-space-size=4096`.trim();
+}
+
 // LiveKit Agent Name for explicit dispatch routing
-process.env.LIVEKIT_AGENT_NAME = process.env.LIVEKIT_AGENT_NAME || 'scamshield-voice';
+process.env.LIVEKIT_AGENT_NAME = process.env.LIVEKIT_AGENT_NAME || 'takabondhu-voice';
 
 // LiveKit Google plugin expects GOOGLE_API_KEY for Gemini Live audio
 if (!process.env.GOOGLE_API_KEY && process.env.GEMINI_API_KEY) {
@@ -56,18 +61,47 @@ export default defineAgent({
       tools: [scamAnalysisTool, ragKnowledgeTool]
     });
 
-    // Event listeners for safe logging & tracking
+    // Helper to broadcast telemetry & transcripts to the client over LiveKit data channel
+    const broadcastData = (data) => {
+      try {
+        if (ctx.room?.localParticipant) {
+          const payload = new TextEncoder().encode(JSON.stringify(data));
+          ctx.room.localParticipant.publishData(payload, { reliable: true }).catch(() => {});
+        }
+      } catch {}
+    };
+
+    // Event listeners for safe logging, tracking & client broadcasting
     session.on(voice.AgentSessionEventTypes.UserInputTranscribed, (ev) => {
       if (ev.transcript && ev.transcript.trim()) {
         console.log(`[Voice Agent] User speech transcribed: "${ev.transcript.slice(0, 80)}..."`);
+        broadcastData({
+          type: 'user_transcript',
+          text: ev.transcript,
+          isFinal: ev.isFinal
+        });
+      }
+    });
+
+    session.on(voice.AgentSessionEventTypes.ConversationItemAdded, (ev) => {
+      if (ev.item && ev.item.content) {
+        const text = typeof ev.item.content === 'string' ? ev.item.content : String(ev.item.content);
+        if (ev.item.role === 'assistant') {
+          console.log(`[Voice Agent] Assistant speech item: "${text.slice(0, 80)}..."`);
+          broadcastData({
+            type: 'agent_transcript',
+            text
+          });
+        }
       }
     });
 
     session.on(voice.AgentSessionEventTypes.AgentStateChanged, (ev) => {
       console.log(`[Voice Agent] Agent state changed: ${ev.state}`);
-      if (ev.state === 'speaking') {
-        console.log(`[Voice Agent] Response spoken`);
-      }
+      broadcastData({
+        type: 'agent_state',
+        state: ev.state
+      });
     });
 
     session.on(voice.AgentSessionEventTypes.Error, (ev) => {
@@ -82,10 +116,17 @@ export default defineAgent({
 
     console.log(`[VOICE DEBUG] Agent session started in room: ${ctx.room.name}`);
 
-    // Spoken Bangla initial greeting
+    // Wait for the human user to connect to the room before triggering initial greeting
     try {
-      session.say('আসসালামু আলাইকুম! আমি TakaBondhu-র Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।');
-      console.log(`[Voice Agent] Initial Bangla greeting dispatched.`);
+      console.log(`[Voice Agent] Waiting for participant in room: ${ctx.room.name}...`);
+      await ctx.waitForParticipant();
+      console.log(`[Voice Agent] Participant joined room ${ctx.room.name}. Triggering initial greeting.`);
+      
+      // Native audio models produce spoken speech via generateReply
+      session.generateReply({
+        instructions: 'Warmly greet the user in natural, polite Bengali (বাংলা): "আসসালামু আলাইকুম! আমি TakaBondhu-র Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।"'
+      });
+      console.log(`[Voice Agent] Initial Bangla greeting generated.`);
     } catch (greetErr) {
       console.warn(`[Voice Agent] Notice during greeting dispatch:`, greetErr.message);
     }
@@ -96,6 +137,7 @@ export default defineAgent({
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   cli.runApp(new ServerOptions({ 
     agent: fileURLToPath(import.meta.url),
-    agentName: 'scamshield-voice'
+    agentName: 'takabondhu-voice',
+    numIdleProcesses: 0
   }));
 }
