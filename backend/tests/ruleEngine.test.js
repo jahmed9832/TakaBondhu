@@ -50,3 +50,18 @@ test('RuleEngine - verbatim evidence extraction returns exact substring', () => 
     }
   }
 });
+
+test('RuleEngine - treats negated and defensive advisory phrasing as non-coercive', () => {
+  const advisoryTexts = [
+    'প্রিয় গ্রাহক, উপায় কখনো আপনার পিন বা ওটিপি জানতে চাইবে না। সতর্ক থাকুন এবং নিরাপদ লেনদেন করুন।',
+    'Bank authorities will never ask for your confidential PIN or password.',
+    'Official security notice: upay helpline kokhono apnar kache OTP chaibe na. Shocheton thakun.'
+  ];
+
+  for (const text of advisoryTexts) {
+    const result = runDeterministicRuleEngine(text);
+    assert.equal(result.rulesScore, 10, `Expected baseline 10, got ${result.rulesScore}`);
+    assert.equal(result.rawSignals.length, 0, `Expected 0 signals for negated advisory`);
+  }
+});
+

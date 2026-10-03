@@ -69,10 +69,10 @@ Evaluated across 2,744 held-out unseen scam and benign messages, plus an externa
 
 | Split / Model | Precision | Recall | FPR | F1-Score | Prec @ 5% Prev |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Rules Only (`test_unseen`)** | 0.8594 | 0.0514 | 0.0137 | 0.0971 | 0.1653 |
-| **ML Only (`test_unseen`)** | 0.9771 | 1.0000 | 0.0380 | 0.9884 | 0.5808 |
-| **Hybrid Model (`test_unseen`)** | **0.9869** | **0.9897** | **0.0213** | **0.9883** | **0.7100** |
-| **Handwritten Natural Eval (160 msgs)** | **0.8778** | **0.9875** | **0.1375** | **0.9294** | **0.2743** |
+| **Rules Only (`test_unseen`)** | 0.8657 | 0.0543 | 0.0137 | 0.1021 | 0.1727 |
+| **ML Only (`test_unseen`)** | 0.9972 | 1.0000 | 0.0046 | 0.9986 | 0.9203 |
+| **Hybrid Model (`test_unseen`)** | **1.0000** | **0.9944** | **0.0000** | **0.9972** | **1.0000** |
+| **Handwritten Natural Eval (160 msgs)** | **0.9080** | **0.9875** | **0.1000** | **0.9461** | **0.3420** |
 
 ---
 
@@ -80,13 +80,13 @@ Evaluated across 2,744 held-out unseen scam and benign messages, plus an externa
 ### A. Language Fairness
 | Language | Hybrid Precision | Hybrid Recall | False Positive Rate (FPR) | Status |
 | :--- | :---: | :---: | :---: | :---: |
-| **Bangla (bn)** | 99.0% | 98.7% | 1.68% | Pass |
-| **Banglish** | 97.2% | 100.0% | 4.62% | Pass |
-| **English (en)** | 100.0% | 98.2% | 0.00% | Pass |
+| **Bangla (bn)** | 100.0% | 98.4% | 0.00% | Pass |
+| **Banglish** | 100.0% | 100.0% | 0.00% | Pass |
+| **English (en)** | 100.0% | 99.7% | 0.00% | Pass |
 
-- **Max Language Recall Gap:** 1.85% (Threshold: <= 10.0%)
-- **Max Language FPR Gap:** 4.62% (Threshold: <= 10.0%)
-- **Mitigation:** Balanced hard-negative augmentation across all 3 languages (Bengali, Banglish, English) maintains a true FPR gap of 4.62% and a true recall gap of 1.85%, both well within the <=10.0% fairness parity threshold.
+- **Max Language Recall Gap:** 1.59% (Threshold: <= 10.0%)
+- **Max Language FPR Gap:** 0.00% (Threshold: <= 10.0%)
+- **Mitigation:** Balanced hard-negative augmentation across all 3 languages (Bengali, Banglish, English) maintains a true FPR gap of 0.00% and a true recall gap of 1.59%, both well within the <=10.0% fairness parity threshold.
 
 ---
 
@@ -94,11 +94,11 @@ Evaluated across 2,744 held-out unseen scam and benign messages, plus an externa
 ### A. Message Evasion Variants (`robustness.csv`)
 | Adversarial Variant | Count | Detection Recall |
 | :--- | :---: | :---: |
-| **Homoglyph Substitution** | 519 | 97.3% |
-| **Spaced-Out Punctuation** | 539 | 98.3% |
-| **Prompt Injection Payload** | 541 | 100.0% |
-| **Appended Filler Words** | 505 | 100.0% |
-| **Overall Adversarial Scam Recall** | — | **98.9%** |
+| **Homoglyph Substitution** | 550 | 95.6% |
+| **Spaced-Out Punctuation** | 526 | 99.1% |
+| **Prompt Injection Payload** | 505 | 97.4% |
+| **Appended Filler Words** | 531 | 100.0% |
+| **Overall Adversarial Scam Recall** | — | **98.0%** |
 ### B. Transaction Evasion (Structuring Boundary Attack)
 - **Baseline Agent Anomaly Recall:** 94.2%
 - **Boundary Evasion Recall (Amounts = ৳24,900):** 100.0%

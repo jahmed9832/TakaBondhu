@@ -667,6 +667,80 @@ def generate_all_data():
                         "source": "synthetic"
                     })
 
+    # Generic official-advisory hard negatives ("we will never ask for your PIN/OTP")
+    # Added specifically to the training split so the model learns that official defensive advisories are benign.
+    # Diverse generic paraphrases across bn, banglish, en (NOT using the exact demo scenario text).
+    GENERIC_ADVISORY_TEMPLATES = {
+        "bn": [
+            "সচেতনতা বার্তা: {mfs} বা কোনো ব্যাংক কর্তৃপক্ষ কখনোই গ্রাহকের কাছে গোপন পিন কিংবা ওটিপি জানতে চাইবে না।",
+            "গ্রাহক নিরাপত্তা নির্দেশিকা: প্রতারক চক্র থেকে সাবধান। {mfs} হেল্পলাইন কখনো আপনার ওয়ালেটের পাসওয়ার্ড বা সিকিউরিটি কোড চাইবে না।",
+            "নিরাপত্তা পরামর্শ: কোনো অবস্থাতেই কারো কাছে আপনার গোপন পিন বা এসএমএস ওটিপি প্রকাশ করবেন না। {mfs} কখনো এটি চায় না।",
+            "জরুরি গ্রাহক বার্তা: ব্যাংক কিংবা {mfs} কর্মকর্তা পরিচয় দিয়ে কেউ ফোন করলে কখনো পিন কোড বলবেন না। তারা কখনো ওটিপি চাইবে না।",
+            "ডিজিটাল নিরাপত্তা টিপস: আপনার অ্যাকাউন্টের পিন ও ওটিপি একান্তই আপনার। {mfs} সাপোর্ট কখনো আপনার গোপন কোড জানতে চাইবে না।",
+            "{mfs} গ্রাহক সেবা নোটিশ: কখনো কাউকে নিজের পিন বা ওটিপি দেবেন না। কর্তৃপক্ষ কখনোই এসব সংবেদনশীল তথ্য জানতে চায় না।",
+            "প্রতারণা প্রতিরোধ বার্তা: কোনো ব্যক্তি বা প্রতিষ্ঠান আপনার ওয়ালেটের গোপন পিন চাইলে প্রত্যাখ্যান করুন। {mfs} কখনো পিন চাইবে না।",
+            "নিরাপদ লেনদেন নির্দেশিকা: প্রতারণামূলক কল বা মেসেজ থেকে সতর্ক থাকুন। {mfs} কর্তৃপক্ষ কখনোই ওটিপি বা পিন যাচাই করতে বলে না।",
+            "সতর্কতামূলক বার্তা: আপনার ওটিপি ও পিন নম্বর কাউকে বলবেন না। {mfs} কখনো কোনো ভেরিফিকেশন কোড চাইতে ফোন করে না।",
+            "অফিসিয়াল নিরাপত্তা বিজ্ঞপ্তি: {mfs} কখনো আপনার অ্যাকাউন্টের ওটিপি বা গোপন পিন জানতে চাইবে না। নিরাপদ লেনদেন বজায় রাখুন।",
+            "গ্রাহক সতর্কতা: {mfs} কখনো কারো কাছে পিন বা পাসওয়ার্ড চায় না। প্রতারক চক্র থেকে নিজের অ্যাকাউন্ট সুরক্ষিত রাখুন।",
+            "নিরাপত্তা নির্দেশিকা: কোনো কর্মকর্তা আপনার ওটিপি জানতে চাইলে দেবেন না, {mfs} কখনোই ওটিপি চাইতে পারে না।",
+            "সচেতনতামূলক নোটিশ: গোপন পিন কারো সাথে শেয়ার না করে সুরক্ষিত লেনদেন নিশ্চিত করুন। {mfs} কখনো পিন চাইবে না।",
+            "জরুরি নোটিশ: {mfs} হেল্পডেস্ক কখনোই গ্রাহকের গোপনীয় পিন বা ওটিপি যাচাই করার অনুরোধ জানায় না।",
+            "সাইবার নিরাপত্তা বার্তা: আপনার পিন ও পাসওয়ার্ড একান্তই ব্যক্তিগত। {mfs} কখনোই এই তথ্য চাইতে ফোন করবে না।"
+        ],
+        "banglish": [
+            "Official advisory: {mfs} ba kono bank official kokhono apnar secret PIN ba OTP jante chaibe na. Shocheton thakun.",
+            "Security alert: Protarona theke shabdhan. {mfs} helpline kokhonoi apnar wallet PIN ba password chaibe na.",
+            "Nirapotta poramorsho: Kono obosthatei karo kache OTP share korben na. {mfs} authority kokhono eita chay na.",
+            "Customer notice: Keu phone kore {mfs} officer dabi korle PIN deben na. Tara kokhono verification code chaibe na.",
+            "Stay safe: Apnar mobile wallet er PIN ar OTP sudhu apnar. {mfs} staff kokhono secret code jante chaibe na.",
+            "Fraud warning: OTP ba PIN kokhono karo kache share korben na. Official {mfs} team kokhono PIN chaibe na.",
+            "Cyber tips: Kono shondehojonok call e trust korben na. {mfs} helpline kokhonoi kono OTP ba PIN jante chay na.",
+            "Security advisory: {mfs} helpline theke kokhono call diye apnar PIN ba SMS OTP chaibe na. Nirapod thakun.",
+            "Shochetonota barta: Wallet er secret PIN kokhono kauke bolben na. {mfs} kokhonoi kono code jante chaibe na.",
+            "Customer advisory: {mfs} er official team kokhono apnar kache OTP ba PIN chaibe na, shobshomoy shocheton thakun.",
+            "Nirapod thakun: {mfs} kokhono apnar OTP ba pin chaibe na. Protarona theke shobshomoy shabdhan thakun.",
+            "Official alert: Phone call a keu PIN ba password chaile deben na, {mfs} kokhonoi eita chay na."
+        ],
+        "en": [
+            "Official Security Advisory: {mfs} and authorized bank personnel will never ask for your secret PIN, OTP, or password.",
+            "Fraud Awareness Notice: Please be advised that {mfs} representatives will never request your one-time password or security credentials.",
+            "Security Reminder: Never share your verification codes with anyone. {mfs} customer support will never ask you to disclose your PIN.",
+            "Public Safety Notice: Protect your wallet by keeping your PIN private. Official {mfs} agents will never require your confidential OTP.",
+            "Cyber Hygiene Alert: Under no circumstances will {mfs} staff ask for your account password or SMS verification code.",
+            "Important Notice: Legitimate bank and {mfs} helplines will never ask for personal PIN numbers or one-time codes over phone.",
+            "Security Advisory: {mfs} will never ask for your wallet PIN or OTP verification code under any circumstances.",
+            "Customer Protection Alert: Always keep your PIN and one-time passwords secret. {mfs} officials will never ask you for them.",
+            "Official Warning: Beware of fraudulent callers. {mfs} customer helpline will never ask for your confidential account PIN.",
+            "Safety Guidelines: Maintain transaction security. {mfs} will never ask for verification codes or passwords over phone.",
+            "Security update: {mfs} never asks customers for PIN or OTP over phone calls or SMS. Please keep them safe.",
+            "Advisory bulletin: Never disclose your mobile banking PIN. Official {mfs} personnel will never ask for it."
+        ]
+    }
+
+    for lang, tmpls in GENERIC_ADVISORY_TEMPLATES.items():
+        for fam_idx, tmpl in enumerate(tmpls):
+            fam_id = f"benign_gen_advisory_{lang}_f{fam_idx+1:02d}"
+            # Generate 20 variations per template family for train split
+            for s_idx in range(20):
+                raw_text = fill_slots(tmpl, lang)
+                text = inject_noise(raw_text, lang)
+                if text in seen_texts_per_split["train"] or text in seen_texts_per_split["test_unseen"]:
+                    continue
+                seen_texts_per_split["train"].add(text)
+                rec_id = f"{fam_id}_{s_idx:03d}_{hashlib.md5(text.encode('utf-8')).hexdigest()[:6]}"
+                records.append({
+                    "id": rec_id,
+                    "text": text,
+                    "label": 0,
+                    "scam_type": "otp_safety",
+                    "language": lang,
+                    "length_bucket": get_length_bucket(text),
+                    "template_id": fam_id,
+                    "split": "train",
+                    "source": "synthetic"
+                })
+
     df = pd.DataFrame(records)
     # Shuffle dataframe with fixed seed
     df = df.sample(frac=1.0, random_state=SEED).reset_index(drop=True)

@@ -1,7 +1,7 @@
 {
   "project": "TakaBondhu",
   "tagline": "Upay's friend that keeps your money safe",
-  "generated_at": "2026-10-03T12:21:02.940444",
+  "generated_at": "2026-10-03T12:49:27.755359",
   "disclaimer": "All figures originate strictly from executable evaluation scripts on held-out test splits. 100% synthetic data.",
   "message_intelligence": {
     "model_version": "v1.0.0-char-wb-lr",
@@ -9,19 +9,19 @@
     "systems": {
       "test_seen": {
         "rules_only": {
-          "precision": 0.9806,
-          "recall": 0.1996,
-          "f1": 0.3317,
-          "pr_auc": 0.8579,
-          "roc_auc": 0.8516,
+          "precision": 0.9818,
+          "recall": 0.2134,
+          "f1": 0.3506,
+          "pr_auc": 0.8784,
+          "roc_auc": 0.8727,
           "fpr": 0.0049,
-          "prec_at_1pct_prevalence": 0.2909,
-          "prec_at_5pct_prevalence": 0.6813,
+          "prec_at_1pct_prevalence": 0.3049,
+          "prec_at_5pct_prevalence": 0.6957,
           "confusion_matrix": {
             "tn": 405,
             "fp": 2,
-            "fn": 405,
-            "tp": 101
+            "fn": 398,
+            "tp": 108
           },
           "support": {
             "total": 913,
@@ -74,19 +74,19 @@
       },
       "test_unseen": {
         "rules_only": {
-          "precision": 0.8594,
-          "recall": 0.0514,
-          "f1": 0.0971,
-          "pr_auc": 0.7985,
-          "roc_auc": 0.7553,
+          "precision": 0.8657,
+          "recall": 0.0543,
+          "f1": 0.1021,
+          "pr_auc": 0.804,
+          "roc_auc": 0.7626,
           "fpr": 0.0137,
-          "prec_at_1pct_prevalence": 0.0366,
-          "prec_at_5pct_prevalence": 0.1653,
+          "prec_at_1pct_prevalence": 0.0385,
+          "prec_at_5pct_prevalence": 0.1727,
           "confusion_matrix": {
             "tn": 649,
             "fp": 9,
-            "fn": 1014,
-            "tp": 55
+            "fn": 1011,
+            "tp": 58
           },
           "support": {
             "total": 1727,
@@ -95,17 +95,17 @@
           }
         },
         "ml_only": {
-          "precision": 0.9771,
+          "precision": 0.9972,
           "recall": 1.0,
-          "f1": 0.9884,
-          "pr_auc": 0.9998,
-          "roc_auc": 0.9997,
-          "fpr": 0.038,
-          "prec_at_1pct_prevalence": 0.21,
-          "prec_at_5pct_prevalence": 0.5808,
+          "f1": 0.9986,
+          "pr_auc": 1.0,
+          "roc_auc": 1.0,
+          "fpr": 0.0046,
+          "prec_at_1pct_prevalence": 0.689,
+          "prec_at_5pct_prevalence": 0.9203,
           "confusion_matrix": {
-            "tn": 633,
-            "fp": 25,
+            "tn": 655,
+            "fp": 3,
             "fn": 0,
             "tp": 1069
           },
@@ -116,19 +116,19 @@
           }
         },
         "hybrid": {
-          "precision": 0.9869,
-          "recall": 0.9897,
-          "f1": 0.9883,
-          "pr_auc": 0.9996,
-          "roc_auc": 0.9994,
-          "fpr": 0.0213,
-          "prec_at_1pct_prevalence": 0.3197,
-          "prec_at_5pct_prevalence": 0.71,
+          "precision": 1.0,
+          "recall": 0.9944,
+          "f1": 0.9972,
+          "pr_auc": 1.0,
+          "roc_auc": 1.0,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
           "confusion_matrix": {
-            "tn": 644,
-            "fp": 14,
-            "fn": 11,
-            "tp": 1058
+            "tn": 658,
+            "fp": 0,
+            "fn": 6,
+            "tp": 1063
           },
           "support": {
             "total": 1727,
@@ -139,17 +139,17 @@
       }
     },
     "handwritten_benchmark": {
-      "precision": 0.8778,
+      "precision": 0.908,
       "recall": 0.9875,
-      "f1": 0.9294,
-      "pr_auc": 0.9744,
-      "roc_auc": 0.9772,
-      "fpr": 0.1375,
-      "prec_at_1pct_prevalence": 0.0676,
-      "prec_at_5pct_prevalence": 0.2743,
+      "f1": 0.9461,
+      "pr_auc": 0.9858,
+      "roc_auc": 0.9861,
+      "fpr": 0.1,
+      "prec_at_1pct_prevalence": 0.0907,
+      "prec_at_5pct_prevalence": 0.342,
       "confusion_matrix": {
-        "tn": 69,
-        "fp": 11,
+        "tn": 72,
+        "fp": 8,
         "fn": 1,
         "tp": 79
       },
@@ -162,19 +162,19 @@
     "demographics": {
       "language": {
         "bn": {
-          "precision": 0.9904,
-          "recall": 0.9873,
-          "f1": 0.9889,
-          "pr_auc": 0.9992,
-          "roc_auc": 0.9986,
-          "fpr": 0.0168,
-          "prec_at_1pct_prevalence": 0.3731,
-          "prec_at_5pct_prevalence": 0.7561,
+          "precision": 1.0,
+          "recall": 0.9841,
+          "f1": 0.992,
+          "pr_auc": 0.9998,
+          "roc_auc": 0.9997,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
           "confusion_matrix": {
-            "tn": 176,
-            "fp": 3,
-            "fn": 4,
-            "tp": 311
+            "tn": 179,
+            "fp": 0,
+            "fn": 5,
+            "tp": 310
           },
           "support": {
             "total": 494,
@@ -183,17 +183,17 @@
           }
         },
         "banglish": {
-          "precision": 0.9716,
+          "precision": 1.0,
           "recall": 1.0,
-          "f1": 0.9856,
+          "f1": 1.0,
           "pr_auc": 1.0,
           "roc_auc": 1.0,
-          "fpr": 0.0462,
-          "prec_at_1pct_prevalence": 0.1794,
-          "prec_at_5pct_prevalence": 0.5324,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
           "confusion_matrix": {
-            "tn": 227,
-            "fp": 11,
+            "tn": 238,
+            "fp": 0,
             "fn": 0,
             "tp": 376
           },
@@ -205,8 +205,8 @@
         },
         "en": {
           "precision": 1.0,
-          "recall": 0.9815,
-          "f1": 0.9907,
+          "recall": 0.9974,
+          "f1": 0.9987,
           "pr_auc": 1.0,
           "roc_auc": 1.0,
           "fpr": 0.0,
@@ -215,8 +215,8 @@
           "confusion_matrix": {
             "tn": 241,
             "fp": 0,
-            "fn": 7,
-            "tp": 371
+            "fn": 1,
+            "tp": 377
           },
           "support": {
             "total": 619,
@@ -227,19 +227,19 @@
       },
       "length_bucket": {
         "medium": {
-          "precision": 0.9868,
-          "recall": 0.9896,
-          "f1": 0.9882,
-          "pr_auc": 0.9996,
-          "roc_auc": 0.9994,
-          "fpr": 0.0213,
-          "prec_at_1pct_prevalence": 0.3196,
-          "prec_at_5pct_prevalence": 0.71,
+          "precision": 1.0,
+          "recall": 0.9943,
+          "f1": 0.9972,
+          "pr_auc": 1.0,
+          "roc_auc": 1.0,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
           "confusion_matrix": {
-            "tn": 644,
-            "fp": 14,
-            "fn": 11,
-            "tp": 1045
+            "tn": 658,
+            "fp": 0,
+            "fn": 6,
+            "tp": 1050
           },
           "support": {
             "total": 1714,
@@ -270,40 +270,22 @@
         }
       },
       "scam_type": {
-        "fake_prize": {
+        "job_scam": {
           "label": 1,
-          "total": 167,
-          "flagged": 167,
+          "total": 166,
+          "flagged": 166,
           "flag_rate": 1.0
         },
-        "loan_app": {
+        "kyc_block": {
           "label": 1,
-          "total": 165,
-          "flagged": 165,
+          "total": 129,
+          "flagged": 129,
           "flag_rate": 1.0
         },
         "remote_access": {
           "label": 1,
           "total": 60,
-          "flagged": 54,
-          "flag_rate": 0.9
-        },
-        "personal_chat": {
-          "label": 0,
-          "total": 178,
-          "flagged": 0,
-          "flag_rate": 0.0
-        },
-        "wrong_transfer": {
-          "label": 1,
-          "total": 163,
-          "flagged": 163,
-          "flag_rate": 1.0
-        },
-        "fake_agent": {
-          "label": 1,
-          "total": 149,
-          "flagged": 149,
+          "flagged": 60,
           "flag_rate": 1.0
         },
         "bank_notification": {
@@ -315,13 +297,31 @@
         "otp_harvest": {
           "label": 1,
           "total": 70,
-          "flagged": 65,
-          "flag_rate": 0.9286
+          "flagged": 64,
+          "flag_rate": 0.9143
         },
-        "kyc_block": {
+        "otp_safety": {
+          "label": 0,
+          "total": 70,
+          "flagged": 0,
+          "flag_rate": 0.0
+        },
+        "personal_chat": {
+          "label": 0,
+          "total": 178,
+          "flagged": 0,
+          "flag_rate": 0.0
+        },
+        "fake_prize": {
           "label": 1,
-          "total": 129,
-          "flagged": 129,
+          "total": 167,
+          "flagged": 167,
+          "flag_rate": 1.0
+        },
+        "wrong_transfer": {
+          "label": 1,
+          "total": 163,
+          "flagged": 163,
           "flag_rate": 1.0
         },
         "innocent_keywords": {
@@ -330,44 +330,44 @@
           "flagged": 0,
           "flag_rate": 0.0
         },
-        "job_scam": {
+        "fake_agent": {
           "label": 1,
-          "total": 166,
-          "flagged": 166,
+          "total": 149,
+          "flagged": 149,
           "flag_rate": 1.0
         },
-        "otp_safety": {
-          "label": 0,
-          "total": 70,
-          "flagged": 14,
-          "flag_rate": 0.2
+        "loan_app": {
+          "label": 1,
+          "total": 165,
+          "flagged": 165,
+          "flag_rate": 1.0
         }
       }
     },
     "fairness": {
-      "max_language_recall_gap": 0.0185,
-      "max_language_fpr_gap": 0.0462,
+      "max_language_recall_gap": 0.0159,
+      "max_language_fpr_gap": 0.0,
       "fairness_gap_under_10pp": true,
-      "mitigation": "Balanced hard-negative augmentation across all 3 languages (Bengali, Banglish, English) maintains a true FPR gap of 4.62% and a true recall gap of 1.85%, both well within the <=10.0% fairness parity threshold."
+      "mitigation": "Balanced hard-negative augmentation across all 3 languages (Bengali, Banglish, English) maintains a true FPR gap of 0.00% and a true recall gap of 1.59%, both well within the <=10.0% fairness parity threshold."
     },
     "robustness": {
-      "overall_recall": 0.9891,
+      "overall_recall": 0.9801,
       "variants": {
-        "homoglyph": {
-          "count": 519,
-          "recall": 0.973
-        },
         "prompt_injection": {
-          "count": 541,
-          "recall": 1.0
+          "count": 505,
+          "recall": 0.9743
+        },
+        "homoglyph": {
+          "count": 550,
+          "recall": 0.9564
         },
         "filler_appended": {
-          "count": 505,
+          "count": 531,
           "recall": 1.0
         },
         "spaced_dots": {
-          "count": 539,
-          "recall": 0.9833
+          "count": 526,
+          "recall": 0.9905
         }
       }
     }
