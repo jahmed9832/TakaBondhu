@@ -88,6 +88,7 @@ export const OFFICIAL_DEMO_SCENARIOS = [
       channel: 'app',
       device_id: 'dev_brand_new_9918',
       device_age_days: 0,
+      recipient_age_days: 0,
       geo_district: 'Sylhet',
       is_new_recipient: true,
       hour: 3

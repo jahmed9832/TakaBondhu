@@ -137,23 +137,23 @@ class FusionEngine:
         
         amt = float(tx_dict.get("amount", 1000.0))
         hour = int(tx_dict.get("hour", 12))
-        is_night = 1 if hour in [23, 0, 1, 2, 3, 4, 5] else 0
-        dev_age = float(tx_dict.get("device_age_days", 100))
-        is_new_dev = 1 if dev_age == 0 else 0
-        is_new_recip = int(tx_dict.get("is_new_recipient", 0))
-        recip_age = float(tx_dict.get("recipient_age_days", 100))
-        is_structuring = 1 if (24000 <= amt < 25000) else 0
+        is_night = 1.0 if (0 <= hour <= 5) else 0.0
+        dev_age = float(tx_dict.get("device_age_days", 100.0))
+        is_new_dev = 1.0 if dev_age <= 0 else 0.0
+        is_new_recip = 1.0 if tx_dict.get("is_new_recipient") in [True, 1, "true", "1", "True"] else 0.0
+        recip_age = float(tx_dict.get("recipient_age_days", 0.0 if is_new_recip == 1.0 else 100.0))
+        is_structuring = 1.0 if (24000.0 <= amt <= 24999.0) else 0.0
 
-        ch = tx_dict.get("channel", "app")
-        ch_app = 1 if ch == "app" else 0
-        ch_ussd = 1 if ch == "ussd" else 0
-        ch_agent_pos = 1 if ch == "agent_pos" else 0
+        ch = str(tx_dict.get("channel", "app")).lower()
+        ch_app = 1.0 if ch == "app" else 0.0
+        ch_ussd = 1.0 if ch == "ussd" else 0.0
+        ch_agent_pos = 1.0 if ch in ["agent_pos", "agent"] else 0.0
 
-        t_type = tx_dict.get("type", "send_money")
-        t_send = 1 if t_type == "send_money" else 0
-        t_cashout = 1 if t_type == "cash_out" else 0
-        t_merch = 1 if t_type == "merchant_payment" else 0
-        t_other = 1 if (not t_send and not t_cashout and not t_merch) else 0
+        t_type = str(tx_dict.get("type", "send_money")).lower()
+        t_send = 1.0 if t_type == "send_money" else 0.0
+        t_cashout = 1.0 if t_type == "cash_out" else 0.0
+        t_merch = 1.0 if t_type in ["merchant_payment", "merchant"] else 0.0
+        t_other = 1.0 if (not t_send and not t_cashout and not t_merch) else 0.0
 
         row_df = pd.DataFrame([{
             "amount": amt,
@@ -185,7 +185,7 @@ class FusionEngine:
         if is_structuring:
             attributions.append({"feature": "amount", "contribution": 25.0, "reason": "Structuring amount in ৳24,000–৳24,999 right below limit"})
         if is_night:
-            attributions.append({"feature": "hour", "contribution": 15.0, "reason": "Unusual high-risk transaction hour (23:00–05:00)"})
+            attributions.append({"feature": "hour", "contribution": 15.0, "reason": "Unusual high-risk transaction hour (00:00–05:59)"})
 
         return score, attributions
 
@@ -198,7 +198,7 @@ class FusionEngine:
         is_night = 1.0 if (0 <= hour <= 5) else 0.0
         dev_age = float(tx_dict.get("device_age_days", 100.0))
         is_new_dev = 1.0 if dev_age <= 0 else 0.0
-        is_new_recip = float(tx_dict.get("is_new_recipient", 0.0))
+        is_new_recip = 1.0 if tx_dict.get("is_new_recipient") in [True, 1, "true", "1", "True"] else 0.0
         row_df = pd.DataFrame([{
             "amount": amt,
             "hour": hour,
@@ -252,31 +252,37 @@ class FusionEngine:
         score = 10.0
 
         amt = float(tx_dict.get("amount", 0.0))
-        t_type = tx_dict.get("type", "")
+        t_type = str(tx_dict.get("type", "")).lower()
         dev_age = float(tx_dict.get("device_age_days", 100))
         hour = int(tx_dict.get("hour", 12))
+        is_new_recip = tx_dict.get("is_new_recipient") in [True, 1, "true", "1", "True"]
 
         # Rule 1: Single transaction limit exceed
         if amt > 25000.0:
             score += 70.0
             rules_triggered.append({"rule_id": "R01_LIMIT_EXCEEDED", "severity": "HIGH", "desc": "Amount exceeds upay single transaction ceiling (৳25,000)"})
 
-        # Rule 2: Instant cash-out following immediate transfer on new device
-        if dev_age == 0 and t_type in ["send_money", "cash_out"] and amt >= 10000.0:
+        # Rule 2: Instant cash-out or large transfer on new device
+        if dev_age <= 0 and t_type in ["send_money", "cash_out"] and amt >= 10000.0:
             score += 45.0
             rules_triggered.append({"rule_id": "R02_NEW_DEV_LARGE_TRANSFER", "severity": "HIGH", "desc": "Large outflow (≥৳10,000) from brand new unregistered device"})
 
         # Rule 3: Deep night transfer
-        if hour in [1, 2, 3, 4] and amt >= 15000.0:
+        if (0 <= hour <= 5) and amt >= 15000.0:
             score += 25.0
-            rules_triggered.append({"rule_id": "R03_NIGHT_HIGH_VELOCITY", "severity": "MEDIUM", "desc": "High-value transfer during deep night anomaly window (01:00–04:59)"})
+            rules_triggered.append({"rule_id": "R03_NIGHT_HIGH_VELOCITY", "severity": "MEDIUM", "desc": "High-value transfer during deep night anomaly window (00:00–05:59)"})
 
         # Rule 4: Regulatory structuring
-        if 24500 <= amt < 25000 and t_type == "cash_out":
+        if 24000.0 <= amt < 25000.0 and t_type == "cash_out":
             score += 30.0
             rules_triggered.append({"rule_id": "R04_STRUCTURING_DETECTION", "severity": "MEDIUM", "desc": "Cash-out amount clustered within 2% below regulatory threshold"})
 
-        # Rule 5: SMS Urgency / PIN keywords if message attached
+        # Rule 5: High-value transfer to new recipient
+        if is_new_recip and amt >= 20000.0:
+            score += 20.0
+            rules_triggered.append({"rule_id": "R06_NEW_RECIPIENT_LARGE_TRANSFER", "severity": "MEDIUM", "desc": "High-value transfer (≥৳20,000) to newly linked recipient"})
+
+        # Rule 6: SMS Urgency / PIN keywords if message attached
         if msg_text:
             lower = str(msg_text).lower()
             scam_keywords = ["pin", "পিন", "otp", "ওটিপি", "block", "বন্ধ", "জরুরি", "urgent", "লটারি", "lottery"]
