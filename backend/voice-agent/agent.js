@@ -130,6 +130,50 @@ export default defineAgent({
 
     console.log(`[VOICE DEBUG] Agent session started in room: ${ctx.room.name}`);
 
+    // Listen for data messages from frontend (Dual-channel text + audio turn handler)
+    ctx.room.on('dataReceived', async (payload, participant) => {
+      try {
+        const raw = new TextDecoder().decode(payload);
+        const msg = JSON.parse(raw);
+        if (msg.type === 'user_speech_text' && msg.text && msg.text.trim()) {
+          const userMsg = msg.text.trim();
+          console.log(`[Voice Agent] Received user_speech_text via data channel: "${userMsg.slice(0, 60)}..."`);
+
+          // 1. Run unified Scam Shield intelligence
+          const analysis = await scamAnalysisTool.execute({ message: userMsg });
+
+          // 2. Broadcast scam analysis payload so UI updates instantly
+          broadcastData({
+            type: 'scam_analysis',
+            data: analysis
+          });
+
+          // 3. Instruct Gemini Realtime to reply via natural spoken Bangla
+          const isScam = analysis.isPotentialScam;
+          const riskLevel = analysis.riskLevel;
+          const advice = analysis.safestPracticalNextStep;
+          const signals = (analysis.signalsDetected || []).map(s => s.type).join(', ');
+
+          const instructions = `The user spoke in Bangla: "${userMsg}".
+Scam Shield Intelligence Assessment:
+- Potential Scam: ${isScam ? 'YES (HIGH RISK)' : 'NO (BENIGN)'}
+- Threat Level: ${riskLevel} (${analysis.riskScore}/100)
+- Threat Signals: ${signals || 'None'}
+- Safest Next Step: "${advice}"
+
+Speak aloud immediately to the user in natural, polite Bengali (বাংলা) in 2 to 3 sentences:
+1. State clearly whether this message or call is suspicious or safe.
+2. Explain why (banks and mobile financial services never ask for OTP or threaten to close accounts over the phone).
+3. Advise the safest practical next step: "${advice}".`;
+
+          session.generateReply({ instructions });
+          console.log(`[Voice Agent] Spoken Bangla reply dispatched for user speech.`);
+        }
+      } catch (dataErr) {
+        console.warn(`[Voice Agent] Notice processing incoming data packet:`, dataErr.message);
+      }
+    });
+
     // Wait for the human user to connect to the room before triggering initial greeting
     try {
       console.log(`[Voice Agent] Waiting for participant in room: ${ctx.room.name}...`);

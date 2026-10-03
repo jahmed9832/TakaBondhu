@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Mic, 
   MicOff, 
@@ -14,7 +14,9 @@ import {
   Activity, 
   Radio, 
   RefreshCw,
-  Info
+  Info,
+  CheckCircle2,
+  Zap
 } from 'lucide-react';
 import { Room, RoomEvent, Track } from 'livekit-client';
 import { apiUrl } from '../apiConfig';
@@ -22,6 +24,7 @@ import { apiUrl } from '../apiConfig';
 export default function LiveVoiceCard({ onScrollToAnalyzer }) {
   // Connection & Room state
   const [connectionState, setConnectionState] = useState('idle'); // 'idle' | 'requesting_token' | 'connecting' | 'connected' | 'error'
+  const [voiceMode, setVoiceMode] = useState('livekit'); // 'livekit' | 'local_offline'
   const [agentState, setAgentState] = useState('idle'); // 'idle' | 'listening' | 'thinking' | 'speaking'
   const [errorMessage, setErrorMessage] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
@@ -42,6 +45,14 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
   const animationFrameRef = useRef(null);
   const recognitionRef = useRef(null);
   const audioElementsRef = useRef([]);
+
+  // Turn management & fallback speech timers
+  const debounceTimerRef = useRef(null);
+  const lastAnalyzedTextRef = useRef('');
+  const agentAudioPlayingRef = useRef(false);
+  const fallbackSpeechTimerRef = useRef(null);
+
+  const INITIAL_GREETING = 'আসসালামু আলাইকুম! আমি TakaBondhu-র Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।';
 
   // Fetch LiveKit status on mount
   useEffect(() => {
@@ -118,10 +129,152 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
     };
   }, [connectionState, agentState]);
 
+  // Client Bangla Speech Synthesis Fallback (Guarantees voice output even if cloud worker lags)
+  const speakBanglaFallback = useCallback((text) => {
+    if (!text || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      const bnVoice = voices.find(v => v.lang.startsWith('bn')) ||
+                      voices.find(v => v.lang.includes('BD') || v.lang.includes('IN'));
+      if (bnVoice) utterance.voice = bnVoice;
+      utterance.lang = bnVoice?.lang || 'bn-BD';
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      
+      utterance.onstart = () => {
+        setAgentState('speaking');
+      };
+      utterance.onend = () => {
+        setAgentState('listening');
+      };
+      utterance.onerror = () => {
+        setAgentState('listening');
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      console.warn('SpeechSynthesis error:', err);
+    }
+  }, []);
+
+  // Multi-tier user speech turn processor
+  const handleUserSpeechTurn = useCallback(async (rawText) => {
+    const text = (rawText || '').trim();
+    if (!text || text.length < 3) return;
+    if (text === lastAnalyzedTextRef.current) return;
+    lastAnalyzedTextRef.current = text;
+
+    setAgentState('thinking');
+
+    // 1. Dispatch over LiveKit Data Channel if connected to cloud room
+    if (roomRef.current?.localParticipant) {
+      try {
+        const payload = new TextEncoder().encode(JSON.stringify({
+          type: 'user_speech_text',
+          text
+        }));
+        roomRef.current.localParticipant.publishData(payload, { reliable: true }).catch(() => {});
+        console.log('[LiveVoice] Dispatched user speech text over LiveKit data channel');
+      } catch (err) {
+        console.warn('[LiveVoice] Notice sending LiveKit data channel packet:', err);
+      }
+    }
+
+    // 2. Query backend Scam Shield analyzer in parallel (guarantees instantaneous UI update)
+    try {
+      const res = await fetch(apiUrl('/api/analyze'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        
+        // Update detected signals from unified engine
+        const detected = [];
+        if (Array.isArray(data.signalsDetected) && data.signalsDetected.length > 0) {
+          detected.push(...data.signalsDetected.map(s => ({
+            name: s.type || s.name,
+            severity: s.severity || 'HIGH',
+            evidence: s.evidence
+          })));
+        } else if (Array.isArray(data.signalsValidated) && data.signalsValidated.length > 0) {
+          detected.push(...data.signalsValidated.map(s => ({
+            name: s.type,
+            severity: 'HIGH',
+            evidence: s.evidence
+          })));
+        }
+        if (detected.length > 0) {
+          setDetectedSignals(detected);
+        }
+
+        // Safe Practical Next Step Guidance in Bengali
+        const isPotentialScam = data.isPotentialScam || (data.riskScore && data.riskScore >= 50);
+        let safeAdvice = '';
+        if (data.safestPracticalNextStep) {
+          safeAdvice = data.safestPracticalNextStep;
+        } else if (data.case_card?.recommended_action) {
+          safeAdvice = data.case_card.recommended_action;
+        } else if (isPotentialScam) {
+          safeAdvice = 'টাকা পাঠাবেন না, কোনো ওটিপি বা পিন নম্বর দেবেন না। কলটি সাথে সাথে কেটে দিন এবং সংশ্লিষ্ট হেল্পলাইনে নিজে ফোন করে যাচাই করুন।';
+        } else {
+          safeAdvice = 'স্বাভাবিক বার্তা। তবে যেকোনো আর্থিক লেনদেনের সময় পিন বা পাসওয়ার্ড কখনোই শেয়ার করবেন না।';
+        }
+
+        setAiTranscript(safeAdvice);
+
+        if (data.rag) {
+          setRagStatus({
+            available: data.rag.status === 'active',
+            count: data.rag.documentCount || 0
+          });
+        }
+
+        // 3. Fallback speech: if LiveKit WebRTC audio has not started speaking within 2.2s, speak via client TTS
+        clearTimeout(fallbackSpeechTimerRef.current);
+        fallbackSpeechTimerRef.current = setTimeout(() => {
+          if (!agentAudioPlayingRef.current) {
+            console.log('[LiveVoice] Speaking safe guidance via Bangla TTS fallback');
+            speakBanglaFallback(safeAdvice);
+          }
+        }, 2200);
+
+        return;
+      }
+    } catch (err) {
+      console.warn('[LiveVoice] Backend analyze query note:', err.message);
+    }
+
+    // 4. Deterministic 100% offline fallback if backend server is unreachable
+    const lower = text.toLowerCase();
+    const isThreat = lower.includes('টাকা') || lower.includes('পাঠান') || lower.includes('বন্ধ') || 
+                     lower.includes('block') || lower.includes('ব্লক') || lower.includes('ওটিপি') || 
+                     lower.includes('otp') || lower.includes('পিন');
+
+    const localAdvice = isThreat
+      ? 'টাকা পাঠাবেন না এবং কোনো ওটিপি বা পিন শেয়ার করবেন না। এটি সন্দেহজনক প্রতারণার স্পষ্ট লক্ষণ।'
+      : 'স্বাভাবিক বার্তা। আর্থিক সুরক্ষার জন্য কখনো কারো সাথে পিন শেয়ার করবেন না।';
+
+    setAiTranscript(localAdvice);
+    clearTimeout(fallbackSpeechTimerRef.current);
+    fallbackSpeechTimerRef.current = setTimeout(() => {
+      if (!agentAudioPlayingRef.current) {
+        speakBanglaFallback(localAdvice);
+      }
+    }, 1200);
+  }, [speakBanglaFallback]);
+
   // Client speech recognition (Dual transcription helper for browser UI)
-  const startBrowserTranscription = () => {
+  const startBrowserTranscription = useCallback(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
+    if (!SpeechRecognition) {
+      console.warn('Browser SpeechRecognition not supported in this environment.');
+      return;
+    }
 
     try {
       const recognition = new SpeechRecognition();
@@ -131,29 +284,38 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
 
       recognition.onresult = (event) => {
         let currentText = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
+        for (let i = 0; i < event.results.length; i++) {
           currentText += event.results[i][0].transcript;
         }
-        if (currentText.trim()) {
-          setUserTranscript(currentText);
+        const trimmed = currentText.trim();
+        if (trimmed) {
+          setUserTranscript(trimmed);
           setAgentState('listening');
 
-          // Quick deterministic scan preview
-          const lower = currentText.toLowerCase();
+          // Instant preview signals
+          const lower = trimmed.toLowerCase();
           const detected = [];
-          if (lower.includes('টাকা') || lower.includes('send') || lower.includes('পাঠান')) {
+          if (lower.includes('টাকা') || lower.includes('send') || lower.includes('পাঠান') || lower.includes('পাঠাতে')) {
             detected.push({ name: 'Payment Request', severity: 'HIGH' });
           }
-          if (lower.includes('বন্ধ') || lower.includes('block') || lower.includes('ব্লক')) {
+          if (lower.includes('বন্ধ') || lower.includes('block') || lower.includes('ব্লক') || lower.includes('বাতিল')) {
             detected.push({ name: 'Account Threat', severity: 'CRITICAL' });
           }
-          if (lower.includes('এখনই') || lower.includes('জরুরি') || lower.includes('urgent')) {
+          if (lower.includes('এখনই') || lower.includes('জরুরি') || lower.includes('urgent') || lower.includes('তাড়াতাড়ি')) {
             detected.push({ name: 'Urgency Pressure', severity: 'HIGH' });
           }
-          if (lower.includes('ওটিপি') || lower.includes('otp') || lower.includes('পিন')) {
-            detected.push({ name: 'OTP Harvesting', severity: 'CRITICAL' });
+          if (lower.includes('ওটিপি') || lower.includes('otp') || lower.includes('পিন') || lower.includes('কোড') || lower.includes('password')) {
+            detected.push({ name: 'OTP / Credential Harvesting', severity: 'CRITICAL' });
           }
-          setDetectedSignals(detected);
+          if (detected.length > 0) {
+            setDetectedSignals(detected);
+          }
+
+          // Debounce turn completion: trigger analysis 1.3s after user pauses speaking
+          clearTimeout(debounceTimerRef.current);
+          debounceTimerRef.current = setTimeout(() => {
+            handleUserSpeechTurn(trimmed);
+          }, 1300);
         }
       };
 
@@ -168,31 +330,185 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
     } catch (e) {
       console.warn('Could not start webkitSpeechRecognition:', e.message);
     }
-  };
+  }, [handleUserSpeechTurn]);
 
-  // Connect to LiveKit Room
+  // Connect to LiveKit Room (with seamless Local Offline Voice fallback)
   const handleStartVoice = async () => {
     setErrorMessage(null);
     setConnectionState('requesting_token');
     setUserTranscript('');
-    setAiTranscript('আসসালামু আলাইকুম! আমি TakaBondhu-র Voice AI Assistant। কোনো আর্থিক মেসেজ বা সন্দেহজনক ফোন কল নিয়ে সন্দেহ হলে আমাকে বলুন, আমি নিরাপদ পরবর্তী পদক্ষেপ নিতে সাহায্য করব।');
+    setAiTranscript(INITIAL_GREETING);
     setDetectedSignals([]);
+    lastAnalyzedTextRef.current = '';
 
-    // 1. Request microphone access first
-    let micStream = null;
+    // 1. Try LiveKit Cloud connection first
+    let tokenData = null;
     try {
-      micStream = await navigator.mediaDevices.getUserMedia({ 
+      const roomName = `takabondhu-${Date.now().toString(36)}`;
+      console.log('[VOICE DEBUG] Requesting LiveKit token...');
+      const res = await fetch(apiUrl('/api/livekit/token'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roomName })
+      });
+
+      if (res.ok) {
+        tokenData = await res.json();
+      }
+    } catch (tokenErr) {
+      console.warn('[VOICE DEBUG] LiveKit token request failed, will use local offline voice:', tokenErr.message);
+    }
+
+    // 2. If LiveKit token acquired, initialize WebRTC low-latency session
+    if (tokenData && tokenData.token && tokenData.configured !== false) {
+      try {
+        setConnectionState('connecting');
+        setVoiceMode('livekit');
+
+        const room = new Room({
+          adaptiveStream: true,
+          dynacast: true,
+          audioCaptureDefaults: {
+            autoGainControl: true,
+            echoCancellation: true,
+            noiseSuppression: true,
+            channelCount: 1,
+            sampleRate: 24000,
+            latency: 0.01
+          },
+          publishDefaults: {
+            dtx: true,
+            red: true,
+            audioBitrate: 24000
+          }
+        });
+
+        roomRef.current = room;
+
+        room.on(RoomEvent.Connected, () => {
+          console.log('[VOICE DEBUG] Connected to LiveKit Room:', room.name);
+          setConnectionState('connected');
+          setAgentState('listening');
+          startBrowserTranscription();
+        });
+
+        room.on(RoomEvent.Disconnected, () => {
+          console.log('[VOICE DEBUG] LiveKit Room disconnected');
+          handleEndCall();
+        });
+
+        // Agent audio track subscription
+        room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
+          if (track.kind === Track.Kind.Audio) {
+            console.log('[VOICE DEBUG] Agent audio track subscribed:', participant.identity);
+            const audioElement = track.attach();
+            audioElement.autoplay = true;
+
+            audioElement.onplay = () => {
+              console.log('[VOICE DEBUG] Agent WebRTC audio playback started');
+              agentAudioPlayingRef.current = true;
+              if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+              setAgentState('speaking');
+            };
+            audioElement.onended = () => {
+              agentAudioPlayingRef.current = false;
+              setAgentState('listening');
+            };
+            audioElement.onpause = () => {
+              agentAudioPlayingRef.current = false;
+            };
+
+            audioElementsRef.current.push(audioElement);
+            setAgentState('speaking');
+          }
+        });
+
+        // Agent data messages
+        room.on(RoomEvent.DataReceived, (payload, participant) => {
+          try {
+            const raw = new TextDecoder().decode(payload);
+            const msg = JSON.parse(raw);
+
+            if (msg.type === 'scam_analysis' && msg.data) {
+              console.log('[VOICE DEBUG] Received scam analysis payload:', msg.data);
+              if (Array.isArray(msg.data.signalsDetected) && msg.data.signalsDetected.length > 0) {
+                setDetectedSignals(msg.data.signalsDetected.map(s => ({
+                  name: s.type,
+                  severity: s.severity || 'HIGH',
+                  evidence: s.evidence
+                })));
+              }
+              if (msg.data.safestPracticalNextStep) {
+                setAiTranscript(msg.data.safestPracticalNextStep);
+              }
+              setRagStatus({
+                available: Boolean(msg.data.ragAvailable),
+                count: msg.data.retrievedSafetyGuidance?.length || 0
+              });
+            } else if (msg.type === 'rag_status' && msg.data) {
+              setRagStatus({
+                available: Boolean(msg.data.available),
+                count: msg.data.count || 0
+              });
+            } else if (msg.type === 'agent_transcript' && msg.text) {
+              setAiTranscript(msg.text);
+            } else if (msg.type === 'user_transcript' && msg.text) {
+              setUserTranscript(msg.text);
+            } else if (msg.type === 'agent_state' && msg.state) {
+              setAgentState(msg.state);
+            }
+          } catch (dataErr) {
+            console.warn('[VOICE DEBUG] Room data packet parse note:', dataErr.message);
+          }
+        });
+
+        // Connect room
+        await room.connect(tokenData.url, tokenData.token);
+
+        // Publish mic track
+        await room.localParticipant.setMicrophoneEnabled(true);
+
+        // Hook visualizer to the published mic track (prevents conflicting dual-getUserMedia)
+        try {
+          const pub = room.localParticipant.getTrackPublication(Track.Source.Microphone);
+          const micTrack = pub?.track?.mediaStreamTrack;
+          if (micTrack) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const stream = new MediaStream([micTrack]);
+            const source = audioCtx.createMediaStreamSource(stream);
+            const analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 64;
+            source.connect(analyser);
+
+            audioContextRef.current = audioCtx;
+            analyserRef.current = analyser;
+          }
+        } catch (vizErr) {
+          console.warn('[VOICE DEBUG] Visualizer hook note:', vizErr);
+        }
+
+        return;
+      } catch (cloudErr) {
+        console.warn('[VOICE DEBUG] LiveKit Cloud WebRTC connection error, transitioning to Local Offline Voice:', cloudErr);
+      }
+    }
+
+    // 3. Fallback: Local Voice Assistant Mode (Works 100% locally/offline with Web Audio + SpeechSynthesis)
+    try {
+      setVoiceMode('local_offline');
+      setConnectionState('connected');
+      setAgentState('listening');
+
+      // Request local mic for visualizer & speech recognition
+      const micStream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true,
-          sampleRate: 24000,
-          channelCount: 1
+          autoGainControl: true
         } 
       });
       micStreamRef.current = micStream;
 
-      // Initialize Web Audio API Analyser for visualizer
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(micStream);
       const analyser = audioCtx.createAnalyser();
@@ -201,175 +517,38 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
 
       audioContextRef.current = audioCtx;
       analyserRef.current = analyser;
+
+      startBrowserTranscription();
+
+      // Speak initial Bengali greeting locally
+      speakBanglaFallback(INITIAL_GREETING);
     } catch (micErr) {
-      console.error('Microphone permission error:', micErr);
+      console.error('Microphone error in local mode:', micErr);
       setConnectionState('error');
       setErrorMessage(
         micErr.name === 'NotAllowedError' || micErr.name === 'PermissionDeniedError'
           ? 'Microphone permission was denied. Please allow microphone access in your browser settings to speak with the safety assistant.'
           : 'Could not access microphone: ' + micErr.message
       );
-      return;
-    }
-
-    // 2. Fetch temporary token from backend
-    try {
-      const roomName = `takabondhu-${Date.now().toString(36)}`;
-      console.log('[VOICE DEBUG] Token requested');
-      const res = await fetch(apiUrl('/api/livekit/token'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roomName })
-      });
-
-      const tokenData = await res.json();
-
-      if (!res.ok || !tokenData.token) {
-        if (res.status === 503 || tokenData.configured === false) {
-          // LiveKit cloud keys not yet added to backend/.env
-          setConnectionState('error');
-          setErrorMessage(
-            tokenData.error || 'LiveKit Cloud is not yet configured. Please set LIVEKIT_URL, LIVEKIT_API_KEY, and LIVEKIT_API_SECRET in backend/.env.'
-          );
-          if (micStreamRef.current) {
-            micStreamRef.current.getTracks().forEach(t => t.stop());
-          }
-          return;
-        }
-        throw new Error(tokenData.error || 'Failed to acquire LiveKit room access token');
-      }
-
-      console.log('[VOICE DEBUG] Token generated for room:', tokenData.roomName);
-      console.log('[VOICE DEBUG] Frontend connecting to room:', tokenData.roomName);
-      setConnectionState('connecting');
-
-      // 3. Initialize LiveKit Room with low-latency voice settings
-      const room = new Room({
-        adaptiveStream: true,
-        dynacast: true,
-        audioCaptureDefaults: {
-          autoGainControl: true,
-          echoCancellation: true,
-          noiseSuppression: true,
-          channelCount: 1,
-          sampleRate: 24000,
-          latency: 0.01
-        },
-        publishDefaults: {
-          dtx: true,
-          red: true,
-          audioBitrate: 24000
-        }
-      });
-
-      roomRef.current = room;
-
-      // Handle room events
-      room.on(RoomEvent.Connected, () => {
-        console.log('[VOICE DEBUG] Frontend connected to room:', room.name);
-        setConnectionState('connected');
-        setAgentState('listening');
-        startBrowserTranscription();
-      });
-
-      room.on(RoomEvent.Disconnected, () => {
-        console.log('[LiveKit] Room disconnected');
-        handleEndCall();
-      });
-
-      // Subscribe to audio tracks from the Voice Agent
-      room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-        if (track.kind === Track.Kind.Audio) {
-          console.log('[VOICE DEBUG] Agent audio track subscribed:', participant.identity);
-          const audioElement = track.attach();
-          audioElement.autoplay = true;
-          audioElementsRef.current.push(audioElement);
-          setAgentState('speaking');
-        }
-      });
-
-      // Listen for LiveKit Data Messages (scam analysis, transcripts, agent state from worker)
-      room.on(RoomEvent.DataReceived, (payload, participant) => {
-        try {
-          const text = new TextDecoder().decode(payload);
-          const msg = JSON.parse(text);
-
-          if (msg.type === 'scam_analysis' && msg.data) {
-            console.log('[VOICE DEBUG] Received scam analysis payload:', msg.data);
-            if (Array.isArray(msg.data.signalsDetected) && msg.data.signalsDetected.length > 0) {
-              setDetectedSignals(msg.data.signalsDetected.map(s => ({
-                name: s.type,
-                severity: s.severity || 'HIGH',
-                evidence: s.evidence
-              })));
-            }
-            if (msg.data.safestPracticalNextStep) {
-              setAiTranscript(msg.data.safestPracticalNextStep);
-            }
-            setRagStatus({
-              available: Boolean(msg.data.ragAvailable),
-              count: msg.data.retrievedSafetyGuidance?.length || 0
-            });
-          } else if (msg.type === 'rag_status' && msg.data) {
-            setRagStatus({
-              available: Boolean(msg.data.available),
-              count: msg.data.count || 0
-            });
-          } else if (msg.type === 'agent_transcript' && msg.text) {
-            setAiTranscript(msg.text);
-          } else if (msg.type === 'user_transcript' && msg.text) {
-            setUserTranscript(msg.text);
-          } else if (msg.type === 'agent_state' && msg.state) {
-            setAgentState(msg.state);
-          }
-        } catch (dataErr) {
-          console.warn('[VOICE DEBUG] Error parsing room data packet:', dataErr);
-        }
-      });
-
-      // Listen for LiveKit native transcription stream
-      room.on(RoomEvent.TranscriptionReceived, (segments, participant) => {
-        if (!Array.isArray(segments) || segments.length === 0) return;
-        const fullText = segments.map(s => s.text).join(' ').trim();
-        if (!fullText) return;
-
-        const isAgent = participant?.isAgent || participant?.identity?.includes('agent');
-        if (isAgent) {
-          setAiTranscript(fullText);
-          setAgentState('speaking');
-        } else {
-          setUserTranscript(fullText);
-          setAgentState('listening');
-        }
-      });
-
-      room.on(RoomEvent.ActiveSpeakersChanged, (speakers) => {
-        const agentSpeaker = speakers.find(s => s.isAgent || s.identity.includes('agent'));
-        if (agentSpeaker) {
-          setAgentState('speaking');
-        } else if (speakers.length > 0) {
-          setAgentState('listening');
-        } else {
-          setAgentState('idle');
-        }
-      });
-
-      // Connect to LiveKit Cloud WebRTC room
-      await room.connect(tokenData.url, tokenData.token);
-
-      // Publish local mic track
-      await room.localParticipant.setMicrophoneEnabled(true);
-
-    } catch (err) {
-      console.error('Error connecting to LiveKit room:', err);
-      setConnectionState('error');
-      setErrorMessage(err.message || 'Failed to establish LiveKit audio connection. Check network and LiveKit Cloud credentials.');
-      handleEndCall();
     }
   };
 
   // Disconnect & cleanup
   const handleEndCall = () => {
+    if (fallbackSpeechTimerRef.current) {
+      clearTimeout(fallbackSpeechTimerRef.current);
+      fallbackSpeechTimerRef.current = null;
+    }
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+    }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {}
+    }
+
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -404,16 +583,35 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
       roomRef.current = null;
     }
 
+    agentAudioPlayingRef.current = false;
+    lastAnalyzedTextRef.current = '';
     setConnectionState('idle');
     setAgentState('idle');
     setIsMuted(false);
   };
 
   const toggleMute = () => {
-    if (!roomRef.current) return;
     const newMuted = !isMuted;
-    roomRef.current.localParticipant.setMicrophoneEnabled(!newMuted);
+    if (roomRef.current) {
+      roomRef.current.localParticipant.setMicrophoneEnabled(!newMuted);
+    }
+    if (micStreamRef.current) {
+      micStreamRef.current.getAudioTracks().forEach(t => {
+        t.enabled = !newMuted;
+      });
+    }
     setIsMuted(newMuted);
+  };
+
+  // Quick 1-click test scenarios for testing and demonstration
+  const handleQuickScenario = (text) => {
+    setUserTranscript(text);
+    if (connectionState !== 'connected') {
+      setConnectionState('connected');
+      setVoiceMode('local_offline');
+      setAiTranscript(INITIAL_GREETING);
+    }
+    handleUserSpeechTurn(text);
   };
 
   return (
@@ -448,6 +646,15 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
                 <span>Bangla Voice AI (বাংলা)</span>
               </span>
+              {connectionState === 'connected' && (
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${
+                  voiceMode === 'livekit' 
+                    ? 'bg-blue-500/10 border-blue-500/30 text-blue-300' 
+                    : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                }`}>
+                  {voiceMode === 'livekit' ? 'LiveKit Cloud' : 'Local Fast Audio'}
+                </span>
+              )}
             </div>
           </div>
 
@@ -550,9 +757,9 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
                     {agentState === 'speaking' ? (
                       <span className="text-cyan-300">Speaking...</span>
                     ) : agentState === 'thinking' ? (
-                      <span className="text-indigo-300">Thinking...</span>
+                      <span className="text-indigo-300">Analyzing threat signals...</span>
                     ) : (
-                      <span className="text-emerald-300">Listening...</span>
+                      <span className="text-emerald-300">Listening to your speech...</span>
                     )}
                   </p>
                 </div>
@@ -564,12 +771,37 @@ export default function LiveVoiceCard({ onScrollToAnalyzer }) {
                   <div>
                     <span className="font-bold text-rose-200 block mb-1">Voice Connection Notice:</span>
                     <p className="leading-relaxed">{errorMessage}</p>
-                    <p className="mt-2 text-[11px] text-slate-400">
-                      💡 Ensure <code className="text-rose-300">LIVEKIT_URL</code>, <code className="text-rose-300">LIVEKIT_API_KEY</code>, and <code className="text-rose-300">LIVEKIT_API_SECRET</code> are set in <code className="text-rose-300">backend/.env</code> and the voice agent worker is running.
-                    </p>
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Quick Scenario Chips for Instant Voice Demonstration */}
+            <div className="mb-6 flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto">
+              <span className="text-[11px] font-semibold text-slate-400 mr-1 flex items-center">
+                <Zap className="w-3 h-3 text-cyan-400 mr-1" /> Quick Voice Test:
+              </span>
+              <button
+                type="button"
+                onClick={() => handleQuickScenario('আমার বিকাশ অ্যাকাউন্ট বন্ধ হয়ে যাবে বলে ৫০০০ টাকা পাঠাতে বলছে।')}
+                className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bangla transition-all active:scale-95"
+              >
+                🔴 বিকাশ বন্ধের হুমকি
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickScenario('আপনাকে লটারির ২৫ লাখ টাকা দেওয়ার জন্য ওটিপি কোড চাওয়া হচ্ছে।')}
+                className="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-bangla transition-all active:scale-95"
+              >
+                🟠 লটারি ও ওটিপি দাবি
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickScenario('দোস্ত কেমন আছিস? কাল কি ক্যাম্পাসে দেখা হবে?')}
+                className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bangla transition-all active:scale-95"
+              >
+                🟢 সাধারণ বার্তা
+              </button>
             </div>
 
             {/* Action Buttons */}
