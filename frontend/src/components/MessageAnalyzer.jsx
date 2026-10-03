@@ -14,13 +14,13 @@ import {
   HeartHandshake,
   Link as LinkIcon,
   Headphones,
-  Cpu,
   Radio,
   Mic,
   MessageSquare
 } from 'lucide-react';
 import { SAMPLE_SCENARIOS } from '../data/sampleScenarios';
 import LiveVoiceCard from './LiveVoiceCard';
+import { useI18n } from '../i18n';
 
 const iconMap = {
   AlertTriangle: AlertTriangle,
@@ -39,8 +39,9 @@ export default function MessageAnalyzer({
   activeTab = 'text', 
   setActiveTab,
   initialText = '',
-  lang = 'en'
+  lang = 'bn'
 }) {
+  const { t } = useI18n(lang);
   const [internalTab, setInternalTab] = useState('text');
   const currentTab = setActiveTab ? activeTab : internalTab;
   const setTab = setActiveTab || setInternalTab;
@@ -67,7 +68,7 @@ export default function MessageAnalyzer({
         setSelectedScenarioId(null);
       }
     } catch {
-      alert('Clipboard access denied. Please paste manually (Ctrl+V).');
+      alert(lang === 'bn' ? 'ক্লিপবোর্ড এক্সেস পাওয়া যায়নি। অনুগ্রহ করে হাতে পেস্ট করুন (Ctrl+V)।' : 'Clipboard access denied. Please paste manually (Ctrl+V).');
     }
   };
 
@@ -77,214 +78,149 @@ export default function MessageAnalyzer({
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (!inputText.trim()) return;
     onAnalyze(inputText.trim());
   };
 
   return (
-    <section ref={analyzerRef} id="analyzer" className="py-12 sm:py-16 relative">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={analyzerRef} id="analyzer" className="py-8 sm:py-12 relative">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Mode Switcher: Live Voice vs Message Analyzer */}
-        <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-8">
+        {/* Mode Switcher: Voice vs Text */}
+        <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-6">
           <button
             type="button"
             onClick={() => setTab('text')}
-            className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center space-x-2.5 transition-all ${
+            className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all min-h-[44px] ${
               currentTab === 'text'
-                ? 'bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-indigo-500/20 text-cyan-300 border border-cyan-400/50 shadow-lg shadow-cyan-500/10 ring-1 ring-cyan-400/30'
-                : 'bg-navy-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border border-cyan-400 shadow-md ring-1 ring-cyan-400/30'
+                : 'bg-navy-900/70 border border-slate-800 text-slate-400 hover:text-slate-200'
             }`}
           >
             <MessageSquare className="w-4 h-4 text-cyan-400" />
-            <span>Analyze a Message</span>
+            <span>{t('navCheckMessage')}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setTab('voice')}
-            className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center space-x-2.5 transition-all ${
+            className={`px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center space-x-2 transition-all min-h-[44px] ${
               currentTab === 'voice'
-                ? 'bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-indigo-500/20 text-cyan-300 border border-cyan-400/50 shadow-lg shadow-cyan-500/10 ring-1 ring-cyan-400/30'
-                : 'bg-navy-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border border-cyan-400 shadow-md ring-1 ring-cyan-400/30'
+                : 'bg-navy-900/70 border border-slate-800 text-slate-400 hover:text-slate-200'
             }`}
           >
             <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
-            <span>🎙️ Talk to TakaBondhu</span>
-            <span className="px-1.5 py-0.5 rounded-full text-[9px] bg-cyan-500/20 text-cyan-300 uppercase font-black">
-              LIVE VOICE
-            </span>
+            <span>🎙️ {lang === 'bn' ? 'ভয়েস সহকারী' : 'Voice Assistant'}</span>
           </button>
         </div>
 
-        {/* Tab 1: Live Voice Assistant */}
+        {/* Tab 1: Live Voice Card */}
         {currentTab === 'voice' && (
-          <LiveVoiceCard onScrollToAnalyzer={() => analyzerRef?.current?.scrollIntoView({ behavior: 'smooth' })} />
+          <LiveVoiceCard 
+            lang={lang}
+            onScrollToAnalyzer={() => analyzerRef?.current?.scrollIntoView({ behavior: 'smooth' })} 
+          />
         )}
 
         {/* Tab 2: Text Message Analyzer */}
         {currentTab === 'text' && (
-          <>
-            {/* Analyzer Card */}
-            <div className="glass-card rounded-3xl p-6 sm:p-9 border border-slate-800 relative overflow-hidden shadow-2xl">
-              
-              {/* Card Header: Is this safe? / Paste a suspicious message... */}
-              <div className="mb-6 pb-5 border-b border-slate-800/80">
-                <div className="flex items-center space-x-2.5 mb-1.5">
-                  <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-                    <ShieldAlert className="w-5 h-5" />
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                    Is this safe?
-                  </h2>
+          <div className="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 relative overflow-hidden shadow-2xl space-y-5">
+            
+            {/* Header */}
+            <div className="pb-4 border-b border-slate-800/80">
+              <div className="flex items-center space-x-2.5 mb-1">
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                  <ShieldAlert className="w-5 h-5" />
                 </div>
-                <p className="text-sm sm:text-base text-slate-300">
-                  Paste a suspicious message or describe what happened.
-                </p>
+                <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  {t('analyzerTitle')}
+                </h2>
               </div>
+              <p className="text-xs sm:text-sm text-slate-300">
+                {t('analyzerSubtitle')}
+              </p>
+            </div>
 
-              {/* Sample Scenarios Quick-Fill */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Quick Test Scenarios:</span>
-                  </span>
-                  <span className="text-[11px] text-slate-400">Click to fill</span>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                  {SAMPLE_SCENARIOS.map((scenario) => {
-                    const IconComponent = iconMap[scenario.icon] || AlertTriangle;
-                    const isSelected = selectedScenarioId === scenario.id;
-
-                    return (
-                      <button
-                        key={scenario.id}
-                        type="button"
-                        onClick={() => handleSelectScenario(scenario)}
-                        className={`p-2 rounded-xl border text-left transition-all text-xs flex flex-col justify-between group ${
-                          isSelected
-                            ? 'bg-cyan-950/70 border-cyan-400/80 text-white ring-1 ring-cyan-400'
-                            : 'bg-navy-950/70 border-slate-800 text-slate-300 hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between w-full mb-1">
-                          <IconComponent className={`w-3.5 h-3.5 ${isSelected ? 'text-cyan-300' : 'text-slate-400 group-hover:text-cyan-400'}`} />
-                          <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-400">
-                            {scenario.category}
-                          </span>
-                        </div>
-                        <span className="font-semibold line-clamp-1 text-[11px]">
-                          {scenario.title}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Input Form */}
-              <form onSubmit={handleSubmit}>
-                <div className="flex items-center justify-between mb-2 text-xs text-slate-400">
-                  <label htmlFor="scam-message-input" className="font-semibold uppercase tracking-wider text-slate-300">
-                    Message Content
+            {/* Input Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-2 text-xs">
+                  <label htmlFor="scam-message-input" className="font-semibold text-slate-300">
+                    {t('inputMessageLabel')}
                   </label>
 
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
                     <button
                       type="button"
                       onClick={handlePaste}
-                      className="hover:text-cyan-300 text-slate-400 transition-colors flex items-center space-x-1 font-medium"
-                      title="Paste from clipboard"
+                      className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-cyan-300 hover:border-cyan-400 text-xs font-medium flex items-center space-x-1"
+                      title={t('btnPaste')}
                     >
                       <ClipboardPaste className="w-3.5 h-3.5" />
-                      <span>Paste</span>
+                      <span>{t('btnPaste')}</span>
                     </button>
                     {inputText && (
                       <button
                         type="button"
                         onClick={handleClear}
-                        className="hover:text-rose-400 text-slate-400 transition-colors flex items-center space-x-1 font-medium"
-                        title="Clear text"
+                        className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-rose-400 text-xs font-medium flex items-center space-x-1"
+                        title={t('btnClear')}
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
-                        <span>Clear</span>
+                        <span>{t('btnClear')}</span>
                       </button>
                     )}
                   </div>
                 </div>
 
                 {/* Textarea */}
-                <div className="relative">
-                  <textarea
-                    id="scam-message-input"
-                    rows={5}
-                    value={inputText}
-                    onChange={(e) => {
-                      setInputText(e.target.value);
-                      if (selectedScenarioId) setSelectedScenarioId(null);
-                    }}
-                    disabled={isLoading}
-                    placeholder="Example: Someone called saying my account will be blocked unless I send money immediately..."
-                    className="w-full bg-navy-950/90 border border-slate-700/80 rounded-2xl p-4 sm:p-5 text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500 font-sans text-sm sm:text-base leading-relaxed transition-all resize-y min-h-[140px] shadow-inner"
-                  />
+                <textarea
+                  id="scam-message-input"
+                  rows={4}
+                  value={inputText}
+                  onChange={(e) => {
+                    setInputText(e.target.value);
+                    if (selectedScenarioId) setSelectedScenarioId(null);
+                  }}
+                  disabled={isLoading}
+                  placeholder={t('inputMessagePlaceholder')}
+                  className="w-full bg-navy-950/90 border border-slate-700/80 rounded-2xl p-4 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500 font-sans text-sm sm:text-base leading-relaxed transition-all resize-y min-h-[120px]"
+                />
+                
+                {/* 1-Line Helper Text under Input */}
+                <p className="text-[11px] text-slate-400 mt-1">
+                  {t('inputMessageHelper')}
+                </p>
+              </div>
 
-                  {isLoading && (
-                    <div className="absolute inset-0 bg-navy-950/80 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center space-y-3 z-10">
-                      <div className="relative w-12 h-12">
-                        <div className="absolute inset-0 rounded-full border-2 border-cyan-500/30"></div>
-                        <div className="absolute inset-0 rounded-full border-2 border-t-cyan-400 animate-spin"></div>
-                        <ShieldAlert className="w-6 h-6 text-cyan-400 absolute inset-0 m-auto animate-pulse" />
-                      </div>
-                      <div className="text-center">
-                        <p className="text-sm font-bold text-white tracking-wide">
-                          TakaBondhu AI Scanning...
-                        </p>
-                        <p className="text-xs text-cyan-300 font-mono mt-0.5">
-                          Checking threat signals and safety guidance
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
+              {/* Submit Button with Helper Text */}
+              <div>
+                <button
+                  type="submit"
+                  disabled={isLoading || !inputText.trim()}
+                  className="w-full py-3.5 px-6 rounded-2xl text-sm sm:text-base font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-xl shadow-cyan-500/25 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 transition-all flex items-center justify-center space-x-2 min-h-[48px]"
+                >
+                  <Search className="w-4 h-4" />
+                  <span>{isLoading ? t('btnAnalyzing') : t('btnAnalyze')}</span>
+                </button>
+                <p className="text-[11px] text-slate-400 text-center mt-1.5">
+                  {lang === 'bn' 
+                    ? 'মেসেজটি স্ক্যাম বা ভুয়া কি না মুহূর্তেই পরীক্ষা করুন' 
+                    : 'Tap to instantly check if this message contains scam signs'}
+                </p>
+              </div>
+            </form>
 
-                {/* Error Banner */}
-                {error && (
-                  <div className="mt-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs sm:text-sm flex items-start space-x-2.5 animate-fade-in">
-                    <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-400 mt-0.5" />
-                    <div>
-                      <span className="font-bold">Notice:</span> {error}
-                    </div>
-                  </div>
-                )}
+            {error && (
+              <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center space-x-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
 
-                {/* Submit Action Bar */}
-                <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-800/80">
-                  <div className="text-xs text-slate-400 flex items-center space-x-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span>AI Context Analysis • Realtime Safety Guidance</span>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isLoading || !inputText.trim()}
-                    className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all flex items-center justify-center space-x-2 shadow-lg ${
-                      isLoading || !inputText.trim()
-                        ? 'bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-700/50'
-                        : 'bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white hover:from-cyan-400 hover:to-blue-500 shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-95'
-                    }`}
-                  >
-                    <ShieldAlert className="w-4 h-4" />
-                    <span>{isLoading ? (lang === 'bn' ? 'যাচাই হচ্ছে...' : 'Analyzing...') : (lang === 'bn' ? 'যাচাই করুন (টাকাবন্ধু)' : 'Analyze with TakaBondhu')}</span>
-                  </button>
-                </div>
-
-              </form>
-
-            </div>
-          </>
+          </div>
         )}
 
       </div>
