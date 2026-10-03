@@ -1,0 +1,161 @@
+id,text,label,scam_type,language,length_bucket,source
+hw_bn_b01,"আম্মু আজ বাজারে ইলিশ মাছ ভালো পেয়েছি, দুইটা কিনে আনলাম। রাতের রান্না করতে পারবা।",0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b02,মামা কালকের রিকশা ভাড়ার ৫০ টাকা সময় পেলে পাঠিয়ে দিও। তাড়া নেই।,0,personal_chat,bn,short,handwritten_eval
+hw_bn_b03,সতর্কবার্তা: বিকাশ বা অন্য কোনো প্রতিষ্ঠান কখনোই আপনার পিন নম্বর জানতে চাইবে না। পিন কাউকে দিলে আপনার একাউন্ট ঝুঁকিতে পড়বে।,0,otp_safety,bn,long,handwritten_eval
+hw_bn_b04,"আপনার উপায়ের চলতি মাসের ডিপিএস কিস্তি ১,০০০ টাকা আগামী ১০ তারিখের মধ্যে পরিশোধ করার অনুরোধ করা হচ্ছে।",0,bank_notification,bn,medium,handwritten_eval
+hw_bn_b05,"ভাই বাসা ভাড়া আর সার্ভিস চার্জ মিলিয়ে মোট ১৮,৫০০ টাকা এই নম্বরে আজকেই দিতে হবে, বাড়িওয়ালা তাগাদা দিচ্ছেন।",0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b06,নিরাপত্তা নোটিশ: কোনো অচেনা ব্যক্তিকে ফোনে ওটিপি বলবেন না। ব্যাংক বা পুলিশ কখনো ওটিপি কোড চায় না।,0,otp_safety,bn,medium,handwritten_eval
+hw_bn_b07,আজকের বিদ্যুৎ বিল পরিশোধের শেষ তারিখ। জরিমানা এড়াতে এখনই পল্লী বিদ্যুৎ অফিসে অথবা অ্যাপে পরিশোধ করুন।,0,innocent_keywords,bn,medium,handwritten_eval
+hw_bn_b08,দোস্ত কালকে ভার্সিটির অ্যাসাইনমেন্ট জমা দেওয়ার লাস্ট ডেট। তুই ফাইলটা রেডি করিস।,0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b09,"আপনার একাউন্টে ১,২০০ টাকা ক্যাশ ইন সম্পন্ন হয়েছে। ব্যালেন্স দেখতে ডায়াল করুন *২৬৮#।",0,bank_notification,bn,medium,handwritten_eval
+hw_bn_b10,"বাবা ডাক্তারের প্রেসক্রিপশনের সব ওষুধ কিনে নিয়ে এসেছি, মোট বিল হয়েছিল ৮৫০ টাকা।",0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b11,"গ্রাহক সেবা বার্তা: কোনো ওটিপি এসএমএস আসলে কাউকে ফরোয়ার্ড করবেন না। সচেতন থাকুন, নিরাপদে লেনদেন করুন।",0,otp_safety,bn,medium,handwritten_eval
+hw_bn_b12,আপা কালকের বিয়ে বাড়ির উপহার কেনার জন্য ৫০০ টাকা আমার নম্বরে পাঠিয়ে দিয়েন।,0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b13,ম্যানেজার সাহেব বলেছেন আজ ব্যাংকের ব্রাঞ্চ ৪টা পর্যন্ত খোলা থাকবে। দরকারি কাগজ নিয়ে চলে আসুন।,0,innocent_keywords,bn,medium,handwritten_eval
+hw_bn_b14,আপনার ওয়াইফাই বিল ৫০০ টাকা গ্রহণ করা হয়েছে। বিলের রসিদ নম্বর TX99201।,0,bank_notification,bn,medium,handwritten_eval
+hw_bn_b15,"ছোট ভাইয়া, কোচিংয়ের মাসিক ফি ৩,০০০ টাকা স্যারের বিকাশ নম্বরে দিয়ে দিস আজ বিকেলে।",0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b16,"ট্রাফিকে আটকে আছি মিরপুর ১০ নম্বরে, পৌঁছাতে আধা ঘণ্টা দেরি হতে পারে।",0,innocent_keywords,bn,medium,handwritten_eval
+hw_bn_b17,উপায় ওয়ালেটে টাকা জমা হওয়ায় আপনাকে ধন্যবাদ। ট্রানজেকশন সফল।,0,bank_notification,bn,short,handwritten_eval
+hw_bn_b18,"জরুরি নয়: অবসর সময়ে একটা ফোন দিয়েন, জমি রেজিস্ট্রেশনের বিষয়ে কথা বলব।",0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b19,সতর্কতা: কোনো অ্যাপস বা স্ক্রিন শেয়ার সফটওয়্যার অচেনা লোকের কথায় ডাউনলোড করবেন না।,0,otp_safety,bn,medium,handwritten_eval
+hw_bn_b20,"প্রিয় গ্রাহক, আপনার একাউন্টের তথ্য হালনাগাদ রাখতে নিকটস্থ কাস্টমার কেয়ার সেন্টারে ভিজিট করুন। পিন কাউকে বলবেন না।",0,otp_safety,bn,long,handwritten_eval
+hw_bn_b21,"আজকের অফিসের লাঞ্চের বিল সবাই মিলে ভাগ করে নিয়েছি, তোমার অংশ ১৫০ টাকা দিলেই হবে।",0,personal_chat,bn,medium,handwritten_eval
+hw_bn_b22,টাকা পাঠানোর আগে প্রাপকের মোবাইল নম্বর ভালো করে মিলিয়ে নিন। নিরাপদ আর্থিক সেবা আপনার অধিকার।,0,otp_safety,bn,medium,handwritten_eval
+hw_bn_b23,শুভ জন্মদিন বন্ধু! অনেক অনেক দোয়া আর শুভকামনা রইল তোর আগামী জীবনের জন্য।,0,innocent_keywords,bn,medium,handwritten_eval
+hw_bn_b24,গ্যাস বিলের বকেয়া পরিশোধ করার জন্য গ্রাহক সেবা কেন্দ্রে যোগাযোগ করার অনুরোধ করা হলো।,0,innocent_keywords,bn,medium,handwritten_eval
+hw_bn_b25,"মা আমি ভালো আছি, হোস্টেলে এসে পৌঁছেছি। তুমি চিন্তা করো না।",0,personal_chat,bn,short,handwritten_eval
+hw_bn_s01,"উপায় হেড অফিস থেকে বলছি। আপনার একাউন্টে অস্বাভাবিক লেনদেন হয়েছে, ২ ঘণ্টার মধ্যে ঠিক না করলে লক হবে। পিন দিন।",1,fake_agent,bn,long,handwritten_eval
+hw_bn_s02,"ভুল করে আপনার নম্বরে ২০,০০০ টাকা চলে গেছে ভাই! আমার বাচ্চার চিকিৎসার টাকা, দয়া করে এখনই ০১৭৯৯-৮৮৭৭৬৬ নম্বরে ফেরত পাঠান।",1,wrong_transfer,bn,long,handwritten_eval
+hw_bn_s03,"অভিনন্দন! আপনার সিম লটারিতে ৩ লক্ষ টাকা জিতেছে! সরকারি ট্যাক্স ও ডেলিভারি ফি বাবদ ২,০০০ টাকা পাঠান ০১৮১১-২২৩৩৪৪ নম্বরে।",1,fake_prize,bn,long,handwritten_eval
+hw_bn_s04,জরুরি বিজ্ঞপ্তি: এনআইডি ভেরিফিকেশন না করায় আপনার ওয়ালেট সাময়িক স্থগিত। সচল করতে প্রাপ্ত ওটিপি কোডটি দ্রুত এই নম্বরে জানান।,1,kyc_block,bn,long,handwritten_eval
+hw_bn_s05,ঘরে বসে ইউটিউব ভিডিও দেখে দৈনিক ১৫০০ টাকা আয় করুন। কাজের আইডি একটিভ করতে জয়েনিং ফি ৫০০ টাকা দিন এখনই।,1,job_scam,bn,medium,handwritten_eval
+hw_bn_s06,"বিনা জামানতে ৫০,০০০ টাকা লোন অনুমোদিত। ঋণ ছাড়পত্র পেতে বীমা ফি বাবদ ১,৫০০ টাকা পাঠান ০১৯৮৮-৭৭৬৬৫৫ নম্বরে।",1,loan_app,bn,long,handwritten_eval
+hw_bn_s07,আপনার মোবাইলে প্রেরিত ৬ ডিজিটের কোডটি অবিলম্বে দিন নয়তো একাউন্ট বাতিল হয়ে যাবে। কাস্টমার কেয়ার।,1,otp_harvest,bn,medium,handwritten_eval
+hw_bn_s08,আপনার একাউন্ট নিরাপদ করতে মোবাইলে এনিডেস্ক সফটওয়্যার ইন্সটল করে ৯ ডিজিটের কোডটি আমাদের জানান।,1,remote_access,bn,medium,handwritten_eval
+hw_bn_s09,বিকাশ সার্ভার আপডেট চলছে। আপনার একাউন্ট চালু রাখতে এখনই আপনার গোপন পিন ও শেষ ট্রানজেকশন অ্যামাউন্ট এসএমএস করুন।,1,fake_agent,bn,long,handwritten_eval
+hw_bn_s10,"ভাই ভুলবশত আপনার একাউন্টে ১৫,০০০ টাকা চলে গেছে। টাকাটা ফেরত দিন না হলে পুলিশের সাইবার ক্রাইমে অভিযোগ করব।",1,wrong_transfer,bn,long,handwritten_eval
+hw_bn_s11,"বাংলাদেশ ব্যাংকের লটারিতে আপনার নম্বর বিজয়ী! নগদ ৫ লাখ টাকা বুঝে নিতে প্রসেসিং ফি ৩,০০০ টাকা দিন।",1,fake_prize,bn,medium,handwritten_eval
+hw_bn_s12,"একাউন্ট সুরক্ষা সতর্কতা: আপনার এনআইডি তথ্য মিলছে না। ২৪ ঘণ্টার মধ্যে একাউন্ট বন্ধ হবে, ভেরিফাই করতে ডায়াল করুন এই লিংকে।",1,kyc_block,bn,long,handwritten_eval
+hw_bn_s13,টেলিগ্রাম পার্ট-টাইম জব: প্রতিদিন ২ ঘণ্টা কাজ করে ২০০০ টাকা নিশ্চিত ইনকাম। রেজিস্ট্রেশন ফি ৬০০ টাকা বিকাশ করুন।,1,job_scam,bn,long,handwritten_eval
+hw_bn_s14,"সহজ কিস্তিতে ১ লাখ টাকা পার্সোনাল লোন নিন ৫ মিনিটে। ফাইল চার্জ ১,২০০ টাকা পাঠালেই সাথে সাথে টাকা একাউন্টে যাবে।",1,loan_app,bn,long,handwritten_eval
+hw_bn_s15,সিকিউরিটি ডিপার্টমেন্ট: আপনার নম্বরে পাঠানো ভেরিফিকেশন কোডটি এখনি কল করে বলুন নতুবা কার্ড ব্লক করা হবে।,1,otp_harvest,bn,long,handwritten_eval
+hw_bn_s16,মোবাইল ব্যাংকিং সেবা সচল রাখতে কুইকসাপোর্ট অ্যাপ ইনস্টল করে স্ক্রিন শেয়ারিং অন করুন। সাপোর্ট এজেন্ট।,1,remote_access,bn,medium,handwritten_eval
+hw_bn_s17,জরুরি: আপনার একাউন্ট থেকে অবৈধ ট্রানজেকশন হচ্ছে। বন্ধ করতে এখনই পাঠানো ওটিপি দিন।,1,otp_harvest,bn,medium,handwritten_eval
+hw_bn_s18,"দারাজ ভাউচার জিতেছেন ১০,০০০ টাকার! ডেলিভারি চার্জ ৩০০ টাকা পাঠান ০১৬১১-৩৩৪৪৫৫ নম্বরে আর পণ্য নিন।",1,fake_prize,bn,medium,handwritten_eval
+hw_bn_s19,"হ্যালো ভাইয়া, আমি ভুল করে দোকানের ক্যাশআউটের টাকা আপনার নাম্বারে পাঠিয়েছি। দয়া করে টাকাটা ব্যাক করুন।",1,wrong_transfer,bn,medium,handwritten_eval
+hw_bn_s20,উপায় হেড অফিস নোটিশ: কেওয়াইসি ফর্ম পূরণ না করায় আজ রাত ১২টায় একাউন্ট বন্ধ করা হবে। এখনই সমাধান করতে কল দিন।,1,kyc_block,bn,long,handwritten_eval
+hw_bn_s21,"ঘরে বসে টাইপিং করে মাসে ৩০,০০০ টাকা আয়। সিকিউরিটি মানি বাবদ ১,০০০ টাকা জমা দিয়ে কাজ শুরু করুন।",1,job_scam,bn,medium,handwritten_eval
+hw_bn_s22,"ইনস্ট্যান্ট ক্যাশ লোন ২৫,০০০ টাকা কোনো ডকুমেন্টস ছাড়াই। ছাড়পত্র চার্জ ৫০০ টাকা বিকাশ করুন ০১৭২২-৯৯০০১১ এ।",1,loan_app,bn,medium,handwritten_eval
+hw_bn_s23,আপনার ওয়ালেটের পাসওয়ার্ড রিসেট করতে পাঠানো ৪ সংখ্যার পিন কোডটি রিপ্লাই করুন। নিরাপত্তা বিভাগ।,1,otp_harvest,bn,medium,handwritten_eval
+hw_bn_s24,টিমভিউয়ার চালু করে কোড না দিলে আপনার মোবাইল ব্যাংকিং আজীবনের জন্য ব্লক করা হবে।,1,remote_access,bn,medium,handwritten_eval
+hw_bn_s25,"উপায় স্পেশাল ক্যাম্পেইন: মাত্র ৫০০ টাকা পাঠিয়ে দ্বিগুণ ১,০০০ টাকা বোনাস গ্রহণ করুন সীমিত সময়ের জন্য।",1,fake_prize,bn,medium,handwritten_eval
+hw_bn_s26,কাস্টমার কেয়ার হেল্পডেস্ক: আপনার এনআইডি ব্লক। অবিলম্বে পিন এবং ওটিপি দিয়ে একাউন্ট হালনাগাদ করুন।,1,fake_agent,bn,medium,handwritten_eval
+hw_bn_s27,আমার অসুস্থ মায়ের অপারেশনের টাকা ভুলে আপনার নাম্বারে গিয়েছে। দয়া করে এখনই ফেরত না দিলে আমি শেষ হয়ে যাব।,1,wrong_transfer,bn,long,handwritten_eval
+hw_bn_s28,"লটারির বিজয়ী পুরস্কার বাবদ ৫০,০০০ টাকা ড্রাফট হয়েছে। ক্লিয়ারেন্স ফি হিসেবে ২,৫০০ টাকা পে করুন।",1,fake_prize,bn,medium,handwritten_eval
+hw_bg_b01,"Mama, dinner er bill ami diyechi kal raat a. Shomoy moto tor share ta bKash kore dis.",0,personal_chat,banglish,medium,handwritten_eval
+hw_bg_b02,Apnar upay wallet theke utility bill porishodh shofol hoyeche. TrxID UP883921. Current balance Tk 1240.,0,bank_notification,banglish,medium,handwritten_eval
+hw_bg_b03,Shochetonota: Kono karon-ei apnar wallet PIN ba SMS OTP karo shathe share korben na. Official keu kokhono PIN chay na.,0,otp_safety,banglish,long,handwritten_eval
+hw_bg_b04,"Bhai bashar rent ar current bill diye dis ajke, landlord call diye khobor niteche.",0,personal_chat,banglish,medium,handwritten_eval
+hw_bg_b05,"Traffic e jam a achi, rasta block. Bashay pouchate ektu late hobe.",0,innocent_keywords,banglish,medium,handwritten_eval
+hw_bg_b06,Apnar account e Tk 2000 cash in shofol hoyeche. Bistarito jante helpline a jogajog korun.,0,bank_notification,banglish,medium,handwritten_eval
+hw_bg_b07,"Dost, tui ki ajke class er slides ar notes gulo mail a send korte parbi? Kal presentation.",0,innocent_keywords,banglish,medium,handwritten_eval
+hw_bg_b08,Cyber security tip: Phone a keu financial help cheye OTP chaile kokhono deben na. Eita dangerous.,0,otp_safety,banglish,medium,handwritten_eval
+hw_bg_b09,"Ammu ami bazar theke shobji ar dudh kine niye ashchi, ranna shuru koro.",0,personal_chat,banglish,medium,handwritten_eval
+hw_bg_b10,"Bank theke cheque boi collect korte hobe ajke 3 tar age, mone kore niye jash.",0,innocent_keywords,banglish,medium,handwritten_eval
+hw_bg_b11,Apnar mobile recharge Tk 100 successful. Remaining balance check korte dial korun *268#.,0,bank_notification,banglish,medium,handwritten_eval
+hw_bg_b12,Official notice: Upay customer care kokhono kono remote access app download korte bole na.,0,otp_safety,banglish,medium,handwritten_eval
+hw_bg_b13,Bhai dinner er por kothao teay khete jabi? 10 tay ber hobo.,0,personal_chat,banglish,short,handwritten_eval
+hw_bg_b14,Semester registration fee ajkei university bank account e pay korte hobe.,0,innocent_keywords,banglish,medium,handwritten_eval
+hw_bg_b15,Internet bill Tk 800 paid successfully. Thank you for staying with us.,0,bank_notification,banglish,medium,handwritten_eval
+hw_bg_b16,Sotorko thakun: Otirikto labh ba reward er lobh dekhale sheta scam hote pare.,0,otp_safety,banglish,medium,handwritten_eval
+hw_bg_b17,"Choto bon er school admission form collect korechi, bikal a dekha hobe.",0,personal_chat,banglish,medium,handwritten_eval
+hw_bg_b18,"Office er meeting sesh kore 6 tay ber hobo, bashay jeye call dibo.",0,innocent_keywords,banglish,medium,handwritten_eval
+hw_bg_b19,Apnar send money transaction shofol hoyeche Tk 500. TrxID 99A88B.,0,bank_notification,banglish,short,handwritten_eval
+hw_bg_b20,Nirapotta poramorsho: Wallet PIN shob shomoy gopon rakhun. Eita onno kauke janaile bipod.,0,otp_safety,banglish,medium,handwritten_eval
+hw_bg_b21,"Mama laptop er service fee 1200 taka lagche, cash diye eshechi.",0,personal_chat,banglish,medium,handwritten_eval
+hw_bg_b22,"Bhai presentation slide ta send kore dis group e, shobai wait korche.",0,innocent_keywords,banglish,medium,handwritten_eval
+hw_bg_b23,Upay wallet security: Apnar account information kokhono karo kache disclose korben na.,0,otp_safety,banglish,medium,handwritten_eval
+hw_bg_b24,"Ajke dokane bhalo discount dicche, tui ashole ekta shirt kine nite parish.",0,personal_chat,banglish,medium,handwritten_eval
+hw_bg_b25,"Medicine er jonno 400 taka pathiye dis shomoy pele, pharmacy te baki ache.",0,personal_chat,banglish,medium,handwritten_eval
+hw_bg_s01,Upay head office theke bolchi. Apnar account a shondehojonok activity pawa geche. Ekhoni PIN na dile block hobe.,1,fake_agent,banglish,long,handwritten_eval
+hw_bg_s02,"Bhai bhul kore 15,000 taka apnar number a send hoyeche. Hospital er bill, please 01711-223344 a refund pathan ekhoni.",1,wrong_transfer,banglish,long,handwritten_eval
+hw_bg_s03,Congratulation! Apnar SIM lottery te 2 lakh taka prize jitheche. Clearance fee 1500 taka pathan 01822-334455 a.,1,fake_prize,banglish,long,handwritten_eval
+hw_bg_s04,Emergency: NID verification incomplete thakay apnar wallet 1 hour er moddhe bondho hobe. SMS a asha OTP din.,1,kyc_block,banglish,long,handwritten_eval
+hw_bg_s05,Ghore boshe daily 2000 taka online income! Join korte advance registration fee 500 taka bKash korun 01999-112233 e.,1,job_scam,banglish,long,handwritten_eval
+hw_bg_s06,"Collateral chara emergency loan 50,000 taka! Approval fee 1000 taka pathiye 5 minute a taka bujhe nin.",1,loan_app,banglish,long,handwritten_eval
+hw_bg_s07,"Customer service: Apnar account verify korte ekhoni ashche 6 digit OTP ta reply din, nahole wallet bondho hobe.",1,otp_harvest,banglish,long,handwritten_eval
+hw_bg_s08,Mobile a AnyDesk install kore screen share code bolun nahole account permanetly lock kore deya hobe.,1,remote_access,banglish,long,handwritten_eval
+hw_bg_s09,Bikash agent verification: Apnar PIN code ta amader bolun security database update er jonno.,1,fake_agent,banglish,medium,handwritten_eval
+hw_bg_s10,Mama bhul kore amar dukaan er cashout apnar number a geche. 10000 taka ta ekhon e back na dile police e jabo.,1,wrong_transfer,banglish,long,handwritten_eval
+hw_bg_s11,"Daraz grand offer: Apnar name 50,000 taka gift coupon ready. Claim korte delivery charge 400 taka pathan.",1,fake_prize,banglish,medium,handwritten_eval
+hw_bg_s12,Account freeze notice: NID block thakay shob shubidha bondho. Ekhoni unfreeze korte OTP code share korun.,1,kyc_block,banglish,long,handwritten_eval
+hw_bg_s13,YouTube video like diye ghor boshe taka income. VIP slot activate korte 800 taka payment korun ekhoni.,1,job_scam,banglish,medium,handwritten_eval
+hw_bg_s14,Emergency micro loan: 30000 taka approved. Processing fee 750 taka pathan cash out number e.,1,loan_app,banglish,medium,handwritten_eval
+hw_bg_s15,Security alert: Karur theke suspicious login hoyeche. Stop korte SMS er OTP code ta amader bolun.,1,otp_harvest,banglish,medium,handwritten_eval
+hw_bg_s16,TeamViewer install na korle apnar bank transaction access chirotore bondho hoye jabe. Support desk.,1,remote_access,banglish,medium,handwritten_eval
+hw_bg_s17,Upay official notice: Double dhamaka offer! 1000 taka pathale 2000 taka cash return paben.,1,fake_prize,banglish,medium,handwritten_eval
+hw_bg_s18,"Bhai amar mayer blood lagbe, bhul kore apnar number e 8,000 taka pathaisi. Ekhoni refund den, doya korun.",1,wrong_transfer,banglish,long,handwritten_eval
+hw_bg_s19,Helpdesk security: Account restore korte 4 digit er PIN ta dial kore confirm korun.,1,fake_agent,banglish,medium,handwritten_eval
+hw_bg_s20,Urgent KYC block: 2 hour e account permanently suspend hobe. Unblock korte link a login korun: http://fake-upay.xyz,1,kyc_block,banglish,long,handwritten_eval
+hw_bg_s21,Freelance typing job: Protidin 1000 taka paben. Joining fee 300 taka pathiye kaj start korun.,1,job_scam,banglish,medium,handwritten_eval
+hw_bg_s22,"Instant loan up to 40,000 taka. File charge 600 taka payment korlei loan transfer hobe wallet e.",1,loan_app,banglish,medium,handwritten_eval
+hw_bg_s23,Bank account verification OTP: Amader agent ke 6 digit er code ta na dile transaction freeze hobe.,1,otp_harvest,banglish,medium,handwritten_eval
+hw_bg_s24,"QuickSupport install korun apnar account problem resolve korte, nahole sob taka kete neya hobe.",1,remote_access,banglish,medium,handwritten_eval
+hw_bg_s25,"Lottery te motor cycle jitechen! Registration tax 3,500 taka pathiye gari deliver nin ekhoni.",1,fake_prize,banglish,medium,handwritten_eval
+hw_bg_s26,"Bhul kore 5,000 taka send hoyeche apnar phone a. Oita goriber taka bhai, taratari ferot pathiye din.",1,wrong_transfer,banglish,medium,handwritten_eval
+hw_bg_s27,Head office security: Apnar account update er jonno OTP ta din shathe shathe.,1,otp_harvest,banglish,medium,handwritten_eval
+hw_en_b01,Security Advisory: Upay and official bank personnel will NEVER ask for your secret PIN or OTP over the phone or SMS. Keep your credentials private.,0,otp_safety,en,long,handwritten_eval
+hw_en_b02,"Reminder: Your monthly apartment rental fee of Tk 22,000 is due today. Please settle via bank transfer or cheque by evening.",0,innocent_keywords,en,medium,handwritten_eval
+hw_en_b03,"Dear customer, your electricity utility bill payment of Tk 1,840 was received successfully. TrxID: UP209381. Account balance: Tk 4,320.",0,bank_notification,en,long,handwritten_eval
+hw_en_b04,"Hi Tanvir, I paid for our lunch today at the cafeteria. Whenever you get free, please send me Tk 350 on upay.",0,personal_chat,en,medium,handwritten_eval
+hw_en_b05,Official safety reminder: Do not disclose one-time passwords or security codes to anyone claiming to be customer service staff.,0,otp_safety,en,long,handwritten_eval
+hw_en_b06,Your tuition fee invoice for the Fall Semester is now available. Due date is October 15. Please pay via university student portal.,0,innocent_keywords,en,long,handwritten_eval
+hw_en_b07,"You have successfully sent Tk 1,500 to 01711-002233. Transfer fee Tk 5.00. Remaining balance Tk 8,450.75. TrxID TX881920.",0,bank_notification,en,long,handwritten_eval
+hw_en_b08,Traffic notice: Mohakhali flyover approach is temporarily blocked right now due to routine municipal road maintenance work.,0,innocent_keywords,en,long,handwritten_eval
+hw_en_b09,"Hi mom, I sent Tk 5,000 to your wallet today for groceries and household medicine. Please check your message inbox.",0,personal_chat,en,medium,handwritten_eval
+hw_en_b10,"Important: We will never ask for your confidential wallet PIN, card CVV, or passwords. Beware of suspicious callers.",0,otp_safety,en,long,handwritten_eval
+hw_en_b11,"Your internet broadband bill of Tk 1,000 is due today. Avoid connection disconnection by paying before midnight through your mobile wallet.",0,innocent_keywords,en,long,handwritten_eval
+hw_en_b12,Can you send me the project quarterly balance sheet right now? The management board meeting begins in twenty minutes.,0,innocent_keywords,en,medium,handwritten_eval
+hw_en_b13,"You received Tk 3,500 from 01819-445566. TrxID RX993821. New available balance Tk 14,280. Upay safe digital payments.",0,bank_notification,en,medium,handwritten_eval
+hw_en_b14,Safety awareness: Never install unknown remote control applications like AnyDesk at the suggestion of telephone callers.,0,otp_safety,en,long,handwritten_eval
+hw_en_b15,"Hi brother, let me know if you can lend me Tk 2,000 for a few days. I will pay it back as soon as my monthly salary clears.",0,personal_chat,en,long,handwritten_eval
+hw_en_b16,The office landlord called to remind us that parking maintenance fees must be cleared by the end of today.,0,innocent_keywords,en,medium,handwritten_eval
+hw_en_b17,"Cash In of Tk 10,000 from Agent Point 01928-112233 successful. Fee Tk 0.00. Current balance Tk 18,920.00.",0,bank_notification,en,medium,handwritten_eval
+hw_en_b18,"Customer notice: We noticed irregular login attempts from an unverified IP. If this was not you, change your PIN in the official app immediately.",0,otp_safety,en,long,handwritten_eval
+hw_en_b19,"Hey, I reached the train station right now. The counter line is moving fast, will catch the afternoon express train.",0,innocent_keywords,en,medium,handwritten_eval
+hw_en_b20,Please remember to pay your office cooperative society subscription fee today so your membership status stays active.,0,innocent_keywords,en,long,handwritten_eval
+hw_en_b21,Mobile recharge of Tk 200 to 01799-123456 completed successfully. Thank you for using our digital financial services.,0,bank_notification,en,medium,handwritten_eval
+hw_en_b22,Security notice: Official representatives will never demand money transfers or threaten account closure over voice calls.,0,otp_safety,en,long,handwritten_eval
+hw_en_b23,"Hi Farhan, could you email me the seminar slides today? I want to review the statistical findings before our presentation.",0,innocent_keywords,en,medium,handwritten_eval
+hw_en_b24,"Gym membership monthly subscription fee Tk 1,500 is due today. You can pay at the reception counter or through digital payment.",0,innocent_keywords,en,long,handwritten_eval
+hw_en_b25,"Your salary of Tk 45,000 has been credited to your mobile wallet. Reference SAL-OCT-2026. Available balance Tk 47,820.",0,bank_notification,en,medium,handwritten_eval
+hw_en_b26,Do not share OTP with anyone under any circumstances. Protecting your mobile financial wallet is your responsibility.,0,otp_safety,en,medium,handwritten_eval
+hw_en_b27,We visited the bank today to submit passport documentation. Everything was processed smoothly by the branch officers.,0,innocent_keywords,en,medium,handwritten_eval
+hw_en_b28,"Hi uncle, I transferred Tk 4,000 to your account for grandma's routine health checkup tests tomorrow morning.",0,personal_chat,en,medium,handwritten_eval
+hw_en_b29,Don't forget that our group dinner cost sharing of Tk 650 is pending today. Please clear it when convenient.,0,personal_chat,en,medium,handwritten_eval
+hw_en_b30,Upay Security Desk: Your account security is paramount. Never write down your 4-digit PIN on paper or share it via SMS.,0,otp_safety,en,long,handwritten_eval
+hw_en_s01,Upay Security Alert: Your wallet has been suspended due to unverified NID. Disclose incoming OTP immediately to restore service.,1,fake_agent,en,long,handwritten_eval
+hw_en_s02,"Urgent mistake: I accidentally transferred Tk 18,500 to your wallet instead of my hospital supplier! Please refund it right now to 01722-998877.",1,wrong_transfer,en,long,handwritten_eval
+hw_en_s03,"Congratulations! Your mobile number won 2nd prize in the National Cash Lottery of Tk 250,000. Send processing clearance fee Tk 2,500 to claim.",1,fake_prize,en,long,handwritten_eval
+hw_en_s04,Warning: Immediate KYC verification required within 2 hours or your account will be permanently terminated. Call our security desk now.,1,kyc_block,en,long,handwritten_eval
+hw_en_s05,"Work from home part-time: Earn Tk 3,000 daily reviewing hotel listings. Pay mandatory onboarding registration fee Tk 800 to 01822-112233.",1,job_scam,en,long,handwritten_eval
+hw_en_s06,"Pre-approved emergency personal loan of Tk 50,000 with 0% interest! Pay file documentation stamp charge Tk 1,200 to receive funds in 5 minutes.",1,loan_app,en,long,handwritten_eval
+hw_en_s07,Security Department: Provide the 6-digit verification code sent to your phone right now to verify identity or face legal prosecution.,1,otp_harvest,en,long,handwritten_eval
+hw_en_s08,"To secure your compromised mobile wallet, install AnyDesk application immediately and provide the 9-digit connection number to support.",1,remote_access,en,long,handwritten_eval
+hw_en_s09,Official Upay Helpdesk: System upgrade in progress. Reply with your secret PIN to ensure uninterrupted wallet transaction capability.,1,fake_agent,en,long,handwritten_eval
+hw_en_s10,"Brother, by mistake my pharmacy wholesale money of Tk 12,000 was sent to your number. Please refund immediately to avoid police case.",1,wrong_transfer,en,long,handwritten_eval
+hw_en_s11,"Special Eid mega bonus: Deposit Tk 1,000 and receive double Tk 2,000 guaranteed cashback within 15 minutes! Offer valid today only.",1,fake_prize,en,long,handwritten_eval
+hw_en_s12,Urgent notice: Your wallet transaction facility is restricted due to suspicious activity. Click http://verify-upay-bd.site to reactivate.,1,kyc_block,en,long,handwritten_eval
+hw_en_s13,"Earn easy money watching YouTube videos! Daily payment Tk 2,500 directly into your wallet. Send joining fee Tk 500 to 01928-334455.",1,job_scam,en,long,handwritten_eval
+hw_en_s14,"Instant collateral-free loan of Tk 40,000 disbursed. Pay advance insurance clearance fee Tk 1,000 to our agent to release payment today.",1,loan_app,en,long,handwritten_eval
+hw_en_s15,"Alert: A login attempt was detected from Sylhet. If not you, disclose your SMS verification code now to block illegal money withdrawal.",1,otp_harvest,en,long,handwritten_eval
+hw_en_s16,Install TeamViewer QuickSupport on your device right now to stop unauthorized transfers from your mobile banking balance.,1,remote_access,en,long,handwritten_eval
+hw_en_s17,Upay Customer Care: We require your secret PIN and last transaction amount to remove the restriction on your wallet.,1,fake_agent,en,medium,handwritten_eval
+hw_en_s18,"I sent Tk 7,500 to your wallet by typing wrong digit. That is my college fee money, please send it back to 01611-223344 immediately.",1,wrong_transfer,en,long,handwritten_eval
+hw_en_s19,"You have won a brand new motorcycle in the MFS anniversary lucky draw! Send government registration VAT Tk 4,500 to 01700-998877.",1,fake_prize,en,long,handwritten_eval
+hw_en_s20,KYC compliance department: Your wallet will be frozen within 60 minutes due to missing biometric records. Reply with OTP to prevent block.,1,kyc_block,en,long,handwritten_eval
+hw_en_s21,"Copy-paste freelance data entry vacancy: Tk 1,800 daily income guaranteed. Send Tk 400 test fee to receive assignment package.",1,job_scam,en,medium,handwritten_eval
+hw_en_s22,"Fast cash loan approved for Tk 35,000. Transfer documentation clearance fee Tk 850 to unlock funds within 10 minutes.",1,loan_app,en,medium,handwritten_eval
+hw_en_s23,Emergency Security Verification: Send us the one-time code you received just now to cancel fraudulent transaction request.,1,otp_harvest,en,medium,handwritten_eval
+hw_en_s24,Remote diagnostic support: Download AnyDesk on your mobile phone and accept incoming connection to resolve balance deduction error.,1,remote_access,en,long,handwritten_eval
+hw_en_s25,"Your bKash/upay account is selected for Tk 10,000 reward grant! Send processing fee Tk 600 right now to receive grant funds.",1,fake_prize,en,medium,handwritten_eval

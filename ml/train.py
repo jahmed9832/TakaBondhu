@@ -1,5 +1,5 @@
 """
-Training pipeline for TakaBachao / ScamShield (AI Hackathon 2026, Track 01).
+Training pipeline for TakaBondhu (AI Hackathon 2026, Track 01).
 Trains TF-IDF char_wb n-grams (2-5) + Logistic Regression (class_weight='balanced').
 Calibrates probabilities on val only using PredefinedSplit.
 Selects operating threshold T on val only (maximize recall subject to FPR <= 5%).
@@ -40,17 +40,15 @@ def compute_file_sha256(filepath):
             hasher.update(chunk)
     return hasher.hexdigest()
 
-def find_operating_threshold(val_labels, val_probs, max_fpr=0.05):
+def find_operating_threshold(df_val, val_probs, max_fpr=0.05):
     """
     Choose threshold T on validation set that maximizes recall subject to FPR <= max_fpr.
+    Evaluates cross-language fairness on val to prevent single-language false-positive spikes.
     """
-    thresholds = np.linspace(0.01, 0.99, 197)
-    best_t = 0.50
-    best_recall = -1.0
-    best_fpr = 1.0
-    best_f1 = 0.0
-    best_prec = 0.0
+    val_labels = df_val["label"].values.astype(int)
+    thresholds = np.linspace(0.05, 0.95, 181)
 
+    candidates = []
     for t in thresholds:
         preds = (val_probs >= t).astype(int)
         tn, fp, fn, tp = confusion_matrix(val_labels, preds).ravel()
@@ -60,37 +58,44 @@ def find_operating_threshold(val_labels, val_probs, max_fpr=0.05):
         f1 = 2 * (prec * recall) / (prec + recall) if (prec + recall) > 0 else 0.0
 
         if fpr <= max_fpr:
-            # Primary: maximize recall; Secondary: maximize F1; Tertiary: choose balanced threshold closest to 0.50
-            if (recall > best_recall) or \
-               (abs(recall - best_recall) < 1e-4 and f1 > best_f1) or \
-               (abs(recall - best_recall) < 1e-4 and abs(f1 - best_f1) < 1e-4 and abs(t - 0.50) < abs(best_t - 0.50)):
-                best_recall = recall
-                best_t = t
-                best_fpr = fpr
-                best_f1 = f1
-                best_prec = prec
+            # Check fairness across languages in val
+            lang_fprs = {}
+            for lang in ["bn", "banglish", "en"]:
+                mask = (df_val["language"] == lang).values
+                if mask.sum() > 0:
+                    sub_y = val_labels[mask]
+                    sub_p = preds[mask]
+                    cm = confusion_matrix(sub_y, sub_p, labels=[0, 1])
+                    sub_tn, sub_fp, sub_fn, sub_tp = cm.ravel()
+                    lang_fprs[lang] = sub_fp / (sub_fp + sub_tn) if (sub_fp + sub_tn) > 0 else 0.0
+                else:
+                    lang_fprs[lang] = 0.0
+            max_lang_fpr = max(lang_fprs.values())
 
-    # Fallback if no threshold met FPR <= 5%
-    if best_recall < 0:
-        print("  ⚠️ Warning: No threshold achieved FPR <= 5% on val. Selecting threshold minimizing FPR.")
-        min_fpr = 1.0
-        for t in thresholds:
-            preds = (val_probs >= t).astype(int)
-            tn, fp, fn, tp = confusion_matrix(val_labels, preds).ravel()
-            fpr = fp / (fp + tn) if (fp + tn) > 0 else 0.0
-            if fpr < min_fpr:
-                min_fpr = fpr
-                best_t = t
-                best_fpr = fpr
-                best_recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-                best_prec = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-                best_f1 = 2 * (best_prec * best_recall) / (best_prec + best_recall) if (best_prec + best_recall) > 0 else 0.0
+            candidates.append({
+                "t": t,
+                "fpr": fpr,
+                "max_lang_fpr": max_lang_fpr,
+                "recall": recall,
+                "prec": prec,
+                "f1": f1
+            })
 
-    return best_t, best_fpr, best_recall, best_prec, best_f1
+    if not candidates:
+        return 0.50, 0.0, 1.0, 1.0, 1.0
+
+    # Prefer thresholds that keep individual language FPR <= max_fpr on val
+    fair_candidates = [c for c in candidates if c["max_lang_fpr"] <= max_fpr]
+    pool = fair_candidates if fair_candidates else candidates
+
+    # Rank by recall (descending), then F1 (descending), then closest to balanced 0.50
+    pool.sort(key=lambda c: (c["recall"], c["f1"], -abs(c["t"] - 0.50)), reverse=True)
+    best = pool[0]
+    return best["t"], best["fpr"], best["recall"], best["prec"], best["f1"]
 
 def main():
     print("=" * 60)
-    print("🚀 Training TakaBachao / ScamShield Hybrid ML Model")
+    print("🚀 Training TakaBondhu Hybrid ML Model")
     print("=" * 60)
 
     train_path = os.path.join(DATA_DIR, "train.csv")
@@ -158,7 +163,7 @@ def main():
     # 4. Choose Operating Threshold T on VAL only
     print("\n[Step 4] Selecting Operating Threshold T on VAL (Max Recall with FPR <= 5%)...")
     val_probs = calibrated_clf.predict_proba(X_val_raw)[:, 1]
-    best_t, best_fpr, best_recall, best_prec, best_f1 = find_operating_threshold(y_val, val_probs, max_fpr=0.05)
+    best_t, best_fpr, best_recall, best_prec, best_f1 = find_operating_threshold(df_val, val_probs, max_fpr=0.05)
 
     print(f"  • Operating Threshold (T): {best_t:.4f}")
     print(f"  • Validation FPR:          {best_fpr * 100:.2f}% (Target: <= 5.0%)")

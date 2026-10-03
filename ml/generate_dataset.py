@@ -1,5 +1,5 @@
 """
-Dataset Generator for TakaBachao / ScamShield (AI Hackathon 2026, Track 01)
+Dataset Generator for TakaBondhu (AI Hackathon 2026, Track 01)
 Generates synthetic multi-lingual dataset (bn, banglish, en) with anti-leakage template splits.
 """
 
@@ -327,7 +327,11 @@ BENIGN_TEMPLATES = {
             "Stay safe from fraudsters: Do not click unknown links or share verification codes with anyone online or over phone.",
             "Protect your hard-earned money: Never provide OTP or account password to callers claiming emergency or lottery prizes.",
             "Official advisory: Customer support will never request your secret PIN or ask you to install AnyDesk.",
-            "Security tip: Memorize your wallet PIN. Never write it down or reveal SMS verification codes to strangers."
+            "Security tip: Memorize your wallet PIN. Never write it down or reveal SMS verification codes to strangers.",
+            "Security Advisory: Upay and official bank personnel will NEVER ask for your secret PIN or OTP over phone. Keep your credentials private.",
+            "Fraud Prevention Alert: Do not share one-time SMS verification codes with third parties under any circumstances.",
+            "Cyber Hygiene Notice: Disclosing your secret PIN to callers claiming emergency or lottery prizes will result in financial loss.",
+            "Security Guidelines: Remember that official bank helpline agents never request remote desktop installations like AnyDesk or TeamViewer."
         ],
         "banglish": [
             "Shochetonota barta: Kono obosthatei apnar {mfs} PIN ba OTP karo shathe share korben na. Helpline kokhono PIN chay na.",
@@ -337,7 +341,11 @@ BENIGN_TEMPLATES = {
             "Protarona theke shabdhan: Kono shondehojonok link a click korben na ebong PIN share korben na.",
             "Nirapotta tips: Phone a keu bipoder kotha bole OTP chaile kokhono deben na. Eita protarona.",
             "{mfs} er helpline kokhonoi AnyDesk install korte bole na ba PIN chay na. Shobshomoy shocheton thakun.",
-            "Mone rakhben: Apnar OTP ar PIN sudhu apnar jonno. Keu chaile shathe shathe na bole din."
+            "Mone rakhben: Apnar OTP ar PIN sudhu apnar jonno. Keu chaile shathe shathe na bole din.",
+            "Official security notice: Upay ba bank theke kokhono phone kore PIN ba OTP chaibe na. Ei information shobshomoy gopon rakhun.",
+            "Shochetonota barta: SMS a pawa kono one time password (OTP) karo shathe share korben na, etate account jhookite pore.",
+            "Cyber nirapotta: Emergency bipod er kotha bole keu taka ba OTP chaile kokhono bishwas korben na.",
+            "Helpline guide: Customer care official kokhonoi AnyDesk ba TeamViewer install korte bole na."
         ],
         "bn": [
             "নিরাপত্তা সতর্কতা: কখনোই আপনার {mfs} পিন, ওটিপি বা পাসওয়ার্ড কারো সাথে শেয়ার করবেন না। হেল্পলাইন কখনো পিন চায় না।",
@@ -347,7 +355,11 @@ BENIGN_TEMPLATES = {
             "প্রতারণা এড়িয়ে চলুন: কোনো অচেনা লিংকে ক্লিক করবেন না এবং কারো সাথে ওটিপি কোড শেয়ার করবেন না।",
             "গ্রাহক সচেতনতা: লটারি বা পুরস্কারের প্রলোভনে পড়ে গোপন পিন বা ওটিপি কোনো ব্যক্তিকে দেবেন না।",
             "মনে রাখবেন: {mfs} কাস্টমার কেয়ার কখনো কোনো অ্যাপ (AnyDesk/TeamViewer) নামাতে বা পিন দিতে বলে না।",
-            "নিরাপদ থাকুন: আপনার গোপন পিন ও ওটিপি শুধু আপনার জন্য। কাউকে বলে নিজের ক্ষতি ডেকে আনবেন না।"
+            "নিরাপদ থাকুন: আপনার গোপন পিন ও ওটিপি শুধু আপনার জন্য। কাউকে বলে নিজের ক্ষতি ডেকে আনবেন না।",
+            "নিরাপত্তা বিজ্ঞপ্তি: উপায় বা ব্যাংকের কোনো কর্মকর্তা কখনোই আপনার গোপন পিন বা ওটিপি জানতে চাইবে না।",
+            "প্রতারণা প্রতিরোধ বার্তা: কোনো অবস্থাতেই এসএমএসে আসা ওটিপি ভেরিফিকেশন কোড অন্য কারো সাথে শেয়ার করবেন না।",
+            "গ্রাহক সচেতনতা: লটারি বা জরুরি বিপদের কথা বলে কেউ ওটিপি বা পিন চাইলে সতর্ক থাকুন এবং কাউকে দেবেন না।",
+            "সাইবার সুরক্ষা নোটিশ: হেল্পলাইনের নাম করে কেউ এনিডেস্ক বা কুইকসাপোর্ট অ্যাপ ইনস্টল করতে বললে তা প্রত্যাখ্যান করুন।"
         ]
     },
     "bank_notification": {
@@ -359,7 +371,11 @@ BENIGN_TEMPLATES = {
             "Send Money Tk {amt} to {phone} successful. Fee Tk 5.00. Balance Tk {bal}. TrxID {trxid}.",
             "Bank to Wallet transfer of Tk {amt} completed successfully. Reference {trxid}. New Balance Tk {bal}.",
             "Cash Out Tk {amt} from ATM/Agent successful. Fee Tk 18.50. Balance Tk {bal}. TrxID {trxid}.",
-            "Utility bill payment of Tk {amt} for account {phone} successful. TrxID {trxid}. Balance Tk {bal}."
+            "Utility bill payment of Tk {amt} for account {phone} successful. TrxID {trxid}. Balance Tk {bal}.",
+            "Your monthly deposit pension scheme (DPS) installment of Tk {amt} has been successfully deducted. Account balance: Tk {bal}.",
+            "Monthly salary of Tk {amt} credited to your mobile wallet from your employer. Reference: {trxid}. Current balance Tk {bal}.",
+            "Bill payment of Tk {amt} to Dhaka Electric Supply Company (DESCO) successful. TrxID {trxid}. Available balance Tk {bal}.",
+            "Merchant payment of Tk {amt} to {name} via QR scan successful. TrxID {trxid}. Remaining balance Tk {bal}."
         ],
         "banglish": [
             "Apnar {mfs} account e {amt} taka joma hoyeche {phone} theke. Notun balance {bal} taka. TrxID {trxid}.",
@@ -369,7 +385,11 @@ BENIGN_TEMPLATES = {
             "Send money shofol hoyeche: {amt} taka {phone} e pathano hoyeche. Notun balance {bal} taka.",
             "Bank theke {mfs} wallet a Tk {amt} add money shofol hoyeche. TrxID {trxid}. Balance Tk {bal}.",
             "Cash out Tk {amt} shofol hoyeche agent {phone} theke. Charge 18.50 taka. Balance Tk {bal}.",
-            "Bidyut bill payment Tk {amt} successful. Reference {trxid}. Apnar obosheishto balance Tk {bal}."
+            "Bidyut bill payment Tk {amt} successful. Reference {trxid}. Apnar obosheishto balance Tk {bal}.",
+            "Apnar monthly DPS er kishti Tk {amt} kete neya hoyeche. Bistarito balance Tk {bal}. TrxID {trxid}.",
+            "Mashik beton Tk {amt} apnar wallet e joma hoyeche. Reference {trxid}. Current balance Tk {bal}.",
+            "DESCO electricity bill payment Tk {amt} shofol hoyeche. TrxID {trxid}. Obosheishto balance Tk {bal}.",
+            "Merchant {name} ke QR payment Tk {amt} successful. TrxID {trxid}. Balance Tk {bal}."
         ],
         "bn": [
             "আপনি {phone} থেকে {amt} টাকা গ্রহণ করেছেন। নতুন ব্যালেন্স {bal} টাকা। ট্রানজেকশন আইডি {trxid}।",
@@ -379,7 +399,11 @@ BENIGN_TEMPLATES = {
             "সেন্ড মানি সফল: {amt} টাকা পাঠানো হয়েছে {phone} নম্বরে। ট্রানজেকশন আইডি {trxid}।",
             "অ্যাড মানি সফল: ব্যাংক একাউন্ট থেকে {amt} টাকা আপনার ওয়ালেটে যুক্ত হয়েছে। ব্যালেন্স {bal} টাকা।",
             "ক্যাশ আউট সফল: এজেন্ট {phone} থেকে {amt} টাকা উত্তোলন করা হয়েছে। ট্রানজেকশন আইডি {trxid}।",
-            "বিদ্যুৎ বিল বাবদ {amt} টাকা সফলভাবে পরিশোধ করা হয়েছে। রেফারেন্স {trxid}। ব্যালেন্স {bal} টাকা।"
+            "বিদ্যুৎ বিল বাবদ {amt} টাকা সফলভাবে পরিশোধ করা হয়েছে। রেফারেন্স {trxid}। ব্যালেন্স {bal} টাকা।",
+            "আপনার মাসিক ডিপিএস কিস্তি বাবদ {amt} টাকা সফলভাবে কর্তন করা হয়েছে। বর্তমান ব্যালেন্স {bal} টাকা।",
+            "মাসিক বেতন বাবদ {amt} টাকা আপনার ওয়ালেটে জমা হয়েছে। রেফারেন্স {trxid}। একাউন্ট ব্যালেন্স {bal} টাকা।",
+            "বিদ্যুৎ বিল বাবদ {amt} টাকা পরিশোধ সফল হয়েছে। TrxID {trxid}। অবশিষ্ট ব্যালেন্স {bal} টাকা।",
+            "মার্চেন্ট {name} কে কিউআর পেমেন্ট {amt} টাকা সফল হয়েছে। ট্রানজেকশন আইডি {trxid}।"
         ]
     },
     "personal_chat": {
@@ -391,7 +415,11 @@ BENIGN_TEMPLATES = {
             "Did you pay the apartment maintenance fee of {amt} this month? Let me know so I can balance the books.",
             "Thanks for lending me the book! I just sent {amt} on {mfs} for the coffee earlier today.",
             "Hi {name}, our shared rent contribution of {amt} is due today. Please transfer it to my wallet.",
-            "I am at the superstore right now, sending you {amt} via {mfs} so you can buy the remaining items."
+            "I am at the superstore right now, sending you {amt} via {mfs} so you can buy the remaining items.",
+            "Hi {name}, I paid for our shared electricity and internet bill today. Can you send your share of Tk {amt} whenever you are free?",
+            "Hello, our monthly apartment rent of Tk {amt} is due today. Please transfer it to the landlord's mobile wallet.",
+            "Hi mom, I sent Tk {amt} to your wallet today for your monthly prescription medicines. Please confirm once received.",
+            "Hey Tanvir, thank you for covering lunch earlier today. I just transferred Tk {amt} on {mfs} to settle my portion."
         ],
         "banglish": [
             "Mama, kal raat er khabarer bill {amt} taka chilo. Shomoy pele {mfs} kore dis.",
@@ -401,7 +429,11 @@ BENIGN_TEMPLATES = {
             "Ai mash er basha bhara ar gas bill {amt} taka ajke diye diyo shomoy moto.",
             "Bhai dinner er bill pay korechi. Tui tor ongsho {amt} taka send kore dis.",
             "Ami ekhon dokane achi, {mfs} e {amt} taka patha, jinishta kine niye ashi.",
-            "Shun, coaching er fee {amt} taka ajke dite hobe. Taka ta {mfs} a pathiye de."
+            "Shun, coaching er fee {amt} taka ajke dite hobe. Taka ta {mfs} a pathiye de.",
+            "Bhai, ajke bashar current ar net bill ami pay korechi. Tor share er {amt} taka shomoy moto {mfs} kore dis.",
+            "Mama, ei mash er basha bhara {amt} taka ajkei dite hobe, bariwala tagada dicche. Taka ta send kore de.",
+            "Ammu, apnar masher oushodh er jonno {amt} taka pathiyechi. Peye call diyen.",
+            "Dost, dupurer lunch er bill share {amt} taka ami transfer kore diyechi, check korish."
         ],
         "bn": [
             "মামা, কালকের রাতের খাবারের বিল বাবদ {amt} টাকা সময় পেলে {mfs} করে দিস।",
@@ -411,7 +443,11 @@ BENIGN_TEMPLATES = {
             "এই মাসের বাসা ভাড়া আর ইউটিলিটি বিল বাবদ {amt} টাকা আজ দিয়ে দিও।",
             "ভাই কালকের রেস্টুরেন্টের বিল আমি দিয়েছি। তোর ভাগের {amt} টাকা সময়মতো পাঠিয়ে দিস।",
             "আমি এখন বাজারে আছি, দরকারি জিনিসের জন্য {amt} টাকা বিকাশ করে দে।",
-            "শোন, ছোট বোনের স্কুলের বেতন {amt} টাকা আজকেই ব্যাংকে জমা দিতে হবে।"
+            "শোন, ছোট বোনের স্কুলের বেতন {amt} টাকা আজকেই ব্যাংকে জমা দিতে হবে।",
+            "ভাই, আজকের বাসার বিদ্যুৎ আর ইন্টারনেট বিল আমি দিয়েছি। তোর ভাগের {amt} টাকা সময়মতো পাঠিয়ে দিস।",
+            "মামা, এই মাসের বাসা ভাড়া {amt} টাকা আজকেই বাড়িওয়ালাকে দিতে হবে। তোর অংশটা দ্রুত পাঠিয়ে দে।",
+            "আম্মু, তোমার এই মাসের প্রেসক্রিপশনের ঔষধ কেনার জন্য {amt} টাকা পাঠিয়েছি। টাকা পেলে জানিও।",
+            "দোস্ত, দুপুরের খাবারের বিল দেওয়ার জন্য ধন্যবাদ। আমি আমার অংশের {amt} টাকা পাঠিয়ে দিয়েছি।"
         ]
     },
     "innocent_keywords": {
@@ -423,7 +459,11 @@ BENIGN_TEMPLATES = {
             "Please send me your email address now so I can share the meeting notes and presentation PDF.",
             "The doctor's consultation fee is Tk 800 today. We should reach the hospital clinic right now.",
             "I waited at the bank counter for 2 hours today just to renew my debit card.",
-            "Don't forget to pay the electricity utility fee today to avoid any late surcharge penalty."
+            "Don't forget to pay the electricity utility fee today to avoid any late surcharge penalty.",
+            "Please pay the university semester registration fee today before the finance department counter closes at 4 PM.",
+            "Traffic on Airport Road is completely blocked right now due to ongoing metro rail maintenance work.",
+            "I am at the bank branch right now to renew my company payroll debit card. Will call you after leaving the counter.",
+            "Don't forget to pay the monthly broadband internet maintenance fee of Tk {fee} today to avoid service disruption."
         ],
         "banglish": [
             "Ami ekhon bank e jacchi salary tulte. Ajke bikal bela dekha hobe.",
@@ -433,7 +473,11 @@ BENIGN_TEMPLATES = {
             "Amake tor email address ta ekhoni send kor, meeting er report ta pathabo.",
             "Doctor er consultation fee ajke 500 taka chilo. Ekhon bashay firchi.",
             "Bank er line a 2 ghonta darano lagse ajke notun cheque boi nite.",
-            "Bidyut bill er fee ajkei pay kore dio, nahole line kete dibe."
+            "Bidyut bill er fee ajkei pay kore dio, nahole line kete dibe.",
+            "University er semester registration fee ajkei pay korte hobe, 4 tar age counter bondho hoye jabe.",
+            "Airport road a bhishon traffic jam, rasta block hoye ache metro rail er kajer jonno.",
+            "Ami ekhon bank branch a achi payroll debit card renew korte. Kaaj sesh kore phone dibo.",
+            "Wifi broadband line er monthly maintenance fee {fee} taka ajkei pay kore diyo, nahole line kete jabe."
         ],
         "bn": [
             "আমি এখন ব্যাংকে যাচ্ছি বেতনের টাকা তুলতে। আজ বিকেলে তোমার সাথে দেখা করব।",
@@ -443,7 +487,11 @@ BENIGN_TEMPLATES = {
             "আমাকে তোমার ইমেইল এড্রেসটা এখনই সেন্ড করো, জরুরি ফাইলটা পাঠাতে হবে।",
             "আজকে ডাক্তারের ভিজিট ফি ৫০০ টাকা দিয়েছি। এখন ওষুধ কিনে বাসায় ফিরছি।",
             "ব্যাংকের লাইনে অনেক ভিড় ছিল আজ, নতুন ডেবিট কার্ডের জন্য অপেক্ষা করতে হলো।",
-            "আজকের মধ্যেই স্কুলের পরীক্ষার ফি পে করে দিতে হবে, নয়তো জরিমানা হবে।"
+            "আজকের মধ্যেই স্কুলের পরীক্ষার ফি পে করে দিতে হবে, নয়তো জরিমানা হবে।",
+            "বিশ্ববিদ্যালয়ের সেমিস্টার রেজিস্ট্রেশন ফি আজকেই ব্যাংকে জমা দিতে হবে, বিকাল ৪টায় কাউন্টার বন্ধ হবে।",
+            "এয়ারপোর্ট রোডে প্রচণ্ড জ্যাম, মেট্রোরেল সংস্কার কাজের কারণে একপাশের রাস্তা সম্পূর্ণ ব্লক হয়ে আছে।",
+            "আমি এখন ব্যাংকের শাখায় আছি নতুন স্যালারি ডেবিট কার্ড নিতে। কাউন্টার থেকে বের হয়ে কল দেব।",
+            "মাসিক ব্রডব্যান্ড ইন্টারনেট সার্ভিস ফি {fee} টাকা আজকেই পে করে দিও, নয়তো সংযোগ বিচ্ছিন্ন হবে।"
         ]
     }
 }
@@ -577,11 +625,10 @@ def generate_all_data():
         for lang, templates in lang_dict.items():
             for fam_idx, tmpl in enumerate(templates):
                 fam_id = f"benign_{benign_type}_{lang}_f{fam_idx+1:02d}"
-                is_unseen = (fam_idx >= 6) # 25% holdout
+                is_unseen = (fam_idx >= int(len(templates) * 0.75)) # 25% holdout
                 
-                # Benign has 4 categories vs 8 scam categories, so generate ~50-54 samples per family
-                # to balance scam and benign classes (~3,500 scam, ~3,500 benign)
-                num_samples = 54 if is_unseen else 50
+                # Benign has 4 categories x 12 families vs 8 scam categories x 8 families
+                num_samples = 36 if is_unseen else 34
                 for s_idx in range(num_samples):
                     raw_text = fill_slots(tmpl, lang)
                     text = inject_noise(raw_text, lang)

@@ -1,22 +1,40 @@
 """
-ML Microservice for TakaBachao / ScamShield (AI Hackathon 2026, Track 01).
-FastAPI application running on 127.0.0.1:8001.
-Endpoints:
-- GET /health
-- POST /v1/predict
-- POST /predict (alias)
-- GET /openapi.json (and exported to docs/openapi.json)
+ml/service.py
+ML Microservice for TakaBondhu (টাকাবন্ধু)
+Event: AI Hackathon 2026 (DIU CPC x upay) - Track 01: Trust & Risk Intelligence
+
+FastAPI application running on 127.0.0.1:8001 providing:
+1. Message Intelligence: TF-IDF char_wb n-grams + calibrated Logistic Regression
+2. Transaction Risk Intelligence: Calibrated HistGradientBoosting classifier
+3. Behavioral Anomaly Detection: IsolationForest customer anomaly scoring
+4. Mule Network Discovery: NetworkX ego-subgraph and flow-velocity analysis
+5. Agent Risk Benchmarking: Structuring ratios and peer comparison z-scores
+6. Pre-Send Fusion: Multi-signal risk blending and 3-part Case Cards
 """
 
 import os
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+
 import sys
 import json
 import logging
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from contextlib import asynccontextmanager
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 import joblib
 import numpy as np
-
+import pandas as pd
 import sklearn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,15 +45,13 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger("ml_service")
+logger = logging.getLogger("takabondhu_ml")
 
-BASE_DIR = os.path.dirname(__file__)
 MODELS_DIR = os.path.join(BASE_DIR, "models")
-MODEL_PATH = os.path.join(MODELS_DIR, "model.joblib")
-META_PATH = os.path.join(MODELS_DIR, "metadata.json")
 DOCS_DIR = os.path.join(BASE_DIR, "..", "docs")
 os.makedirs(DOCS_DIR, exist_ok=True)
 
+# Pydantic Request / Response Models
 class ReasonCode(BaseModel):
     ngram: str
     contribution: float
@@ -52,105 +68,121 @@ class PredictResponse(BaseModel):
     model_version: str
     threshold: float
 
+class TransactionScreenRequest(BaseModel):
+    transaction: Dict[str, Any] = Field(..., description="Transaction payload containing amount, sender, receiver, etc.")
+    message: Optional[str] = Field(None, description="Optional associated SMS or chat message")
+    session_context: Optional[Dict[str, Any]] = None
+
 class HealthResponse(BaseModel):
     status: str
     loaded: bool
-    model_version: str
-    threshold: float
-    sklearn_version: str
-    feature_count: Optional[int] = None
+    model_version: str = "v1.0.0-char-wb-lr"
+    threshold: float = 0.50
+    models: Dict[str, Any] = {}
+    sklearn_version: str = ""
     message: Optional[str] = None
 
-# Global model state
+
+# State singleton
+from ml.fusion import FusionEngine
+from ml.transactions.graph_analyzer import MuleGraphAnalyzer
+from ml.transactions.agent_benchmarker import AgentBenchmarker
+
 state = {
     "loaded": False,
+    "fusion_engine": None,
+    "graph_analyzer": None,
+    "agent_benchmarker": None,
     "vectorizer": None,
     "classifier": None,
     "scam_type_clf": None,
     "scam_types": [],
     "threshold": 0.50,
-    "model_version": "none",
+    "model_version": "v1.0.0-char-wb-lr",
     "feature_names": None,
     "base_coefs": None,
     "load_error": None
 }
 
-def load_model():
-    if not os.path.exists(MODEL_PATH):
-        state["loaded"] = False
-        state["load_error"] = f"Model artifact not found at {MODEL_PATH}. Please run 'npm run train'."
-        logger.warning(state["load_error"])
+
+def load_model(force: bool = False):
+    if state["loaded"] and not force:
         return
 
     try:
-        logger.info(f"Loading ML model artifact from {MODEL_PATH}...")
-        artifact = joblib.load(MODEL_PATH)
-        state["vectorizer"] = artifact["vectorizer"]
-        state["classifier"] = artifact["classifier"]
-        state["scam_type_clf"] = artifact.get("scam_type_clf")
-        state["scam_types"] = artifact.get("scam_types", [])
-        state["threshold"] = float(artifact.get("threshold", 0.50))
+        logger.info("Initializing TakaBondhu ML engines...")
+        # 1. Message Model
+        msg_model_path = os.path.join(MODELS_DIR, "model.joblib")
+        if os.path.exists(msg_model_path):
+            artifact = joblib.load(msg_model_path)
+            state["vectorizer"] = artifact["vectorizer"]
+            state["classifier"] = artifact["classifier"]
+            state["scam_type_clf"] = artifact.get("scam_type_clf")
+            state["scam_types"] = artifact.get("scam_types", [])
+            state["threshold"] = round(float(artifact.get("threshold", 0.50)), 4)
+            state["feature_names"] = state["vectorizer"].get_feature_names_out()
+            try:
+                base_estimator = state["classifier"].calibrated_classifiers_[0].estimator
+                state["base_coefs"] = base_estimator.coef_[0]
+            except Exception:
+                state["base_coefs"] = None
 
-        # Extract vocabulary and base estimator coefficients for attribution
-        state["feature_names"] = state["vectorizer"].get_feature_names_out()
-        try:
-            base_estimator = state["classifier"].calibrated_classifiers_[0].estimator
-            state["base_coefs"] = base_estimator.coef_[0]
-        except Exception as e:
-            logger.warning(f"Could not extract base coefs for feature attribution: {e}")
-            state["base_coefs"] = None
+        # 2. Multi-Signal Fusion Engine
+        state["fusion_engine"] = FusionEngine()
 
-        if os.path.exists(META_PATH):
-            with open(META_PATH, "r", encoding="utf-8") as f:
-                meta = json.load(f)
-                state["model_version"] = meta.get("model_version", "v1.0.0-char-wb-lr")
-        else:
-            state["model_version"] = "v1.0.0-char-wb-lr"
+        # 3. Mule Graph Analyzer
+        state["graph_analyzer"] = MuleGraphAnalyzer()
+        tx_csv = os.path.join(BASE_DIR, "data", "transactions", "transactions.csv")
+        if os.path.exists(tx_csv):
+            tx_sample = pd.read_csv(tx_csv).head(15000)
+            state["graph_analyzer"].build_graph(tx_sample)
+
+        # 4. Agent Benchmarker
+        state["agent_benchmarker"] = AgentBenchmarker()
+        agent_bench_path = os.path.join(MODELS_DIR, "agent_benchmarks.json")
+        if os.path.exists(agent_bench_path):
+            with open(agent_bench_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                state["agent_benchmarker"].peer_metrics = data.get("peer_metrics", {})
+                state["agent_benchmarker"].agent_profiles = data.get("profiles_sample", {})
 
         state["loaded"] = True
-        state["load_error"] = None
-        logger.info(f"✓ Model successfully loaded! Version: {state['model_version']}, Threshold: {state['threshold']:.4f}")
-
-        # Warm-up prediction
-        warmup_text = "Your bKash account will be blocked within 2 hours. Send OTP immediately."
-        _ = compute_prediction(warmup_text)
-        logger.info("✓ Warm-up prediction successful.")
-
-    except Exception as err:
+        logger.info("✓ All TakaBondhu ML models and engines loaded successfully.")
+    except Exception as e:
         state["loaded"] = False
-        state["load_error"] = f"Failed to load model: {err}. Please run 'npm run train'."
-        logger.error(state["load_error"])
+        state["load_error"] = str(e)
+        logger.error(f"Error loading ML models: {e}")
 
-def compute_prediction(text: str):
-    if not state["loaded"]:
-        raise RuntimeError(state["load_error"] or "Model not loaded.")
 
-    vec = state["vectorizer"].transform([text])
-    prob = float(state["classifier"].predict_proba(vec)[0, 1])
-    label_at_threshold = 1 if prob >= state["threshold"] else 0
+def compute_prediction(text: str) -> dict:
+    vec = state["vectorizer"]
+    clf = state["classifier"]
+    threshold = state["threshold"]
 
-    # Predict scam type
+    X = vec.transform([text])
+    prob = float(clf.predict_proba(X)[0, 1])
+    label_at_threshold = 1 if prob >= threshold else 0
+
     scam_type = "unknown"
-    if state["scam_type_clf"]:
+    if state["scam_type_clf"] is not None and len(state["scam_types"]) > 0:
         try:
-            scam_type = str(state["scam_type_clf"].predict(vec)[0])
-        except Exception as e:
-            logger.warning(f"Scam type prediction error: {e}")
+            st_pred = state["scam_type_clf"].predict(X)[0]
+            scam_type = state["scam_types"][st_pred] if isinstance(st_pred, (int, np.integer)) else str(st_pred)
+        except Exception:
+            scam_type = "unknown"
 
-    # Compute top contributing n-grams (attributions)
     reason_codes = []
     if state["base_coefs"] is not None and state["feature_names"] is not None:
-        cx = vec.tocoo()
+        cx = X.tocoo()
         contributions = []
         for col, val in zip(cx.col, cx.data):
             coef = state["base_coefs"][col]
             contrib = val * coef
             contributions.append((state["feature_names"][col], contrib))
 
-        # Sort by positive contribution (evidence for fraud)
         contributions.sort(key=lambda x: x[1], reverse=True)
         for ngram, c in contributions[:5]:
-            if c > 0.05: # Only report meaningful positive signals
+            if c > 0.05:
                 reason_codes.append(ReasonCode(ngram=ngram, contribution=round(float(c), 4)))
 
     return {
@@ -160,13 +192,13 @@ def compute_prediction(text: str):
         "scam_type": scam_type,
         "reason_codes": reason_codes,
         "model_version": state["model_version"],
-        "threshold": state["threshold"]
+        "threshold": round(state["threshold"], 4)
     }
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     load_model()
-    # Export OpenAPI documentation to docs/openapi.json
     try:
         openapi_schema = app.openapi()
         openapi_path = os.path.join(DOCS_DIR, "openapi.json")
@@ -177,9 +209,10 @@ async def lifespan(app: FastAPI):
         logger.warning(f"Could not export OpenAPI schema: {e}")
     yield
 
+
 app = FastAPI(
-    title="TakaBachao ScamShield ML Service",
-    description="Inference API providing TF-IDF char n-gram classification, probability calibration, scam type prediction, and n-gram attribution reason codes.",
+    title="TakaBondhu ML Service",
+    description="Upay AI Financial-Safety Microservice: Real-time transaction scoring, message intelligence, behavioral anomaly detection, mule network discovery, and agent risk benchmarking.",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -192,6 +225,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/health", response_model=HealthResponse)
 def health():
     if not state["loaded"]:
@@ -200,6 +234,7 @@ def health():
             loaded=False,
             model_version="none",
             threshold=0.50,
+            models={},
             sklearn_version=sklearn.__version__,
             message=state["load_error"] or "Model unavailable. Run 'npm run train'."
         )
@@ -209,10 +244,17 @@ def health():
         loaded=True,
         model_version=state["model_version"],
         threshold=state["threshold"],
+        models={
+            "message_classifier": {"loaded": state["vectorizer"] is not None, "version": state["model_version"], "threshold": state["threshold"]},
+            "transaction_classifier": {"loaded": state["fusion_engine"] is not None and state["fusion_engine"].txn_model is not None, "version": "v1.0.0-lgbm-calibrated"},
+            "anomaly_detector": {"loaded": state["fusion_engine"] is not None and state["fusion_engine"].anomaly_detector is not None, "version": "v1.0.0-isoforest"},
+            "graph_analyzer": {"loaded": state["graph_analyzer"] is not None, "version": "v1.0.0-networkx-mule"},
+            "agent_benchmarker": {"loaded": state["agent_benchmarker"] is not None, "version": "v1.0.0-peer-zscore"}
+        },
         sklearn_version=sklearn.__version__,
-        feature_count=len(state["feature_names"]) if state["feature_names"] is not None else None,
-        message="Model is loaded and ready for predictions."
+        message="All models loaded and ready for predictions."
     )
+
 
 @app.post("/v1/predict", response_model=PredictResponse)
 def predict_v1(req: PredictRequest):
@@ -228,10 +270,83 @@ def predict_v1(req: PredictRequest):
         logger.error(f"Inference error: {e}")
         raise HTTPException(status_code=500, detail="Inference processing failed.")
 
+
 @app.post("/predict", response_model=PredictResponse)
 def predict_alias(req: PredictRequest):
-    """Alias for /v1/predict"""
     return predict_v1(req)
+
+
+@app.post("/v1/analyze-message", response_model=PredictResponse)
+def analyze_message_alias(req: PredictRequest):
+    return predict_v1(req)
+
+
+@app.post("/v1/score-transaction")
+def score_transaction_endpoint(payload: Dict[str, Any]):
+    if not state["loaded"] or not state["fusion_engine"]:
+        raise HTTPException(status_code=503, detail="ML service unavailable.")
+    try:
+        tx = payload.get("transaction", payload)
+        score, attrs = state["fusion_engine"].score_transaction(tx)
+        anom_score, anom_reasons = state["fusion_engine"].score_anomaly(tx)
+        return {
+            "status": "ok",
+            "transaction_risk_score": round(score, 1),
+            "anomaly_score": round(anom_score, 1),
+            "attributions": attrs,
+            "anomaly_reasons": anom_reasons,
+            "model_version": "v1.0.0-lgbm-calibrated"
+        }
+    except Exception as e:
+        logger.error(f"Error scoring transaction: {e}")
+        raise HTTPException(status_code=500, detail="Transaction scoring failed.")
+
+
+@app.post("/v1/screen")
+def screen_endpoint(req: TransactionScreenRequest):
+    if not state["loaded"] or not state["fusion_engine"]:
+        raise HTTPException(status_code=503, detail="ML service unavailable.")
+    try:
+        fusion = state["fusion_engine"]
+        result = fusion.fuse(tx_dict=req.transaction, message_text=req.message or "")
+        return {
+            "status": "ok",
+            **result
+        }
+    except Exception as e:
+        logger.error(f"Error screening transaction: {e}")
+        raise HTTPException(status_code=500, detail="Pre-send screening failed.")
+
+
+@app.get("/v1/mule-network/{wallet}")
+def mule_network_endpoint(wallet: str):
+    if not state["loaded"] or not state["graph_analyzer"]:
+        raise HTTPException(status_code=503, detail="Graph service unavailable.")
+    try:
+        subgraph = state["graph_analyzer"].get_wallet_subgraph(wallet)
+        return {
+            "status": "ok",
+            **subgraph
+        }
+    except Exception as e:
+        logger.error(f"Error fetching mule network for {wallet}: {e}")
+        raise HTTPException(status_code=500, detail="Mule network lookup failed.")
+
+
+@app.get("/v1/agents/{agent_id}/risk")
+def agent_risk_endpoint(agent_id: str):
+    if not state["loaded"] or not state["agent_benchmarker"]:
+        raise HTTPException(status_code=503, detail="Agent benchmarker service unavailable.")
+    try:
+        res = state["agent_benchmarker"].evaluate_agent(agent_id)
+        return {
+            "status": "ok",
+            **res
+        }
+    except Exception as e:
+        logger.error(f"Error evaluating agent {agent_id}: {e}")
+        raise HTTPException(status_code=500, detail="Agent risk evaluation failed.")
+
 
 if __name__ == "__main__":
     import uvicorn
@@ -244,5 +359,4 @@ if __name__ == "__main__":
         print(f"Exported OpenAPI schema to {out_p}")
         sys.exit(0)
 
-    port = int(os.environ.get("ML_PORT", 8001))
-    uvicorn.run("service:app", host="127.0.0.1", port=port, log_level="info", app_dir=BASE_DIR)
+    uvicorn.run("ml.service:app", host="127.0.0.1", port=8001, reload=False)

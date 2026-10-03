@@ -1,673 +1,789 @@
 {
-  "evaluation_disclaimer": "Synthetic benchmark. Not a measure of real-world accuracy.",
-  "honest_evaluation_split": "test_unseen",
-  "model_version": "v1.0.0-char-wb-lr",
-  "threshold": 0.5,
-  "systems": {
-    "test_seen": {
-      "rules_only": {
-        "precision": 1.0,
-        "recall": 0.1917,
-        "f1": 0.3217,
-        "pr_auc": 0.8982,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 1.0,
-        "confusion_matrix": {
-          "tn": 355,
-          "fp": 0,
-          "fn": 409,
-          "tp": 97
+  "project": "TakaBondhu",
+  "tagline": "Upay's friend that keeps your money safe",
+  "generated_at": "2026-10-03T12:12:23.185820",
+  "disclaimer": "All figures originate strictly from executable evaluation scripts on held-out test splits. 100% synthetic data.",
+  "message_intelligence": {
+    "model_version": "v1.0.0-char-wb-lr",
+    "threshold": 0.49999999999999994,
+    "systems": {
+      "test_seen": {
+        "rules_only": {
+          "precision": 0.9806,
+          "recall": 0.1996,
+          "f1": 0.3317,
+          "pr_auc": 0.8579,
+          "roc_auc": 0.8516,
+          "fpr": 0.0049,
+          "prec_at_1pct_prevalence": 0.2909,
+          "prec_at_5pct_prevalence": 0.6813,
+          "confusion_matrix": {
+            "tn": 405,
+            "fp": 2,
+            "fn": 405,
+            "tp": 101
+          },
+          "support": {
+            "total": 913,
+            "benign": 407,
+            "fraud": 506
+          }
         },
-        "support": {
-          "total": 861,
-          "benign": 355,
-          "scam": 506
+        "ml_only": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "pr_auc": 1.0,
+          "roc_auc": 1.0,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
+          "confusion_matrix": {
+            "tn": 407,
+            "fp": 0,
+            "fn": 0,
+            "tp": 506
+          },
+          "support": {
+            "total": 913,
+            "benign": 407,
+            "fraud": 506
+          }
+        },
+        "hybrid": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "pr_auc": 1.0,
+          "roc_auc": 1.0,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
+          "confusion_matrix": {
+            "tn": 407,
+            "fp": 0,
+            "fn": 0,
+            "tp": 506
+          },
+          "support": {
+            "total": 913,
+            "benign": 407,
+            "fraud": 506
+          }
         }
       },
-      "ml_only": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "pr_auc": 1.0,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 1.0,
-        "confusion_matrix": {
-          "tn": 355,
-          "fp": 0,
-          "fn": 0,
-          "tp": 506
+      "test_unseen": {
+        "rules_only": {
+          "precision": 0.8594,
+          "recall": 0.0514,
+          "f1": 0.0971,
+          "pr_auc": 0.7985,
+          "roc_auc": 0.7553,
+          "fpr": 0.0137,
+          "prec_at_1pct_prevalence": 0.0366,
+          "prec_at_5pct_prevalence": 0.1653,
+          "confusion_matrix": {
+            "tn": 649,
+            "fp": 9,
+            "fn": 1014,
+            "tp": 55
+          },
+          "support": {
+            "total": 1727,
+            "benign": 658,
+            "fraud": 1069
+          }
         },
-        "support": {
-          "total": 861,
-          "benign": 355,
-          "scam": 506
-        }
-      },
-      "hybrid": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "pr_auc": 1.0,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 1.0,
-        "confusion_matrix": {
-          "tn": 355,
-          "fp": 0,
-          "fn": 0,
-          "tp": 506
+        "ml_only": {
+          "precision": 0.9771,
+          "recall": 1.0,
+          "f1": 0.9884,
+          "pr_auc": 0.9998,
+          "roc_auc": 0.9997,
+          "fpr": 0.038,
+          "prec_at_1pct_prevalence": 0.21,
+          "prec_at_5pct_prevalence": 0.5808,
+          "confusion_matrix": {
+            "tn": 633,
+            "fp": 25,
+            "fn": 0,
+            "tp": 1069
+          },
+          "support": {
+            "total": 1727,
+            "benign": 658,
+            "fraud": 1069
+          }
         },
-        "support": {
-          "total": 861,
-          "benign": 355,
-          "scam": 506
-        }
-      },
-      "gemini_only": "not run (API key not configured)"
-    },
-    "test_unseen": {
-      "rules_only": {
-        "precision": 1.0,
-        "recall": 0.044,
-        "f1": 0.0842,
-        "pr_auc": 0.791,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 1.0,
-        "confusion_matrix": {
-          "tn": 653,
-          "fp": 0,
-          "fn": 1022,
-          "tp": 47
-        },
-        "support": {
-          "total": 1722,
-          "benign": 653,
-          "scam": 1069
-        }
-      },
-      "ml_only": {
-        "precision": 0.8827,
-        "recall": 1.0,
-        "f1": 0.9377,
-        "pr_auc": 0.997,
-        "fpr": 0.2175,
-        "prec_at_5pct_prevalence": 0.1949,
-        "confusion_matrix": {
-          "tn": 511,
-          "fp": 142,
-          "fn": 0,
-          "tp": 1069
-        },
-        "support": {
-          "total": 1722,
-          "benign": 653,
-          "scam": 1069
-        }
-      },
-      "hybrid": {
-        "precision": 0.9402,
-        "recall": 1.0,
-        "f1": 0.9692,
-        "pr_auc": 0.9682,
-        "fpr": 0.1041,
-        "prec_at_5pct_prevalence": 0.3357,
-        "confusion_matrix": {
-          "tn": 585,
-          "fp": 68,
-          "fn": 0,
-          "tp": 1069
-        },
-        "support": {
-          "total": 1722,
-          "benign": 653,
-          "scam": 1069
-        }
-      },
-      "gemini_only": "not run (API key not configured)"
-    }
-  },
-  "per_group": {
-    "language": {
-      "bn": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "pr_auc": 1.0,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 1.0,
-        "confusion_matrix": {
-          "tn": 164,
-          "fp": 0,
-          "fn": 0,
-          "tp": 315
-        },
-        "support": {
-          "total": 479,
-          "benign": 164,
-          "scam": 315
-        }
-      },
-      "banglish": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "pr_auc": 1.0,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 1.0,
-        "confusion_matrix": {
-          "tn": 246,
-          "fp": 0,
-          "fn": 0,
-          "tp": 376
-        },
-        "support": {
-          "total": 622,
-          "benign": 246,
-          "scam": 376
-        }
-      },
-      "en": {
-        "precision": 0.8475,
-        "recall": 1.0,
-        "f1": 0.9175,
-        "pr_auc": 0.9121,
-        "fpr": 0.2798,
-        "prec_at_5pct_prevalence": 0.1583,
-        "confusion_matrix": {
-          "tn": 175,
-          "fp": 68,
-          "fn": 0,
-          "tp": 378
-        },
-        "support": {
-          "total": 621,
-          "benign": 243,
-          "scam": 378
+        "hybrid": {
+          "precision": 0.9869,
+          "recall": 0.9897,
+          "f1": 0.9883,
+          "pr_auc": 0.9996,
+          "roc_auc": 0.9994,
+          "fpr": 0.0213,
+          "prec_at_1pct_prevalence": 0.3197,
+          "prec_at_5pct_prevalence": 0.71,
+          "confusion_matrix": {
+            "tn": 644,
+            "fp": 14,
+            "fn": 11,
+            "tp": 1058
+          },
+          "support": {
+            "total": 1727,
+            "benign": 658,
+            "fraud": 1069
+          }
         }
       }
     },
-    "length_bucket": {
-      "short": {
-        "precision": 0.0,
-        "recall": 0.0,
-        "f1": 0.0,
-        "pr_auc": 0.0,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 0.0,
-        "confusion_matrix": {
-          "tn": 18,
-          "fp": 0,
-          "fn": 0,
-          "tp": 0
+    "handwritten_benchmark": {
+      "precision": 0.8778,
+      "recall": 0.9875,
+      "f1": 0.9294,
+      "pr_auc": 0.9744,
+      "roc_auc": 0.9772,
+      "fpr": 0.1375,
+      "prec_at_1pct_prevalence": 0.0676,
+      "prec_at_5pct_prevalence": 0.2743,
+      "confusion_matrix": {
+        "tn": 69,
+        "fp": 11,
+        "fn": 1,
+        "tp": 79
+      },
+      "support": {
+        "total": 160,
+        "benign": 80,
+        "fraud": 80
+      }
+    },
+    "demographics": {
+      "language": {
+        "bn": {
+          "precision": 0.9904,
+          "recall": 0.9873,
+          "f1": 0.9889,
+          "pr_auc": 0.9992,
+          "roc_auc": 0.9986,
+          "fpr": 0.0168,
+          "prec_at_1pct_prevalence": 0.3731,
+          "prec_at_5pct_prevalence": 0.7561,
+          "confusion_matrix": {
+            "tn": 176,
+            "fp": 3,
+            "fn": 4,
+            "tp": 311
+          },
+          "support": {
+            "total": 494,
+            "benign": 179,
+            "fraud": 315
+          }
         },
-        "support": {
-          "total": 18,
-          "benign": 18,
-          "scam": 0
+        "banglish": {
+          "precision": 0.9716,
+          "recall": 1.0,
+          "f1": 0.9856,
+          "pr_auc": 1.0,
+          "roc_auc": 1.0,
+          "fpr": 0.0462,
+          "prec_at_1pct_prevalence": 0.1794,
+          "prec_at_5pct_prevalence": 0.5324,
+          "confusion_matrix": {
+            "tn": 227,
+            "fp": 11,
+            "fn": 0,
+            "tp": 376
+          },
+          "support": {
+            "total": 614,
+            "benign": 238,
+            "fraud": 376
+          }
+        },
+        "en": {
+          "precision": 1.0,
+          "recall": 0.9815,
+          "f1": 0.9907,
+          "pr_auc": 1.0,
+          "roc_auc": 1.0,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
+          "confusion_matrix": {
+            "tn": 241,
+            "fp": 0,
+            "fn": 7,
+            "tp": 371
+          },
+          "support": {
+            "total": 619,
+            "benign": 241,
+            "fraud": 378
+          }
         }
       },
-      "medium": {
-        "precision": 0.9395,
-        "recall": 1.0,
-        "f1": 0.9688,
-        "pr_auc": 0.9668,
-        "fpr": 0.1071,
-        "prec_at_5pct_prevalence": 0.3295,
-        "confusion_matrix": {
-          "tn": 567,
-          "fp": 68,
-          "fn": 0,
-          "tp": 1056
+      "length_bucket": {
+        "medium": {
+          "precision": 0.9868,
+          "recall": 0.9896,
+          "f1": 0.9882,
+          "pr_auc": 0.9996,
+          "roc_auc": 0.9994,
+          "fpr": 0.0213,
+          "prec_at_1pct_prevalence": 0.3196,
+          "prec_at_5pct_prevalence": 0.71,
+          "confusion_matrix": {
+            "tn": 644,
+            "fp": 14,
+            "fn": 11,
+            "tp": 1045
+          },
+          "support": {
+            "total": 1714,
+            "benign": 658,
+            "fraud": 1056
+          }
         },
-        "support": {
-          "total": 1691,
-          "benign": 635,
-          "scam": 1056
+        "long": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "pr_auc": 0.0,
+          "roc_auc": 0.0,
+          "fpr": 0.0,
+          "prec_at_1pct_prevalence": 1.0,
+          "prec_at_5pct_prevalence": 1.0,
+          "confusion_matrix": {
+            "tn": 0,
+            "fp": 0,
+            "fn": 0,
+            "tp": 13
+          },
+          "support": {
+            "total": 13,
+            "benign": 0,
+            "fraud": 13
+          }
         }
       },
-      "long": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "pr_auc": 1.0,
-        "fpr": 0.0,
-        "prec_at_5pct_prevalence": 1.0,
-        "confusion_matrix": {
-          "tn": 0,
-          "fp": 0,
-          "fn": 0,
-          "tp": 13
+      "scam_type": {
+        "fake_prize": {
+          "label": 1,
+          "total": 167,
+          "flagged": 167,
+          "flag_rate": 1.0
         },
-        "support": {
-          "total": 13,
-          "benign": 0,
-          "scam": 13
+        "loan_app": {
+          "label": 1,
+          "total": 165,
+          "flagged": 165,
+          "flag_rate": 1.0
+        },
+        "remote_access": {
+          "label": 1,
+          "total": 60,
+          "flagged": 54,
+          "flag_rate": 0.9
+        },
+        "personal_chat": {
+          "label": 0,
+          "total": 178,
+          "flagged": 0,
+          "flag_rate": 0.0
+        },
+        "wrong_transfer": {
+          "label": 1,
+          "total": 163,
+          "flagged": 163,
+          "flag_rate": 1.0
+        },
+        "fake_agent": {
+          "label": 1,
+          "total": 149,
+          "flagged": 149,
+          "flag_rate": 1.0
+        },
+        "bank_notification": {
+          "label": 0,
+          "total": 311,
+          "flagged": 0,
+          "flag_rate": 0.0
+        },
+        "otp_harvest": {
+          "label": 1,
+          "total": 70,
+          "flagged": 65,
+          "flag_rate": 0.9286
+        },
+        "kyc_block": {
+          "label": 1,
+          "total": 129,
+          "flagged": 129,
+          "flag_rate": 1.0
+        },
+        "innocent_keywords": {
+          "label": 0,
+          "total": 99,
+          "flagged": 0,
+          "flag_rate": 0.0
+        },
+        "job_scam": {
+          "label": 1,
+          "total": 166,
+          "flagged": 166,
+          "flag_rate": 1.0
+        },
+        "otp_safety": {
+          "label": 0,
+          "total": 70,
+          "flagged": 14,
+          "flag_rate": 0.2
         }
       }
     },
-    "scam_type": {
-      "innocent_keywords": {
-        "label": 0,
-        "total": 56,
-        "flagged": 0,
-        "flag_rate": 0.0
-      },
-      "kyc_block": {
-        "label": 1,
-        "total": 129,
-        "flagged": 129,
-        "flag_rate": 1.0
-      },
-      "wrong_transfer": {
-        "label": 1,
-        "total": 163,
-        "flagged": 163,
-        "flag_rate": 1.0
-      },
-      "bank_notification": {
-        "label": 0,
-        "total": 312,
-        "flagged": 0,
-        "flag_rate": 0.0
-      },
-      "fake_agent": {
-        "label": 1,
-        "total": 149,
-        "flagged": 149,
-        "flag_rate": 1.0
-      },
-      "personal_chat": {
-        "label": 0,
-        "total": 206,
-        "flagged": 42,
-        "flag_rate": 0.2039
-      },
-      "remote_access": {
-        "label": 1,
-        "total": 60,
-        "flagged": 60,
-        "flag_rate": 1.0
-      },
-      "loan_app": {
-        "label": 1,
-        "total": 165,
-        "flagged": 165,
-        "flag_rate": 1.0
-      },
-      "job_scam": {
-        "label": 1,
-        "total": 166,
-        "flagged": 166,
-        "flag_rate": 1.0
-      },
-      "otp_safety": {
-        "label": 0,
-        "total": 79,
-        "flagged": 26,
-        "flag_rate": 0.3291
-      },
-      "fake_prize": {
-        "label": 1,
-        "total": 167,
-        "flagged": 167,
-        "flag_rate": 1.0
-      },
-      "otp_harvest": {
-        "label": 1,
-        "total": 70,
-        "flagged": 70,
-        "flag_rate": 1.0
+    "fairness": {
+      "max_language_recall_gap": 0.0185,
+      "max_language_fpr_gap": 0.0462,
+      "fairness_gap_under_10pp": true,
+      "mitigation": "Balanced hard-negative augmentation across all 3 languages (Bengali, Banglish, English) maintains a true FPR gap of 4.62% and a true recall gap of 1.85%, both well within the <=10.0% fairness parity threshold."
+    },
+    "robustness": {
+      "overall_recall": 0.9891,
+      "variants": {
+        "homoglyph": {
+          "count": 519,
+          "recall": 0.973
+        },
+        "prompt_injection": {
+          "count": 541,
+          "recall": 1.0
+        },
+        "filler_appended": {
+          "count": 505,
+          "recall": 1.0
+        },
+        "spaced_dots": {
+          "count": 539,
+          "recall": 0.9833
+        }
       }
     }
   },
-  "fairness": {
-    "max_language_recall_gap": 0.0,
-    "max_language_fpr_gap": 0.2798,
-    "max_length_recall_gap": 1.0,
-    "language_gap_exceeds_10pp": true,
-    "summary": "Language FPR gap (28.0pp) exceeds 10pp (English FPR 27.98% vs 0.00% for bn/banglish). Mitigation: incorporate larger English hard-negative corpus and fine-tune language-stratified decision boundaries."
-  },
-  "robustness": {
-    "clean_test_unseen_scam_recall": 1.0,
-    "overall_robustness_scam_recall": 0.9943,
-    "variants": {
-      "prompt_injection": {
-        "count": 536,
-        "recall": 1.0
+  "transaction_risk_intelligence": {
+    "model_version": "v1.0.0-lgbm-calibrated",
+    "threshold": 0.13,
+    "test_time": {
+      "precision": 0.8515,
+      "recall": 0.9832,
+      "f1": 0.9126,
+      "pr_auc": 0.9804,
+      "roc_auc": 0.9995,
+      "fpr": 0.0041,
+      "prec_at_1pct_prevalence": 0.7066,
+      "prec_at_5pct_prevalence": 0.9262,
+      "confusion_matrix": {
+        "tn": 56740,
+        "fp": 235,
+        "fn": 23,
+        "tp": 1347
       },
-      "spaced_dots": {
-        "count": 517,
-        "recall": 0.9942
-      },
-      "filler_appended": {
-        "count": 525,
-        "recall": 1.0
-      },
-      "homoglyph": {
-        "count": 521,
-        "recall": 0.9827
+      "support": {
+        "total": 58345,
+        "benign": 56975,
+        "fraud": 1370
       }
-    }
-  },
-  "top_features": {
-    "top_scam_ngrams": [
-      {
-        "ngram": "! ",
-        "coef": 1.5709
+    },
+    "test_unseen_entity": {
+      "precision": 0.8204,
+      "recall": 0.9803,
+      "f1": 0.8932,
+      "pr_auc": 0.9622,
+      "roc_auc": 0.9987,
+      "fpr": 0.0074,
+      "prec_at_1pct_prevalence": 0.5715,
+      "prec_at_5pct_prevalence": 0.8742,
+      "confusion_matrix": {
+        "tn": 24738,
+        "fp": 185,
+        "fn": 17,
+        "tp": 845
       },
-      {
-        "ngram": "ur",
-        "coef": 1.2765
-      },
-      {
-        "ngram": " 01",
-        "coef": 1.1263
-      },
-      {
-        "ngram": "01",
-        "coef": 1.1228
-      },
-      {
-        "ngram": "\u09b0\u09c1",
-        "coef": 1.0497
-      },
-      {
-        "ngram": "ac",
-        "coef": 1.0286
-      },
-      {
-        "ngram": "te",
-        "coef": 1.0244
-      },
-      {
-        "ngram": " 0",
-        "coef": 1.0085
-      },
-      {
-        "ngram": " \u0995\u09b0",
-        "coef": 0.9837
-      },
-      {
-        "ngram": "\u0995\u09b0",
-        "coef": 0.9742
-      },
-      {
-        "ngram": "\u09be\u09b0 ",
-        "coef": 0.9733
-      },
-      {
-        "ngram": "ri",
-        "coef": 0.9556
-      },
-      {
-        "ngram": " to ",
-        "coef": 0.9514
-      },
-      {
-        "ngram": " a",
-        "coef": 0.937
-      },
-      {
-        "ngram": "\u09b0\u09c1\u09a8",
-        "coef": 0.92
-      },
-      {
-        "ngram": " \u0995\u09b0\u09c1",
-        "coef": 0.92
-      },
-      {
-        "ngram": "\u0995\u09b0\u09c1",
-        "coef": 0.92
-      },
-      {
-        "ngram": " \u0995\u09b0\u09c1\u09a8",
-        "coef": 0.92
-      },
-      {
-        "ngram": "\u0995\u09b0\u09c1\u09a8",
-        "coef": 0.92
-      },
-      {
-        "ngram": "to ",
-        "coef": 0.8963
+      "support": {
+        "total": 25785,
+        "benign": 24923,
+        "fraud": 862
       }
-    ],
-    "top_benign_ngrams": [
+    },
+    "review_capacity": {
+      "test_time": {
+        "top_10_per_1000": {
+          "review_capacity_k": 10,
+          "budget_cases_reviewed": 583,
+          "fraud_caught": 583,
+          "total_fraud": 1370,
+          "precision_at_k": 1.0,
+          "recall_at_k": 0.4255
+        },
+        "top_20_per_1000": {
+          "review_capacity_k": 20,
+          "budget_cases_reviewed": 1166,
+          "fraud_caught": 1127,
+          "total_fraud": 1370,
+          "precision_at_k": 0.9666,
+          "recall_at_k": 0.8226
+        },
+        "top_50_per_1000": {
+          "review_capacity_k": 50,
+          "budget_cases_reviewed": 2917,
+          "fraud_caught": 1370,
+          "total_fraud": 1370,
+          "precision_at_k": 0.4697,
+          "recall_at_k": 1.0
+        }
+      },
+      "test_unseen_entity": {
+        "top_10_per_1000": {
+          "review_capacity_k": 10,
+          "budget_cases_reviewed": 257,
+          "fraud_caught": 257,
+          "total_fraud": 862,
+          "precision_at_k": 1.0,
+          "recall_at_k": 0.2981
+        },
+        "top_20_per_1000": {
+          "review_capacity_k": 20,
+          "budget_cases_reviewed": 515,
+          "fraud_caught": 506,
+          "total_fraud": 862,
+          "precision_at_k": 0.9825,
+          "recall_at_k": 0.587
+        },
+        "top_50_per_1000": {
+          "review_capacity_k": 50,
+          "budget_cases_reviewed": 1289,
+          "fraud_caught": 862,
+          "total_fraud": 862,
+          "precision_at_k": 0.6687,
+          "recall_at_k": 1.0
+        }
+      }
+    },
+    "pattern_recall": {
+      "test_time": {
+        "account_takeover": {
+          "count": 382,
+          "recall": 1.0
+        },
+        "mule_network": {
+          "count": 268,
+          "recall": 0.9701
+        },
+        "social_engineering": {
+          "count": 417,
+          "recall": 0.9832
+        },
+        "agent_anomaly": {
+          "count": 139,
+          "recall": 0.9424
+        },
+        "wrong_transfer_refund": {
+          "count": 164,
+          "recall": 1.0
+        }
+      },
+      "test_unseen_entity": {
+        "account_takeover": {
+          "count": 118,
+          "recall": 1.0
+        },
+        "mule_network": {
+          "count": 487,
+          "recall": 0.9754
+        },
+        "social_engineering": {
+          "count": 156,
+          "recall": 0.9936
+        },
+        "agent_anomaly": {
+          "count": 53,
+          "recall": 0.9245
+        },
+        "wrong_transfer_refund": {
+          "count": 48,
+          "recall": 1.0
+        }
+      }
+    },
+    "fairness_slices": {
+      "district": {
+        "Noakhali": {
+          "count": 3078,
+          "recall": 1.0,
+          "fpr": 0.0056
+        },
+        "Narayanganj": {
+          "count": 2852,
+          "recall": 0.9804,
+          "fpr": 0.005
+        },
+        "Feni": {
+          "count": 2837,
+          "recall": 1.0,
+          "fpr": 0.005
+        },
+        "Khulna": {
+          "count": 2766,
+          "recall": 0.9783,
+          "fpr": 0.0037
+        },
+        "Brahmanbaria": {
+          "count": 2751,
+          "recall": 0.9545,
+          "fpr": 0.0033
+        }
+      },
+      "amount_bucket": {
+        "under_500": {
+          "count": 22411,
+          "recall": 0.7222,
+          "fpr": 0.0005
+        },
+        "500_to_2000": {
+          "count": 12793,
+          "recall": 0.9682,
+          "fpr": 0.0075
+        },
+        "2000_to_10000": {
+          "count": 20108,
+          "recall": 0.9847,
+          "fpr": 0.0063
+        },
+        "above_10000": {
+          "count": 3033,
+          "recall": 0.9969,
+          "fpr": 0.0021
+        }
+      },
+      "channel": {
+        "app": {
+          "count": 36042,
+          "recall": 0.9847,
+          "fpr": 0.0041
+        },
+        "ussd": {
+          "count": 17448,
+          "recall": 0.99,
+          "fpr": 0.0052
+        },
+        "agent_pos": {
+          "count": 4855,
+          "recall": 0.9508,
+          "fpr": 0.0002
+        }
+      }
+    },
+    "evasion_robustness": {
+      "baseline_agent_anomaly_recall": 0.9424,
+      "structuring_boundary_evasion_recall": 1.0,
+      "delta": 0.0576,
+      "comment": "Model features include explicit 'is_structuring_range' indicator, rendering boundary structuring resilient."
+    },
+    "calibration_curve": [
       {
-        "ngram": " ba",
-        "coef": -1.5781
+        "bin": "[0.0, 0.1]",
+        "count": 56746,
+        "mean_predicted": 0.0001,
+        "empirical_rate": 0.0003
       },
       {
-        "ngram": "or ",
-        "coef": -1.5304
+        "bin": "[0.1, 0.2]",
+        "count": 43,
+        "mean_predicted": 0.1463,
+        "empirical_rate": 0.3953
       },
       {
-        "ngram": "0.",
-        "coef": -1.3897
+        "bin": "[0.2, 0.3]",
+        "count": 22,
+        "mean_predicted": 0.2503,
+        "empirical_rate": 0.3182
       },
       {
-        "ngram": ", ",
-        "coef": -1.3609
+        "bin": "[0.3, 0.4]",
+        "count": 36,
+        "mean_predicted": 0.3478,
+        "empirical_rate": 0.3889
       },
       {
-        "ngram": " me",
-        "coef": -1.309
+        "bin": "[0.4, 0.5]",
+        "count": 62,
+        "mean_predicted": 0.4493,
+        "empirical_rate": 0.3387
       },
       {
-        "ngram": "ba",
-        "coef": -1.2047
+        "bin": "[0.5, 0.6]",
+        "count": 87,
+        "mean_predicted": 0.5471,
+        "empirical_rate": 0.5057
       },
       {
-        "ngram": "ala",
-        "coef": -1.203
+        "bin": "[0.6, 0.7]",
+        "count": 118,
+        "mean_predicted": 0.6457,
+        "empirical_rate": 0.6356
       },
       {
-        "ngram": "the ",
-        "coef": -1.1035
+        "bin": "[0.7, 0.8]",
+        "count": 183,
+        "mean_predicted": 0.7551,
+        "empirical_rate": 0.8306
       },
       {
-        "ngram": "sho",
-        "coef": -1.1026
+        "bin": "[0.8, 0.9]",
+        "count": 137,
+        "mean_predicted": 0.8487,
+        "empirical_rate": 0.8613
       },
       {
-        "ngram": "\u09c7\u09a8\u09cd",
-        "coef": -1.0656
-      },
-      {
-        "ngram": "he ",
-        "coef": -1.0558
-      },
-      {
-        "ngram": "id ",
-        "coef": -1.049
-      },
-      {
-        "ngram": "fo",
-        "coef": -1.0457
-      },
-      {
-        "ngram": "no",
-        "coef": -1.0367
-      },
-      {
-        "ngram": "trx",
-        "coef": -1.0276
-      },
-      {
-        "ngram": "trxi",
-        "coef": -1.0276
-      },
-      {
-        "ngram": "rxid",
-        "coef": -1.0276
-      },
-      {
-        "ngram": "rxi",
-        "coef": -1.0276
-      },
-      {
-        "ngram": "rx",
-        "coef": -1.0276
-      },
-      {
-        "ngram": "xi",
-        "coef": -1.0276
+        "bin": "[0.9, 1.0]",
+        "count": 911,
+        "mean_predicted": 0.9799,
+        "empirical_rate": 0.9912
       }
     ]
   },
-  "rules_before_after": {
-    "at_threshold_40": {
-      "before_fpr": "21.06%",
-      "before_count": "578 / 2744",
-      "after_fpr": "1.49%",
-      "after_count": "41 / 2744"
-    },
-    "at_threshold_50": {
-      "before_fpr": "9.11%",
-      "before_count": "250 / 2744",
-      "after_fpr": "0.00%",
-      "after_count": "0 / 2744"
-    }
-  },
-  "error_analysis": {
-    "false_positives_count": 68,
-    "false_negatives_count": 0,
-    "false_positives_sample": [
-      {
-        "id": "benign_personal_chat_en_f07_044_019c10",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 53.22,
-        "rules_score": 10.0,
-        "ml_score": 82.04,
-        "text": "Hi Nusrat, our shared rent contribution of 5,000 is due today. Please transfer it to my wallet."
+  "multi_signal_ablation": {
+    "rules_only": {
+      "precision": 1.0,
+      "recall": 0.1745,
+      "f1": 0.2971,
+      "pr_auc": 0.6482,
+      "roc_auc": 0.7639,
+      "fpr": 0.0,
+      "prec_at_1pct_prevalence": 1.0,
+      "prec_at_5pct_prevalence": 1.0,
+      "confusion_matrix": {
+        "tn": 4000,
+        "fp": 0,
+        "fn": 1131,
+        "tp": 239
       },
-      {
-        "id": "benign_otp_safety_en_f07_002_9735ed",
-        "language": "en",
-        "scam_type": "otp_safety",
-        "hybrid_score": 69.1,
-        "rules_score": 40.0,
-        "ml_score": 88.5,
-        "text": "Official advisory: Customerr support will never request your secret PIN or ask you to install AnyDesk."
-      },
-      {
-        "id": "benign_personal_chat_en_f07_022_d40592",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 53.11,
-        "rules_score": 10.0,
-        "ml_score": 81.86,
-        "text": "Hi Nusrat, our shared rent contribution of 500 is due today. Please transfer it to my wallet."
-      },
-      {
-        "id": "benign_personal_chat_en_f07_038_3de70e",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 53.28,
-        "rules_score": 10.0,
-        "ml_score": 82.13,
-        "text": "Hi Nusrat, our shared rent contribution of 1,000 is due today. Please transfer it to my wallet."
-      },
-      {
-        "id": "benign_personal_chat_en_f07_027_675829",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 54.18,
-        "rules_score": 10.0,
-        "ml_score": 83.63,
-        "text": "Hi Rahim, our shared rent contribution of 50,000 is due today. Please transfer it to my wallet."
-      },
-      {
-        "id": "benign_personal_chat_en_f07_023_103ead",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 51.69,
-        "rules_score": 10.0,
-        "ml_score": 79.48,
-        "text": "Hi Tanvir, our shared rent contribution of 2,500 is due today. Please transfer it to my wallet."
-      },
-      {
-        "id": "benign_otp_safety_en_f08_008_b18d75",
-        "language": "en",
-        "scam_type": "otp_safety",
-        "hybrid_score": 74.54,
-        "rules_score": 40.0,
-        "ml_score": 97.57,
-        "text": "Security tip: Memorize your wallettt PIN. Never write it down or reveal SMS verification codes to strangers."
-      },
-      {
-        "id": "benign_otp_safety_en_f07_021_6f68df",
-        "language": "en",
-        "scam_type": "otp_safety",
-        "hybrid_score": 68.04,
-        "rules_score": 40.0,
-        "ml_score": 86.74,
-        "text": "Official advisory: Customer support will never request your secret PIN or ask you to install AnyDesk. \u26a0\ufe0f"
-      },
-      {
-        "id": "benign_otp_safety_en_f08_039_88ceca",
-        "language": "en",
-        "scam_type": "otp_safety",
-        "hybrid_score": 74.27,
-        "rules_score": 40.0,
-        "ml_score": 97.12,
-        "text": "Security tip: Memorize your wallet PIN. Never write it downnn or reveal SMS verification codes to strangers."
-      },
-      {
-        "id": "benign_personal_chat_en_f07_016_75f008",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 50.58,
-        "rules_score": 10.0,
-        "ml_score": 77.63,
-        "text": "Hi Tanvir, our shared rent contribution of 2,500 is due today. Please transfer it to my wallet. \ud83d\udcf1"
-      },
-      {
-        "id": "benign_otp_safety_en_f07_020_3512be",
-        "language": "en",
-        "scam_type": "otp_safety",
-        "hybrid_score": 68.89,
-        "rules_score": 40.0,
-        "ml_score": 88.16,
-        "text": "Officialll advisory: Customer support will never request your secret PIN or ask you to install AnyDesk."
-      },
-      {
-        "id": "benign_personal_chat_en_f07_021_eb1192",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 50.03,
-        "rules_score": 10.0,
-        "ml_score": 76.72,
-        "text": "Hi Tanvir, our shared rent contribution of 15,000 is due today. Please transfer it to my wallet. \u203c\ufe0f"
-      },
-      {
-        "id": "benign_personal_chat_en_f07_014_71445a",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 52.49,
-        "rules_score": 10.0,
-        "ml_score": 80.82,
-        "text": "Hi Nusrat, our shared rent contribution of 25,000 is due today. Please transfer it to my wallet."
-      },
-      {
-        "id": "benign_otp_safety_en_f08_018_6c9057",
-        "language": "en",
-        "scam_type": "otp_safety",
-        "hybrid_score": 73.96,
-        "rules_score": 40.0,
-        "ml_score": 96.6,
-        "text": "Securityyy tip: Memorize your wallet PIN. Never write it down or reveal SMS verification codes to strangers."
-      },
-      {
-        "id": "benign_personal_chat_en_f07_024_56c930",
-        "language": "en",
-        "scam_type": "personal_chat",
-        "hybrid_score": 54.75,
-        "rules_score": 10.0,
-        "ml_score": 84.58,
-        "text": "hi rahim, our shared rent contribution of 500 is due today. please transfer it to my wallet."
+      "support": {
+        "total": 5370,
+        "benign": 4000,
+        "fraud": 1370
       }
-    ],
-    "false_negatives_sample": []
+    },
+    "message_ml_only": {
+      "precision": 1.0,
+      "recall": 0.3044,
+      "f1": 0.4667,
+      "pr_auc": 0.4818,
+      "roc_auc": 0.6522,
+      "fpr": 0.0,
+      "prec_at_1pct_prevalence": 1.0,
+      "prec_at_5pct_prevalence": 1.0,
+      "confusion_matrix": {
+        "tn": 4000,
+        "fp": 0,
+        "fn": 953,
+        "tp": 417
+      },
+      "support": {
+        "total": 5370,
+        "benign": 4000,
+        "fraud": 1370
+      }
+    },
+    "txn_ml_only": {
+      "precision": 0.9818,
+      "recall": 0.9832,
+      "f1": 0.9825,
+      "pr_auc": 0.9981,
+      "roc_auc": 0.9994,
+      "fpr": 0.0062,
+      "prec_at_1pct_prevalence": 0.6138,
+      "prec_at_5pct_prevalence": 0.8922,
+      "confusion_matrix": {
+        "tn": 3975,
+        "fp": 25,
+        "fn": 23,
+        "tp": 1347
+      },
+      "support": {
+        "total": 5370,
+        "benign": 4000,
+        "fraud": 1370
+      }
+    },
+    "anomaly_only": {
+      "precision": 0.9963,
+      "recall": 0.5891,
+      "f1": 0.7404,
+      "pr_auc": 0.9757,
+      "roc_auc": 0.9898,
+      "fpr": 0.0008,
+      "prec_at_1pct_prevalence": 0.8881,
+      "prec_at_5pct_prevalence": 0.9764,
+      "confusion_matrix": {
+        "tn": 3997,
+        "fp": 3,
+        "fn": 563,
+        "tp": 807
+      },
+      "support": {
+        "total": 5370,
+        "benign": 4000,
+        "fraud": 1370
+      }
+    },
+    "graph_only": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "pr_auc": 0.2596,
+      "roc_auc": 0.5078,
+      "fpr": 0.0158,
+      "prec_at_1pct_prevalence": 0.0,
+      "prec_at_5pct_prevalence": 0.0,
+      "confusion_matrix": {
+        "tn": 3937,
+        "fp": 63,
+        "fn": 1370,
+        "tp": 0
+      },
+      "support": {
+        "total": 5370,
+        "benign": 4000,
+        "fraud": 1370
+      }
+    },
+    "fusion_all_signals": {
+      "precision": 0.9846,
+      "recall": 0.9788,
+      "f1": 0.9817,
+      "pr_auc": 0.9982,
+      "roc_auc": 0.9993,
+      "fpr": 0.0052,
+      "prec_at_1pct_prevalence": 0.6532,
+      "prec_at_5pct_prevalence": 0.9075,
+      "confusion_matrix": {
+        "tn": 3979,
+        "fp": 21,
+        "fn": 29,
+        "tp": 1341
+      },
+      "support": {
+        "total": 5370,
+        "benign": 4000,
+        "fraud": 1370
+      }
+    },
+    "gemini_only": {
+      "status": "not run (API key not configured in offline evaluation mode)",
+      "comment": "Grounded LLM acts strictly as narrative investigator and customer translator, bounded to [-10, +10] adjustment without overriding decision recommendations."
+    }
   }
 }
