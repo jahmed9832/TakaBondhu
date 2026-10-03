@@ -353,6 +353,10 @@ class FusionEngine:
         if str(agent_id).startswith("agent_") and agent_score >= 50.0:
             base_score = min(98.0, base_score + 15.0)
 
+        # High-severity rule safety floor: If critical rule fired (>=70), elevate to at least SOFT_FRICTION
+        if rules_score >= 70.0 and base_score < self.THRESHOLD_SOFT_FRICTION:
+            base_score = self.THRESHOLD_SOFT_FRICTION
+
         final_score = round(min(98.0, max(5.0, base_score)), 1)
 
         # 3. Decision Recommendation (NEVER auto-block money)

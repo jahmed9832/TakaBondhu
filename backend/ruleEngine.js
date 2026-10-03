@@ -60,14 +60,15 @@ export function runDeterministicRuleEngine(message) {
     urgencyEvidence = extractSnippet(
       message,
       [
-        /(?:within\s+\d+\s+(?:hours?|minutes?|days?)|expires\s+today|act\s+fast|urgently\s+need|send\s+right\s+now|cancel\s+right\s+now|dial\s+now|call\s+(?:us\s+)?now|before\s+\d+\s*(?:am|pm)|\d+\s*ঘণ্টার\s*মধ্যে|আজকের\s*মধ্যে|জরুরি\s*নোটিশ|জরুরি\s*ভিত্তিতে|জরুরি\s*(?:নিরাপত্তা\s*)?সতর্কতা|অতি\s*দ্রুত|অবিলম্বে\s*(?:এই\s*)?(?:এজেন্ট|নম্বরে|কল|টাকা|পাঠান|যোগাযোগ)|এখনই\s*(?:পরিশোধ|পাঠান|বলুন|ফেরত|এসএমএস|মেসেজ|verify|confirm|call)|\d+\s*ghontar\s*moddhe|ekhoni\s*(?:call|verify|pathan|ferot|send|sms))/i,
+        /(?:within\s+\d+\s+(?:hours?|minutes?|days?)|expires\s+today|act\s+fast|urgently\s+need|send\s+right\s+now|cancel\s+right\s+now|dial\s+now|call\s+(?:us\s+)?now|before\s+\d+\s*(?:am|pm)|\d+\s*ঘণ্টার\s*মধ্যে|আজকের\s*মধ্যে|জরুরি\s*নোটিশ|জরুরি\s*ভিত্তিতে|জরুরি\s*(?:নিরাপত্তা\s*)?সতর্কতা|অতি\s*দ্রুত|অবিলম্বে\s*(?:এই\s*)?(?:এজেন্ট|নম্বরে|কল|টাকা|পাঠান|যোগাযোগ)|এখনই\s*(?:পরিশোধ|পাঠান|বলুন|ফেরত|এসএমএস|মেসেজ|verify|confirm|call)|জলদি\s*(?:টাকা|উপায়|সেন্ড|পাঠান|মেসেজ|করুন|কর|দিন)|এই\s*মুহূর্তে|\d+\s*ghontar\s*moddhe|ekhoni\s*(?:call|verify|pathan|ferot|send|sms))/i,
         /(?:last\s+chance|immediate\s+suspension|temporary\s+hold)/i
       ],
       [
         'within 2 hours', 'within 1 hour', 'within 24 hours', 'expires today',
         'act fast', 'urgently need', 'send right now', 'cancel right now',
         '২ ঘণ্টার মধ্যে', 'ঘণ্টার মধ্যে', 'জরুরি ভিত্তিতে', 'অতি দ্রুত', 'জরুরি নোটিশ',
-        'অবিলম্বে এই এজেন্ট নম্বরে', 'জরুরি নিরাপত্তা সতর্কতা', 'এখনই এসএমএস করে পাঠান', 'shondhar age'
+        'অবিলম্বে এই এজেন্ট নম্বরে', 'জরুরি নিরাপত্তা সতর্কতা', 'এখনই এসএমএস করে পাঠান', 'shondhar age',
+        'জলদি', 'এই মুহূর্তে'
       ]
     );
   }
@@ -123,7 +124,7 @@ export function runDeterministicRuleEngine(message) {
         /(?:(?:processing|clearance|customs|advance|joining|onboarding|registration|insurance|stamp\s+duty|license|training|booking|file|security)\s+(?:fee|charge|deposit)|security\s+deposit|test\s+deposit)/i,
         /(?:প্রসেসিং\s*ফি|রেজিস্ট্রেশন\s*ফি|সিকিউরিটি\s*ফি|ভেরিফিকেশন\s*ফি|জামানত|ছাড়পত্র\s*ফি|ডকুমেন্ট\s*ফি|ট্যাক্স\s*বাবদ|অগ্রিম\s*ইন্স্যুরেন্স|সার্ভিস\s*চার্জ)/i,
         /(?:processing\s*fee|registration\s*fee|joining\s*fee|security\s*deposit|advance\s*insurance|stamp\s*charge)\s*(?:tk\s*|৳\s*)?\d+/i,
-        /(?:refund\s+(?:it\s+)?to|mistake\s+transfer|send\s+it\s+back\s+to|return\s+it\s+to|ফেরত\s+পাঠান|ব্যাক\s+করুন|ferot\s+pathan|return\s+korun)\s*(?:[0-9+০-৯\s-]+)?/i,
+        /(?:refund\s+(?:it\s+)?to|mistake\s+transfer|send\s+it\s+back\s+to|return\s+it\s+to|ফেরত\s+পাঠান|ব্যাক\s+করুন|ferot\s+pathan|return\s+korun|সেন্ড\s*মানি\s*(?:করুন|কর|দিন|পাঠান)|send\s*money\s*(?:korun|koro|den))\s*(?:[0-9+০-৯\s-]+)?/i,
         /(?:wire\s+transfer|gift\s+card|ক্যাশ-?আউট\s*করুন|cash-?out\s*korun)/i,
         /(?:ekhoni\s*\d+\s*taka\s*pathan|\d+\s*taka\s*pathan\s*verify\s*korte|\d+\s*টাকা\s*ফি\s*দিন)/i
       ],
@@ -131,7 +132,7 @@ export function runDeterministicRuleEngine(message) {
         'processing fee', 'clearance fee', 'customs fee', 'advance insurance fee',
         'joining fee', 'security deposit', 'stamp duty charge', 'registration charge',
         'প্রসেসিং ফি', 'রেজিস্ট্রেশন ফি', 'ছাড়পত্র ফি', 'জামানত বাবদ', 'ফেরত পাঠান',
-        'সিকিউরিটি ফি ক্যাশ-আউট করুন', 'সিকিউরিটি ফি', 'ক্যাশ-আউট করুন'
+        'সিকিউরিটি ফি ক্যাশ-আউট করুন', 'সিকিউরিটি ফি', 'ক্যাশ-আউট করুন', 'সেন্ড মানি কর'
       ]
     );
   }
@@ -266,12 +267,13 @@ export function runDeterministicRuleEngine(message) {
     message,
     [
       /(?:stranded\s+at\s+(?:the\s+)?clinic|emergency\s+room|injured\s+leg|hospital\s+deposit|sick\s+mother\s+needs|lost\s+my\s+phone\s+and\s+wallet)/i,
-      /(?:খুব\s*বিপদে\s*আছি|মায়ের\s*(?:চিকিৎসা|অসুখ)|হাসপাতালে|মেডিকেল\s*ইমার্জেন্সি)/i,
+      /(?:(?:খুব\s*)?বিপদে\s*(?:পড়েছি|আছি|পড়ছি)|মায়ের\s*(?:চিকিৎসা|অসুখ)|হাসপাতালে|মেডিকেল\s*ইমার্জেন্সি|অ্যাক্সিডেন্ট)/i,
       /(?:khub\s*bipode\s*achi|mayer\s*osukh|hospital\s*deposit)/i
     ],
     [
       'stranded at the clinic', 'emergency room', 'injured leg', 'sick mother needs',
-      'খুব বিপদে আছি', 'মায়ের চিকিৎসার', 'মেডিকেল ইমার্জেন্সি', 'khub bipode achi'
+      'খুব বিপদে আছি', 'মায়ের চিকিৎসার', 'মেডিকেল ইমার্জেন্সি', 'khub bipode achi',
+      'বিপদে পড়েছি', 'অ্যাক্সিডেন্ট', 'হাসপাতালে'
     ]
   );
 
@@ -280,7 +282,7 @@ export function runDeterministicRuleEngine(message) {
       type: 'Emotional Manipulation',
       severity: 'HIGH',
       evidence: emotionalEvidence,
-      points: 20,
+      points: 25,
       explanation: 'Leverages medical emergencies, accidents, or personal distress to manipulate empathy and prevent rational verification.'
     });
   }
