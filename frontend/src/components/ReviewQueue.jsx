@@ -330,7 +330,7 @@ export default function ReviewQueue({ onBackToAnalyzer, lang = 'bn', initialWall
                     {/* Expanded Evidence */}
                     {isExpanded && (
                       <div className="my-4 border-t border-slate-800 pt-3">
-                        <MuleNetworkGraph targetWallet={item.scam_type || initialWallet || '01700999001'} lang={lang} />
+                        <MuleNetworkGraph targetWallet={item.scam_type || initialWallet || 'cust_mule_04_unseen'} lang={lang} />
                       </div>
                     )}
 
@@ -401,7 +401,7 @@ export default function ReviewQueue({ onBackToAnalyzer, lang = 'bn', initialWall
             <h3 className="text-base font-bold text-white">{t('tabGraph')}</h3>
             <p className="text-xs text-slate-400 mt-0.5">{t('panelGraphDesc')}</p>
           </div>
-          <MuleNetworkGraph targetWallet={initialWallet || '01700999001'} lang={lang} />
+          <MuleNetworkGraph targetWallet={initialWallet || 'cust_mule_04_unseen'} lang={lang} />
         </div>
       )}
 

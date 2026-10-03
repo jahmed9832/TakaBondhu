@@ -119,8 +119,8 @@ TakaBondhu features an interactive Demo Bar at the top of the screen allowing in
 | **1. Fake Agent** | Upfront fee impersonation | Screener | Flagged HIGH / CRITICAL • Reason: Upay official impersonation • Soft Friction |
 | **2. OTP Harvest** | Credential theft | Screener | Flagged CRITICAL • Hold for review • PII auto-redacted |
 | **3. Account Takeover** | Unusual hour + new device | Pre-Send | ATO Risk flagged • 10-second countdown pause triggered |
-| **4. Mule Ring** | Rapid fan-in / fan-out | Fraud Ops | Top Wallet `01700999001` • SVG Graph shows 12 victims $\rightarrow$ 4 agents |
-| **5. Agent Anomaly** | ৳24,900 structuring | Fraud Ops | Agent `01800999001` • Z-score $5.2$ std dev vs district peer baseline |
+| **4. Mule Ring** | Rapid fan-in pooling | Fraud Ops | Wallet `cust_mule_04_unseen` • SVG Graph shows 4 victims pooling ৳2.5M |
+| **5. Agent Anomaly** | ৳24,500–৳24,950 structuring | Fraud Ops | Agent `agent_0001` • Z-score $5.0$ std dev vs district peer baseline |
 | **6. Benign Notice** | Official security advisory | Screener | Evaluated LOW (Safe) • Recommendation: ALLOW (no false alarm) |
 
 *(Note: Exact live scores and decisions are dynamically computed by the API; run `npm run demo:check` to inspect current output).*

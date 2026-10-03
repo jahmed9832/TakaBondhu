@@ -6,6 +6,13 @@
  * - Graceful fallback: returns { status: "unavailable" } without throwing
  */
 
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8001';
 const TIMEOUT_MS = 1500;
 const RETRY_DELAY_MS = 100;
@@ -176,26 +183,36 @@ export async function getMuleNetworkML(walletId) {
   } catch (err) {
     console.warn('[ML Client] getMuleNetworkML fallback:', err.message);
   }
-  if (walletId === '01700999001') {
-    return {
-      status: 'fallback',
-      wallet_id: walletId,
-      is_mule_suspect: true,
-      risk_score: 96.0,
-      total_inflow: 124000.0,
-      total_outflow: 120000.0,
-      nodes: [
-        { id: walletId, label: `Mule Hub (${walletId})`, type: 'customer', is_target: true, is_mule: true },
-        { id: '01711000001', label: 'Victim 01711000001', type: 'customer', is_target: false, is_mule: false },
-        { id: 'agent_0001', label: 'Agent agent_0001', type: 'agent', is_target: false, is_mule: false }
-      ],
-      edges: [
-        { source: '01711000001', target: walletId, amount: 10500.0, tx_count: 1, direction: 'inflow' },
-        { source: walletId, target: 'agent_0001', amount: 30000.0, tx_count: 2, direction: 'outflow' }
-      ],
-      reasons: ['High fan-in: received funds from 12 distinct senders', 'Rapid fund dispersion to agents']
-    };
+
+  // Pure data-driven fallback from precomputed graph cache if local service offline
+  try {
+    const cachePath = path.join(__dirname, '..', 'ml', 'models', 'graph_cache.json');
+    if (fs.existsSync(cachePath)) {
+      const cache = JSON.parse(fs.readFileSync(cachePath, 'utf-8'));
+      if (cache.subgraphs && cache.subgraphs[walletId]) {
+        return { status: 'offline_cache', ...cache.subgraphs[walletId] };
+      }
+      const stat = cache.stats_sample?.[walletId] || cache.top_suspects?.find(s => s.wallet_id === walletId);
+      if (stat) {
+        return {
+          status: 'offline_cache',
+          wallet_id: walletId,
+          is_mule_suspect: stat.is_mule_suspect ?? false,
+          risk_score: stat.risk_score ?? 10.0,
+          total_inflow: stat.total_inflow ?? 0.0,
+          total_outflow: stat.total_outflow ?? 0.0,
+          unique_senders: stat.unique_senders ?? 0,
+          unique_receivers: stat.unique_receivers ?? 0,
+          nodes: [{ id: walletId, label: walletId, type: 'customer', is_target: true, is_mule: stat.is_mule_suspect ?? false }],
+          edges: [],
+          reasons: stat.reasons || ['Network interaction recorded in graph baseline.']
+        };
+      }
+    }
+  } catch (fileErr) {
+    console.warn('[ML Client] Failed reading local graph cache:', fileErr.message);
   }
+
   return {
     status: 'fallback',
     wallet_id: walletId,
@@ -217,17 +234,42 @@ export async function getAgentRiskML(agentId) {
   } catch (err) {
     console.warn('[ML Client] getAgentRiskML fallback:', err.message);
   }
-  if (agentId === '01800999001') {
-    return {
-      status: 'fallback',
-      agent_id: agentId,
-      risk_score: 95.0,
-      risk_level: 'CRITICAL',
-      metrics: { cashouts_count: 148, total_volume: 1250000.0, structuring_ratio: 0.26, night_ratio: 0.22 },
-      z_scores: { z_structuring: 5.2, z_night: 4.8, z_volume: 3.9 },
-      reasons: ['Structuring anomaly: 26% cashouts in ৳24,000–৳24,999 (z=5.2)']
-    };
+
+  // Pure data-driven fallback from benchmark artifact if local service offline
+  try {
+    const benchPath = path.join(__dirname, '..', 'ml', 'models', 'agent_benchmarks.json');
+    if (fs.existsSync(benchPath)) {
+      const bench = JSON.parse(fs.readFileSync(benchPath, 'utf-8'));
+      const profile = bench.profiles_sample?.[agentId] || bench.high_risk_agents?.find(a => a.agent_id === agentId);
+      if (profile) {
+        return {
+          status: 'offline_cache',
+          agent_id: agentId,
+          risk_score: profile.risk_score,
+          risk_level: profile.risk_level,
+          metrics: {
+            cashouts_count: profile.n_cashouts,
+            total_volume: profile.total_volume,
+            structuring_ratio: profile.structuring_ratio,
+            night_ratio: profile.night_ratio,
+            peer_baseline: {
+              peer_mean_structuring: Number(bench.peer_metrics?.mean_structuring?.toFixed(4) || 0.0087),
+              peer_mean_night: Number(bench.peer_metrics?.mean_night?.toFixed(4) || 0.0074)
+            }
+          },
+          z_scores: {
+            z_structuring: profile.z_structuring,
+            z_night: profile.z_night,
+            z_volume: profile.z_volume
+          },
+          reasons: profile.reasons
+        };
+      }
+    }
+  } catch (fileErr) {
+    console.warn('[ML Client] Failed reading local agent benchmarks:', fileErr.message);
   }
+
   return {
     status: 'fallback',
     agent_id: agentId,

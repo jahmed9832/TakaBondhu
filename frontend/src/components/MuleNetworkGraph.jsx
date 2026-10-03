@@ -3,7 +3,7 @@ import { Network, ArrowRight, RefreshCw, AlertTriangle, Users, DollarSign, HelpC
 import { apiUrl } from '../apiConfig';
 import { useI18n } from '../i18n';
 
-export default function MuleNetworkGraph({ targetWallet = '01700999001', lang = 'bn' }) {
+export default function MuleNetworkGraph({ targetWallet = 'cust_mule_04_unseen', lang = 'bn' }) {
   const [wallet, setWallet] = useState(targetWallet);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);

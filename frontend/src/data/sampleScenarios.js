@@ -100,9 +100,9 @@ export const OFFICIAL_DEMO_SCENARIOS = [
     nameBn: '৪. মানি-মিউল নেটওয়ার্ক',
     targetView: 'review',
     category: 'Graph Network Analysis',
-    description: 'Wallet 01700999001 received 12 rapid inflows from separate victims followed by immediate cash-out to 4 agents.',
-    descriptionBn: '১২ জন ভিকটিমের টাকা এক ওয়ালেটে দ্রুত একত্রিত করে ৪টি এজেন্টের মাধ্যমে তাৎক্ষণিক ক্যাশ-আউট।',
-    muleWallet: '01700999001'
+    description: 'Wallet cust_mule_04_unseen received rapid repetitive inflows totaling ৳2.5M from 4 victims.',
+    descriptionBn: '৪ জন ভিকটিমের থেকে দ্রুত মোট ২৫ লাখ টাকার বেশি লেনদেন এক ওয়ালেটে (cust_mule_04_unseen) সংগ্রহ।',
+    muleWallet: 'cust_mule_04_unseen'
   },
   {
     id: 'demo-agent-anomaly',
@@ -110,9 +110,9 @@ export const OFFICIAL_DEMO_SCENARIOS = [
     nameBn: '৫. এজেন্ট অস্বাভাবিকতা ও স্মারফিং',
     targetView: 'review',
     category: 'Agent Anomaly',
-    description: 'Agent 01800999001 exhibits structuring behavior: repetitive ৳24,900 cash-outs at 2:00 AM (Z-score 5.2 std dev vs peer group).',
-    descriptionBn: 'লিমিট ফাঁকি দিতে রাত ২টায় বারবার ২৪,৯০০ টাকার ক্যাশ-আউট (সহকর্মীদের চেয়ে ৫.২ গুণ বেশি)।',
-    agentId: '01800999001'
+    description: 'Agent agent_0001 exhibits structuring behavior: repetitive ৳24,500–৳24,950 cash-outs at late night (Z-score 5.0 std dev vs peer group).',
+    descriptionBn: 'লিমিট ফাঁকি দিতে গভীর রাতে বারবার ২৪,৫০০-২৪,৯৫০ টাকার ক্যাশ-আউট (সহকর্মীদের চেয়ে ৫.০ গুণ বেশি Z-স্কোর)।',
+    agentId: 'agent_0001'
   },
   {
     id: 'demo-benign-lookalike',

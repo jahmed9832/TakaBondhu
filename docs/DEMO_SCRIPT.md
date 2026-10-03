@@ -85,10 +85,10 @@
 - **Visual Action:**
   1. Click **"Fraud Ops Console"**.
   2. View the risk queue sorted by risk score and review capacity.
-  3. Click on Case `#CASE-2026-9901` (Wallet `01700999001`).
+  3. Click on Case `#CASE-2026-9901` (Wallet `cust_mule_04_unseen`).
   4. Expand the **3-Question Case Card**:
-     - *What happened:* 12 victims deposited ৳148,000, followed by rapid cash-outs to 4 agents.
-     - *Why it is risky:* Classic fan-in/fan-out mule routing with sub-30 minute velocity.
+     - *What happened:* 4 victims deposited ৳2,505,408 across 246 repetitive transfers into a personal wallet.
+     - *Why it is risky:* Classic fan-in pooling pattern with extreme concentration and velocity.
      - *What upay should do now:* Place temporary hold on cash-out channels and escalate to compliance.
   5. Scroll to the **Mule Network Ego-Graph**: hover over the purple mule node and red victim nodes.
   6. Click **"Confirm Fraud"** button $\rightarrow$ Observe live telemetry update and append to the tamper-evident audit log.

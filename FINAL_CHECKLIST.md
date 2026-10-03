@@ -190,8 +190,8 @@ Click each button on the top **Demo Bar**:
 1. **"1. Fake Agent"** $\rightarrow$ See instant high-risk detection (HIGH/CRITICAL; see output of `npm run demo:check`) and plain-Bangla advice.
 2. **"2. OTP Harvest"** $\rightarrow$ See critical-risk credential theft flag (HIGH/CRITICAL; see output of `npm run demo:check`) and PII redaction.
 3. **"3. Account Takeover"** $\rightarrow$ Switch to Pre-Send Check; see 10-second soft-friction countdown on anomalous 03:15 AM transfer.
-4. **"4. Mule Ring"** $\rightarrow$ Switch to Fraud Ops; view interactive SVG graph of wallet `01700999001` showing 12 victims fanning in and 4 agents cashing out.
-5. **"5. Agent Anomaly"** $\rightarrow$ View agent `01800999001` structuring repetitive ৳24,900 cash-outs ($Z = 5.2$ std dev).
+4. **"4. Mule Ring"** $\rightarrow$ Switch to Fraud Ops; view interactive SVG graph of wallet `cust_mule_04_unseen` showing 4 victims pooling ৳2.5M.
+5. **"5. Agent Anomaly"** $\rightarrow$ View agent `agent_0001` structuring repetitive ৳24,500–৳24,950 cash-outs ($Z = 5.0$ std dev).
 6. **"6. Benign Notice"** $\rightarrow$ Test official advisory; see safe Low Risk score (LOW; see output of `npm run demo:check`) and zero false alarm.
 
 ### Step 4: Executive Business Impact

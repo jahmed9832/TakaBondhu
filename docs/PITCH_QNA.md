@@ -47,6 +47,11 @@ We disclose this directly in our ablation report: on pure tabular ledger transac
 **Answer:**
 On message text alone, our Message-ML model achieves **0.9996 PR-AUC** with 99.28% recall. However, in the transaction ledger ablation cohort, it scores **0.4818 PR-AUC**. The reason is simple and realistic: **most transactions do not have a linked user message**. Account takeovers (ATO), silent night-time wallet drains, and money mule structuring occur without an accompanying SMS or chat conversation. A model with access only to text is structurally blind to non-conversational fraud. Evaluating Message-ML on a full transaction ledger honestly highlights why single-modality defenses fail in MFS, and why multi-signal fusion is essential.
 
+#### Q8b: "How good is your mule-network detection?"
+**Answer:**
+In our graph evaluation (`ml/transactions/graph_analyzer.py`), our graph module detects pre-defined money-mule rings with **100% recall (3/3 non-holdout development rings and 2/2 quarantined unseen holdout rings)** using structural fan-in pooling velocity and excessive aggregate inflow metrics (> ৳2,000,000 received across 4 victims).
+However, we report an honest ablation finding: standalone graph topology without multi-modal transaction and device context produces lower precision across large-scale dynamic ledgers. Many legitimate commercial merchants or peer group treasurers also exhibit high in-degree. That is why TakaBondhu never relies on graph topology alone to block transactions; graph signals are weighted at 5% in our calibrated fusion engine to inform analyst review queues without causing customer disruption.
+
 ---
 
 ### Category 2: Business Economics & Impact (Questions 9–13)

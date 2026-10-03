@@ -62,7 +62,7 @@ We enforce six non-negotiable architectural invariants:
 ### Model Card 5: Agent Risk Benchmarking (`ml/models/agent_benchmarks.json`)
 - **Architecture:** Parametric peer comparison using Z-score deviations across peer agents in the same geographic district and turnover tier.
 - **Metrics Tracked:** Structuring ratio (transfers clustered between ৳24,000–৳24,999 to bypass the ৳25,000 threshold), night-time volume ratio (01:00 AM–05:00 AM), and cash-out velocity.
-- **Detection Benchmark:** Flags anomalous agents operating at $\ge 3.0$ standard deviations above peer baseline (e.g., Agent `01800999001` exhibits $Z = 5.2$ std dev).
+- **Detection Benchmark:** Flags anomalous agents operating at $\ge 3.0$ standard deviations above peer baseline (e.g., Agent `agent_0001` exhibits $Z = 5.0$ std dev on structuring and $Z = 5.6$ on night-time volume).
 
 ---
 

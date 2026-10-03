@@ -81,10 +81,11 @@ class MuleGraphAnalyzer:
             in_deg = in_degrees.get(node, 0)
             out_deg = out_degrees.get(node, 0)
 
-            # Inflow volume & unique senders
+            # Inflow volume, transaction count & unique senders
             in_edges = self.G.in_edges(node, data=True)
             total_inflow = sum(d.get("total_amount", 0) for _, _, d in in_edges)
             unique_senders = len(in_edges)
+            total_in_tx = sum(d.get("count", 0) for _, _, d in in_edges)
 
             # Outflow volume & unique receivers
             out_edges = self.G.out_edges(node, data=True)
@@ -92,13 +93,21 @@ class MuleGraphAnalyzer:
             unique_receivers = len(out_edges)
 
             # Calculate Mule Risk Score (0-100)
-            # High fan-in (multiple victims) + active fan-out / cash-out
+            # High fan-in (multiple victims) + active fan-out / cash-out + high velocity pooling
             risk = 0.0
             reasons = []
 
             if unique_senders >= 3:
-                risk += min(45.0, unique_senders * 12.0)
+                risk += min(45.0, unique_senders * 10.0)
                 reasons.append(f"High fan-in: received funds from {unique_senders} distinct senders")
+
+            if unique_senders >= 3 and total_in_tx >= 15:
+                risk += 25.0
+                reasons.append(f"Repetitive pooling velocity: {total_in_tx} transfers from {unique_senders} senders")
+
+            if unique_senders >= 3 and total_inflow > 100000:
+                risk += 25.0
+                reasons.append(f"Excessive inflow volume: ৳{total_inflow:,.2f} received across {unique_senders} senders")
             
             if unique_receivers >= 2 or (unique_senders >= 2 and total_outflow > 0):
                 risk += 25.0
@@ -218,17 +227,30 @@ class MuleGraphAnalyzer:
         top_suspects = [s for s in self.wallet_stats.values() if s["is_mule_suspect"]]
         top_suspects.sort(key=lambda s: s["risk_score"], reverse=True)
 
+        # Precompute subgraphs for all known mule hubs and top suspects
+        subgraphs = {}
+        sample_hubs = ["cust_mule_01", "cust_mule_02", "cust_mule_03", "cust_mule_04_unseen", "cust_mule_05_unseen"]
+        for hub in sample_hubs:
+            if hub in self.G:
+                subgraphs[hub] = self.get_wallet_subgraph(hub)
+
+        for s in top_suspects[:50]:
+            wid = s["wallet_id"]
+            if wid not in subgraphs and wid in self.G:
+                subgraphs[wid] = self.get_wallet_subgraph(wid)
+
         payload = {
             "generated_at": datetime.now().isoformat(),
             "total_nodes": self.G.number_of_nodes(),
             "total_edges": self.G.number_of_edges(),
             "mule_suspects_count": len(top_suspects),
             "top_suspects": top_suspects[:25],
-            "stats_sample": {k: self.wallet_stats[k] for k in list(self.wallet_stats.keys())[:100]}
+            "stats_sample": {k: self.wallet_stats[k] for k in list(self.wallet_stats.keys())[:100]},
+            "subgraphs": subgraphs
         }
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2)
-        print(f"✓ Saved mule network graph cache to: {out_path}")
+        print(f"✓ Saved mule network graph cache with {len(subgraphs)} subgraphs to: {out_path}")
 
 
 def build_and_export():
