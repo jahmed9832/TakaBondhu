@@ -26,8 +26,8 @@ if (fs.existsSync(backendEnv)) {
   dotenv.config();
 }
 
-// Ensure worker processes use moderate heap suitable for both local dev and cloud containers
-const heapLimit = process.env.NODE_MAX_MEM || (process.env.NODE_ENV === 'production' ? '128' : '2048');
+// Ensure worker processes use lean heap suitable for constrained local Windows memory & cloud containers
+const heapLimit = process.env.NODE_MAX_MEM || '256';
 if (!process.env.NODE_OPTIONS || !process.env.NODE_OPTIONS.includes('--max-old-space-size')) {
   process.env.NODE_OPTIONS = `${process.env.NODE_OPTIONS || ''} --max-old-space-size=${heapLimit}`.trim();
 }
