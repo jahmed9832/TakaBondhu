@@ -1,0 +1,142 @@
+{
+  "status": "success",
+  "generated_at": "2026-10-03T12:12:24.241222",
+  "disclaimer": "All figures illustrative, assumption-driven. Computed from real held-out test evaluation metrics combined with stated operational assumptions.",
+  "real_model_inputs": {
+    "recall": 0.9832,
+    "fpr": 0.0041,
+    "recall_at_top20_review_capacity": 0.8226,
+    "precision_at_top20_review_capacity": 0.9666,
+    "precision_at_5pct_prevalence": 0.9262
+  },
+  "per_100k_transactions": {
+    "conservative_worst": {
+      "transactions": 100000,
+      "scam_attempts": 480.0,
+      "scams_intercepted": 394.8,
+      "loss_prevented_bdt": 616703.22,
+      "analyst_hours_saved": 126.5,
+      "labor_saved_bdt": 82194.84,
+      "friction_fp_cost_bdt": 19891.56,
+      "allocated_program_cost_bdt": 10277.78,
+      "net_benefit_bdt": 668728.72,
+      "net_benefit_usd": 5572.74
+    },
+    "base_expected": {
+      "transactions": 100000,
+      "scam_attempts": 800.0,
+      "scams_intercepted": 658.1,
+      "loss_prevented_bdt": 1957788.0,
+      "analyst_hours_saved": 239.6,
+      "labor_saved_bdt": 155727.0,
+      "friction_fp_cost_bdt": 19827.6,
+      "allocated_program_cost_bdt": 10277.78,
+      "net_benefit_bdt": 2083409.62,
+      "net_benefit_usd": 17361.75
+    },
+    "optimistic_best": {
+      "transactions": 100000,
+      "scam_attempts": 1120.0,
+      "scams_intercepted": 921.3,
+      "loss_prevented_bdt": 4111354.8,
+      "analyst_hours_saved": 358.2,
+      "labor_saved_bdt": 232839.36,
+      "friction_fp_cost_bdt": 19763.64,
+      "allocated_program_cost_bdt": 10277.78,
+      "net_benefit_bdt": 4314152.74,
+      "net_benefit_usd": 35951.27
+    }
+  },
+  "macro_annual_metrics": {
+    "monthly_transactions": 15000000,
+    "monthly_scam_attempts_estimated": 120000,
+    "monthly_scams_intercepted": 98712,
+    "monthly_loss_prevented_bdt": 293668200.0,
+    "annual_loss_prevented_bdt": 3524018400.0,
+    "annual_loss_prevented_usd": 29366820.0,
+    "analyst_hours_saved_monthly": 4050.0,
+    "labor_savings_annual_bdt": 31590000.0,
+    "annual_program_cost_bdt": 18500000.0,
+    "net_annual_benefit_bdt": 3501418720.0,
+    "net_annual_benefit_usd": 29178489.33
+  },
+  "macro_sensitivity_analysis": {
+    "conservative_worst": {
+      "annual_loss_prevented_bdt": 1110065796.0,
+      "annual_labor_saved_bdt": 22113000.0,
+      "annual_program_cost_bdt": 18500000.0,
+      "net_annual_benefit_bdt": 1077989116.0,
+      "net_annual_benefit_usd": 8983242.63
+    },
+    "base_expected": {
+      "annual_loss_prevented_bdt": 3524018400.0,
+      "annual_labor_saved_bdt": 31590000.0,
+      "annual_program_cost_bdt": 18500000.0,
+      "net_annual_benefit_bdt": 3501418720.0,
+      "net_annual_benefit_usd": 29178489.33
+    },
+    "optimistic_best": {
+      "annual_loss_prevented_bdt": 7400438640.0,
+      "annual_labor_saved_bdt": 37908000.0,
+      "annual_program_cost_bdt": 18500000.0,
+      "net_annual_benefit_bdt": 7384156960.0,
+      "net_annual_benefit_usd": 61534641.33
+    }
+  },
+  "assumptions": {
+    "monthly_transactions": {
+      "value": 15000000,
+      "unit": "transactions/month",
+      "type": "ASSUMPTION",
+      "rationale": "Representative monthly transaction throughput for an established national MFS provider in Bangladesh."
+    },
+    "scam_attempt_rate": {
+      "value": 0.008,
+      "unit": "fraction",
+      "type": "ASSUMPTION",
+      "rationale": "Estimated 0.8% of transaction volume targeted by phishing, impersonation, or account takeover attempts."
+    },
+    "avg_loss_per_successful_scam_bdt": {
+      "value": 8500,
+      "unit": "BDT",
+      "type": "ASSUMPTION",
+      "rationale": "Average reported victim financial loss per successful mobile financial services fraud incident."
+    },
+    "analyst_cost_per_hour_bdt": {
+      "value": 650,
+      "unit": "BDT/hour",
+      "type": "ASSUMPTION",
+      "rationale": "Fully burdened hourly cost of Level-1 / Level-2 fraud operations review personnel in Dhaka."
+    },
+    "baseline_minutes_per_case": {
+      "value": 18.0,
+      "unit": "minutes",
+      "type": "ASSUMPTION",
+      "rationale": "Average manual investigation time required to reconstruct transaction logs, SMS history, and agent checks without AI support."
+    },
+    "takabondhu_minutes_per_case": {
+      "value": 4.5,
+      "unit": "minutes",
+      "type": "ASSUMPTION",
+      "rationale": "Streamlined investigation time using automated 3-part case cards, rule traces, and mule network graph visualizers (75% time reduction)."
+    },
+    "analyst_daily_review_capacity": {
+      "value": 600,
+      "unit": "cases/day",
+      "type": "ASSUMPTION",
+      "rationale": "Target daily operational triage capacity for human fraud operations team."
+    },
+    "attempt_success_rate": {
+      "value": 0.35,
+      "unit": "fraction",
+      "type": "ASSUMPTION",
+      "rationale": "Conservative assumption that 35% of scam attempts would succeed in actual fund extraction if no safety friction was applied."
+    },
+    "program_cost_annual_bdt": {
+      "value": 18500000,
+      "unit": "BDT/year",
+      "type": "ASSUMPTION",
+      "rationale": "Estimated annual software licensing, cloud compute inference infrastructure, monitoring, and program maintenance expenses (~$154,000 USD/year)."
+    }
+  }
+}

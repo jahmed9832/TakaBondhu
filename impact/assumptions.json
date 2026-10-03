@@ -1,0 +1,56 @@
+{
+  "monthly_transactions": {
+    "value": 15000000,
+    "unit": "transactions/month",
+    "type": "ASSUMPTION",
+    "rationale": "Representative monthly transaction throughput for an established national MFS provider in Bangladesh."
+  },
+  "scam_attempt_rate": {
+    "value": 0.008,
+    "unit": "fraction",
+    "type": "ASSUMPTION",
+    "rationale": "Estimated 0.8% of transaction volume targeted by phishing, impersonation, or account takeover attempts."
+  },
+  "avg_loss_per_successful_scam_bdt": {
+    "value": 8500,
+    "unit": "BDT",
+    "type": "ASSUMPTION",
+    "rationale": "Average reported victim financial loss per successful mobile financial services fraud incident."
+  },
+  "analyst_cost_per_hour_bdt": {
+    "value": 650,
+    "unit": "BDT/hour",
+    "type": "ASSUMPTION",
+    "rationale": "Fully burdened hourly cost of Level-1 / Level-2 fraud operations review personnel in Dhaka."
+  },
+  "baseline_minutes_per_case": {
+    "value": 18.0,
+    "unit": "minutes",
+    "type": "ASSUMPTION",
+    "rationale": "Average manual investigation time required to reconstruct transaction logs, SMS history, and agent checks without AI support."
+  },
+  "takabondhu_minutes_per_case": {
+    "value": 4.5,
+    "unit": "minutes",
+    "type": "ASSUMPTION",
+    "rationale": "Streamlined investigation time using automated 3-part case cards, rule traces, and mule network graph visualizers (75% time reduction)."
+  },
+  "analyst_daily_review_capacity": {
+    "value": 600,
+    "unit": "cases/day",
+    "type": "ASSUMPTION",
+    "rationale": "Target daily operational triage capacity for human fraud operations team."
+  },
+  "attempt_success_rate": {
+    "value": 0.35,
+    "unit": "fraction",
+    "type": "ASSUMPTION",
+    "rationale": "Conservative assumption that 35% of scam attempts would succeed in actual fund extraction if no safety friction was applied."
+  },
+  "program_cost_annual_bdt": {
+    "value": 18500000,
+    "unit": "BDT/year",
+    "type": "ASSUMPTION",
+    "rationale": "Estimated annual software licensing, cloud compute inference infrastructure, monitoring, and program maintenance expenses (~$154,000 USD/year)."
+  }
+}
