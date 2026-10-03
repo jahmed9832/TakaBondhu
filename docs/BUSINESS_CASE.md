@@ -6,11 +6,31 @@
 
 > [!NOTE]
 > **Provenance Notice (Illustrative, Assumption-Driven):**  
-> All financial projections below are illustrative, assumption-driven estimates. They are calculated by feeding **executable held-out machine learning evaluation metrics** (`results.json`) into the transparent parameters declared in `impact/assumptions.json` (such as `attempt_success_rate = 35%` and `program_cost_annual_bdt = ৳18,500,000`).
+> All financial projections below are illustrative, assumption-driven estimates based on stated assumptions and a synthetic benchmark, not real upay data.
+> Calculated using:
+> 1. Transparent assumptions declared in `impact/assumptions.json` (`attempt_success_rate = 35%`, `avg_loss = ৳8,500`, `yearly_running_cost = ৳18,500,000`).
+> 2. Real held-out evaluation metrics in `ml/reports/results.json` (`recall_at_capacity = 82.26%`).
 
 ---
 
-## 1. Normalized Unit Economics: Per 100,000 Transactions
+## 1. Transparent Step-by-Step Money-Saved Formula
+TakaBondhu computes expected annual financial savings using the transparent formula:
+
+$$\text{Annual Net Saved (৳)} = (\text{Monthly Attempts} \times \text{\% Caught} \times \text{\% Successful} \times \text{Avg Loss} \times 12) - \text{Yearly Running Cost}$$
+
+### Standard Scenario (10,000 scam attempts / month):
+- **Monthly Scam Attempts:** 10,000 attempts
+- **% TakaBondhu Catches:** **82.26%** (empirical recall at review capacity from `ml/reports/results.json`)
+- **% That Would Have Succeeded:** **35%** (from `impact/assumptions.json`)
+- **Average Loss Per Scam:** **৳8,500** (from `impact/assumptions.json`)
+- **Gross Monthly Loss Prevented:** $10,000 \times 0.8226 \times 0.35 \times ৳8,500 = \text{৳24,472,350/month}$
+- **Gross Annual Loss Prevented:** $\text{৳24,472,350} \times 12 = \text{৳293,668,200/year}$ (~৳29.4 কোটি)
+- **Less Yearly Running Cost:** $\text{৳18,500,000/year}$ (~৳1.85 কোটি, infrastructure, operations, telemetry)
+- **Net Annual Money Saved:** $\text{৳293,668,200} - \text{৳18,500,000} = \mathbf{৳275,168,200\text{/year}}\;(\mathbf{৳27.5\text{ কোটি/বছর}})$
+
+---
+
+## 2. Normalized Unit Economics: Per 100,000 Transactions
 To provide an honest, conservative perspective independent of macroeconomic volume assumptions, the table below reports performance per **100,000 processed transactions**:
 
 | Impact Metric | Conservative (Worst-Case) | Base Expected | Optimistic (Best-Case) |

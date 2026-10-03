@@ -1,470 +1,360 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   DollarSign, 
-  TrendingUp, 
-  Clock, 
+  HelpCircle, 
+  Sparkles, 
+  ArrowRight, 
   ShieldCheck, 
-  Sliders, 
-  Info, 
-  Layers, 
-  ArrowRight,
-  CheckCircle2,
-  Calendar,
-  AlertTriangle,
-  RefreshCw,
-  Cpu
+  AlertCircle,
+  ToggleLeft,
+  ToggleRight
 } from 'lucide-react';
 
 export default function ImpactSimulator({ lang = 'bn', isLargeText = false }) {
-  // Configurable operational assumptions
-  const [transactions, setTransactions] = useState(15000000); // 15M/mo
-  const [scamRate, setScamRate] = useState(0.8); // 0.8% attempts
-  const [attemptSuccessRate, setAttemptSuccessRate] = useState(35); // 35% success if unblocked
-  const [avgLoss, setAvgLoss] = useState(8500); // ৳8,500
-  const [hourlyCost, setHourlyCost] = useState(650); // ৳650/hr
-  const [programCostAnnual, setProgramCostAnnual] = useState(18500000); // ৳18.5M annual infra + ops
-  const [viewMode, setViewMode] = useState('per100k'); // 'per100k' | 'macro'
+  // 3 user inputs with plain labels
+  const [attempts, setAttempts] = useState(10000);
+  const [avgLoss, setAvgLoss] = useState(8500);
+  const [successRate, setSuccessRate] = useState(35);
 
-  // Model performance from frozen test_time evaluation (ml/reports/results.json)
-  const recallAtCapacity = 0.8226; // 82.26% recall at 20/1,000 capacity
-  const precisionAtCapacity = 0.9666; // 96.66% precision at capacity
-  const fpr = 0.0041; // 0.41% FPR
-  const hoursSavedPerCase = (18.0 - 4.5) / 60.0; // 0.225 hrs saved per case triage
+  // Loaded strictly from API (ml/reports/results.json & impact/assumptions.json)
+  const [catchRate, setCatchRate] = useState(null);
+  const [yearlyRunningCost, setYearlyRunningCost] = useState(null);
+  const [scenariosData, setScenariosData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [formatInWords, setFormatInWords] = useState(true);
 
-  // --- Normalized Per 100,000 Transactions Unit Economics ---
-  const attemptsPer100k = 100000 * (scamRate / 100.0);
-  const interceptedPer100k = attemptsPer100k * recallAtCapacity;
-  const successfulInterceptedPer100k = interceptedPer100k * (attemptSuccessRate / 100.0);
-  const lossPreventedPer100k = successfulInterceptedPer100k * avgLoss;
-
-  const casesTriagedPer100k = interceptedPer100k + (100000 * fpr);
-  const analystHoursSavedPer100k = casesTriagedPer100k * hoursSavedPerCase;
-  const laborSavedPer100k = analystHoursSavedPer100k * hourlyCost;
-
-  const annualTx = transactions * 12;
-  const allocatedProgramCostPer100k = programCostAnnual / (annualTx / 100000.0);
-  const netBenefitPer100k = lossPreventedPer100k + laborSavedPer100k - allocatedProgramCostPer100k;
-  const netBenefitPer100kUSD = netBenefitPer100k / 120.0;
-
-  // --- Macro Monthly & Annual Projections ---
-  const totalScamsMonth = transactions * (scamRate / 100.0);
-  const scamsInterceptedMonth = totalScamsMonth * recallAtCapacity;
-  const successfulScamsInterceptedMonth = scamsInterceptedMonth * (attemptSuccessRate / 100.0);
-  const lossPreventedMonth = successfulScamsInterceptedMonth * avgLoss;
-  const lossPreventedYear = lossPreventedMonth * 12;
-  const lossPreventedYearUSD = lossPreventedYear / 120.0;
-
-  const casesTriagedMonth = Math.min(600 * 30, scamsInterceptedMonth + (transactions * fpr));
-  const analystHoursSavedMonth = casesTriagedMonth * hoursSavedPerCase;
-  const laborSavedYear = analystHoursSavedMonth * hourlyCost * 12;
-  const netAnnualBenefit = lossPreventedYear + laborSavedYear - programCostAnnual;
-  const netAnnualBenefitUSD = netAnnualBenefit / 120.0;
-
-  // Scenarios for sensitivity matrix (per 100,000 transactions)
-  const scenariosPer100k = {
-    worst: {
-      loss: lossPreventedPer100k * 0.315, // -40% rate, -25% loss, -30% success
-      labor: laborSavedPer100k * 0.528,
-      cost: allocatedProgramCostPer100k,
-      get net() { return this.loss + this.labor - this.cost; },
-      get netUSD() { return this.net / 120.0; }
-    },
-    base: {
-      loss: lossPreventedPer100k,
-      labor: laborSavedPer100k,
-      cost: allocatedProgramCostPer100k,
-      get net() { return this.loss + this.labor - this.cost; },
-      get netUSD() { return this.net / 120.0; }
-    },
-    best: {
-      loss: lossPreventedPer100k * 2.10, // +40% rate, +25% loss, +20% success
-      labor: laborSavedPer100k * 1.495,
-      cost: allocatedProgramCostPer100k,
-      get net() { return this.loss + this.labor - this.cost; },
-      get netUSD() { return this.net / 120.0; }
+  useEffect(() => {
+    let isMounted = true;
+    async function loadConfig() {
+      try {
+        const res = await fetch('/v1/impact/config');
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted) {
+            setCatchRate(data.metrics?.catch_rate_pct ?? null);
+            setYearlyRunningCost(data.metrics?.yearly_running_cost_bdt ?? null);
+            setAvgLoss(data.defaults?.avg_loss_per_scam_bdt ?? 8500);
+            setSuccessRate(data.defaults?.attempt_success_rate_pct ?? 35);
+            setAttempts(data.defaults?.scam_attempts_per_month ?? 10000);
+            setScenariosData(data.scenarios ?? null);
+            setIsLoading(false);
+          }
+          return;
+        }
+      } catch {
+        // Retry with backend url if running on Vite dev port
+        try {
+          const res2 = await fetch('http://127.0.0.1:5000/v1/impact/config');
+          if (res2.ok) {
+            const data = await res2.json();
+            if (isMounted) {
+              setCatchRate(data.metrics?.catch_rate_pct ?? null);
+              setYearlyRunningCost(data.metrics?.yearly_running_cost_bdt ?? null);
+              setAvgLoss(data.defaults?.avg_loss_per_scam_bdt ?? 8500);
+              setSuccessRate(data.defaults?.attempt_success_rate_pct ?? 35);
+              setAttempts(data.defaults?.scam_attempts_per_month ?? 10000);
+              setScenariosData(data.scenarios ?? null);
+              setIsLoading(false);
+            }
+            return;
+          }
+        } catch {
+          // Keep loading state until connected
+        }
+      }
+      if (isMounted) setIsLoading(false);
     }
+    loadConfig();
+    return () => { isMounted = false; };
+  }, []);
+
+  // Format currency either in Words (Lakh/Crore) or full digits
+  const formatBDT = (amount, inWords = formatInWords) => {
+    if (typeof amount !== 'number' || isNaN(amount)) return '৳০';
+    const rounded = Math.round(amount);
+
+    if (inWords) {
+      if (Math.abs(rounded) >= 10000000) {
+        const crore = (rounded / 10000000).toFixed(1);
+        return `৳${crore} ${lang === 'bn' ? 'কোটি' : 'Crore'}`;
+      }
+      if (Math.abs(rounded) >= 100000) {
+        const lakh = (rounded / 100000).toFixed(1);
+        return `৳${lakh} ${lang === 'bn' ? 'লক্ষ' : 'Lakh'}`;
+      }
+    }
+    return `৳${rounded.toLocaleString('en-US')}`;
   };
 
-  const t = {
-    bn: {
-      title: 'ব্যবসায়িক প্রভাব ও অর্থনৈতিক রিটার্ন সিমুলেটর',
-      subtitle: 'রিয়েল টেস্ট-সেট মডেলের ফলাফলের সাথে সমন্বয় করে প্রতি ১,০০,০০০ লেনদেনে নেট লাভ হিসাব করুন।',
-      disclaimer: 'সকল হিসাব অনুমিত এবং সিন্থেটিক বেঞ্চমার্ক ও ঘোষিত অনুমানের উপর ভিত্তি করে প্রদর্শিত (Illustrative, assumption-driven)।',
-      togglePer100k: 'প্রতি ১,০০,০০০ লেনদেনে (স্ট্যান্ডার্ড)',
-      toggleMacro: 'বার্ষিক সামগ্রিক ভলিউম (ম্যাক্রো)',
-      monthlyTx: 'মাসিক লেনদেন ভলিউম',
-      scamPrevalence: 'অনুমানকৃত প্রতারণা চেষ্টার হার (%)',
-      attemptSuccess: 'চেষ্টা সফলতার হার (অবাধ অবস্থায় %)',
-      avgLossLabel: 'গড় আর্থিক ক্ষতি (টাকা/ঘটনা)',
-      analystCost: 'অ্যানালিস্ট প্রতি ঘণ্টার খরচ (টাকা/ঘণ্টা)',
-      programCost: 'বার্ষিক প্রোগ্রাম ও ক্লাউড খরচ (টাকা/বছর)',
-      kpiLossPrevented: 'প্রত্যক্ষ আর্থিক ক্ষতি প্রতিরোধ',
-      kpiLaborSaved: 'অ্যানালিস্ট শ্রম সাশ্রয়',
-      kpiProgramCost: 'প্রোগ্রাম খরচ কর্তন (Infra+Ops)',
-      kpiNetBenefit: 'নেট অপারেশনাল লাভ (খরচ বাদে)',
-      conservative: 'রক্ষণশীল (Worst-case)',
-      base: 'প্রত্যাশিত (Base-case)',
-      optimistic: 'অনুকূল (Best-case)',
-      rolloutTitle: 'উপায় সিস্টেমে ধাপে ধাপে রোলআউট পরিকল্পনা',
-      phase1: 'ফেজ ১: শ্যাডো মোড (১ম ৩০ দিন) — কোনো ইন্টারাপশন ছাড়া ব্যাকগ্রাউন্ড ড্রিফট পর্যবেক্ষণ।',
-      phase2: 'ফেজ ২: সফট ফ্রিকশন (৩১-৯০ দিন) — মাঝারি ঝুঁকিতে ৫ সেকেন্ডের সতর্কতামূলক বিরতি।',
-      phase3: 'ফেজ ৩: হিউম্যান-রিভিউড হোল্ড (৯১+ দিন) — উচ্চ ঝুঁকিপূর্ণ লেনদেন ফ্রড টিমে জমা।'
-    },
-    en: {
-      title: 'Business Impact & Economic Return Simulator',
-      subtitle: 'Calculate projected financial protection for Upay combining real model benchmarks with transparent assumptions.',
-      disclaimer: 'All figures illustrative, assumption-driven. Computed from real held-out test evaluation metrics combined with stated operational assumptions.',
-      togglePer100k: 'Per 100k Transactions (Standard)',
-      toggleMacro: 'Annual Macro View',
-      monthlyTx: 'Monthly Transaction Throughput',
-      scamPrevalence: 'Estimated Scam Attempt Rate (%)',
-      attemptSuccess: 'Attempt Success Rate (If Unblocked %)',
-      avgLossLabel: 'Avg Loss per Incident (BDT)',
-      analystCost: 'Analyst Hourly Cost (BDT/hr)',
-      programCost: 'Annual Program Cost (Infra + Ops BDT)',
-      kpiLossPrevented: 'Direct Fraud Loss Prevented',
-      kpiLaborSaved: 'Analyst Labor Hours Saved',
-      kpiProgramCost: 'Allocated Program Cost',
-      kpiNetBenefit: 'Net Economic Value (After Cost)',
-      conservative: 'Conservative (Worst)',
-      base: 'Expected (Base)',
-      optimistic: 'Optimistic (Best)',
-      rolloutTitle: 'Phased Upay Core Deployment Strategy',
-      phase1: 'Phase 1: Shadow Mode (Days 1–30) — Background latency & drift telemetry with 0 user friction.',
-      phase2: 'Phase 2: Soft Friction (Days 31–90) — Friendly 5-second reflection delay on medium risk.',
-      phase3: 'Phase 3: Human-Reviewed Hold (Days 91+) — High-risk cases held in triage queue for Ops.'
-    }
-  }[lang] || {};
+  // Safe fallback catch rate & running cost from config only
+  const activeCatchRate = catchRate ?? 0;
+  const activeRunningCost = yearlyRunningCost ?? 0;
+
+  // Formula: attempts × % TakaBondhu catches × % that would have succeeded × avg loss × 12 − yearly running cost
+  const monthlyGrossSaved = attempts * (activeCatchRate / 100) * (successRate / 100) * avgLoss;
+  const yearlyGrossSaved = monthlyGrossSaved * 12;
+  const yearlyNetSaved = Math.max(0, yearlyGrossSaved - activeRunningCost);
+
+  // Scenario computations
+  const getScenarioSaved = (scenarioKey) => {
+    const s = scenariosData?.[scenarioKey];
+    if (!s) return yearlyNetSaved;
+    const sCatch = s.catch_rate_pct;
+    const sSucc = s.success_rate_pct;
+    const sLoss = avgLoss * (s.loss_multiplier || 1.0);
+    const gross = attempts * (sCatch / 100) * (sSucc / 100) * sLoss * 12;
+    return Math.max(0, gross - activeRunningCost);
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in">
-      
-      {/* Title & View Switcher */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <div className="space-y-6 max-w-4xl mx-auto">
+      {/* 1. Visible Provenance & Assumptions Disclaimer Banner */}
+      <div 
+        className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-amber-200 text-sm flex items-start gap-3 shadow-sm"
+        role="alert"
+      >
+        <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <div className="leading-relaxed">
+          <span className="font-semibold text-amber-300 block mb-0.5">
+            {lang === 'bn' ? 'স্বচ্ছ অনুমান বিজ্ঞপ্তি' : 'Transparency Notice'}
+          </span>
+          {lang === 'bn' 
+            ? 'Illustrative estimate based on stated assumptions and a synthetic benchmark, not real upay data / শুধু অনুমান — বাস্তব উপায় ডেটা নয়'
+            : 'Illustrative estimate based on stated assumptions and a synthetic benchmark, not real upay data.'
+          }
+        </div>
+      </div>
+
+      {/* 2. Top Header and Toggle */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-700/60 pb-4">
         <div>
-          <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-semibold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-              Track 01 Business Economics
-            </span>
-            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-semibold uppercase tracking-wider bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
-              Illustrative • Assumption-Driven
-            </span>
-          </div>
-          <h2 className="text-2xl font-black text-white tracking-tight mt-2 flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-emerald-400" />
-            <span>{t.title}</span>
+          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <DollarSign className="w-6 h-6 text-emerald-400" />
+            {lang === 'bn' ? 'কত টাকা বাঁচবে (সিমুলেটর)' : 'Money Saved Calculator'}
           </h2>
-          <p className="text-slate-400 text-sm mt-1">{t.subtitle}</p>
+          <p className="text-slate-400 text-sm mt-1">
+            {lang === 'bn' 
+              ? '৩টি সহজ তথ্য দিয়ে দেখুন TakaBondhu বছরে সম্ভাব্য কত কোটি টাকা বাঁচাতে সাহায্য করবে।'
+              : 'Enter 3 simple metrics to see estimated annual scam loss savings.'
+            }
+          </p>
         </div>
 
-        {/* View Mode Toggle */}
-        <div className="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-semibold">
-          <button
-            onClick={() => setViewMode('per100k')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              viewMode === 'per100k'
-                ? 'bg-cyan-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            {t.togglePer100k}
-          </button>
-          <button
-            onClick={() => setViewMode('macro')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              viewMode === 'macro'
-                ? 'bg-cyan-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            {t.toggleMacro}
-          </button>
-        </div>
+        {/* ৳ + words toggle */}
+        <button
+          onClick={() => setFormatInWords(!formatInWords)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 transition-colors"
+          title={lang === 'bn' ? 'টাকার অংক কথায় (কোটি/লক্ষ) অথবা সংখ্যায় দেখুন' : 'Toggle currency in words vs numbers'}
+        >
+          {formatInWords ? (
+            <ToggleRight className="w-5 h-5 text-emerald-400" />
+          ) : (
+            <ToggleLeft className="w-5 h-5 text-slate-400" />
+          )}
+          <span>{formatInWords ? (lang === 'bn' ? '৳ কথায় (কোটি/লক্ষ)' : '৳ In Words (Crore/Lakh)') : (lang === 'bn' ? '৳ সংখ্যায়' : '৳ Exact Number')}</span>
+        </button>
       </div>
 
-      {/* Mandatory Honesty Banner */}
-      <div className="p-4 rounded-2xl bg-navy-900 border border-slate-800 text-xs text-slate-300 flex items-center gap-3 mb-8">
-        <Info className="w-5 h-5 text-cyan-400 shrink-0" />
-        <span>
-          <strong className="text-white font-semibold">Transparency Note:</strong> {t.disclaimer} Operational assumptions (attempt rate, success rate, program cost) are declared in <code className="text-cyan-300 font-mono">impact/assumptions.json</code> and validated on held-out test splits.
-        </span>
-      </div>
-
-      {/* Primary KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        {/* KPI 1: Loss Prevented */}
-        <div className="p-5 rounded-3xl bg-navy-900 border border-emerald-500/30 shadow-xl relative overflow-hidden">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
-            {t.kpiLossPrevented}
-          </span>
-          <div className="text-2xl font-black text-emerald-400 tracking-tight font-mono">
-            {viewMode === 'per100k' ? (
-              <>৳{(lossPreventedPer100k / 100000).toFixed(2)} <span className="text-xs font-normal text-slate-400">Lakh / 100k tx</span></>
-            ) : (
-              <>৳{(lossPreventedYear / 1000000).toFixed(1)} <span className="text-xs font-normal text-slate-400">M BDT / yr</span></>
-            )}
-          </div>
-          <span className="text-xs text-slate-400 block mt-1 font-mono">
-            {viewMode === 'per100k'
-              ? `~ $${(lossPreventedPer100k / 120.0).toFixed(0)} USD`
-              : `~ $${(lossPreventedYearUSD / 1000000).toFixed(2)}M USD`}
-          </span>
-        </div>
-
-        {/* KPI 2: Labor Hours Saved */}
-        <div className="p-5 rounded-3xl bg-navy-900 border border-cyan-500/30 shadow-xl relative overflow-hidden">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
-            {t.kpiLaborSaved}
-          </span>
-          <div className="text-2xl font-black text-cyan-400 tracking-tight font-mono">
-            {viewMode === 'per100k' ? (
-              <>{analystHoursSavedPer100k.toFixed(1)} <span className="text-xs font-normal text-slate-400">hrs / 100k tx</span></>
-            ) : (
-              <>{(analystHoursSavedMonth * 12).toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="text-xs font-normal text-slate-400">hrs / yr</span></>
-            )}
-          </div>
-          <span className="text-xs text-slate-400 block mt-1 font-mono">
-            {viewMode === 'per100k' 
-              ? `৳${Math.round(laborSavedPer100k).toLocaleString()} labor value`
-              : `৳${(laborSavedYear / 1000000).toFixed(2)}M labor value`}
-          </span>
-        </div>
-
-        {/* KPI 3: Program Cost */}
-        <div className="p-5 rounded-3xl bg-navy-900 border border-amber-500/30 shadow-xl relative overflow-hidden">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
-            {t.kpiProgramCost}
-          </span>
-          <div className="text-2xl font-black text-amber-400 tracking-tight font-mono">
-            {viewMode === 'per100k' ? (
-              <>৳{Math.round(allocatedProgramCostPer100k).toLocaleString()} <span className="text-xs font-normal text-slate-400">/ 100k tx</span></>
-            ) : (
-              <>৳{(programCostAnnual / 1000000).toFixed(1)} <span className="text-xs font-normal text-slate-400">M BDT / yr</span></>
-            )}
-          </div>
-          <span className="text-xs text-slate-400 block mt-1">
-            Infra hosting + 2 AML analysts
-          </span>
-        </div>
-
-        {/* KPI 4: Net Benefit (After Cost) */}
-        <div className="p-5 rounded-3xl bg-navy-900 border border-violet-500/40 shadow-xl relative overflow-hidden">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
-            {t.kpiNetBenefit}
-          </span>
-          <div className="text-2xl font-black text-violet-300 tracking-tight font-mono">
-            {viewMode === 'per100k' ? (
-              <>৳{(netBenefitPer100k / 100000).toFixed(2)} <span className="text-xs font-normal text-slate-400">Lakh / 100k tx</span></>
-            ) : (
-              <>৳{(netAnnualBenefit / 1000000).toFixed(1)} <span className="text-xs font-normal text-slate-400">M BDT net</span></>
-            )}
-          </div>
-          <span className="text-xs text-slate-400 block mt-1 font-mono">
-            {viewMode === 'per100k'
-              ? `~ $${netBenefitPer100kUSD.toFixed(0)} USD net benefit`
-              : `~ $${(netAnnualBenefitUSD / 1000000).toFixed(2)}M USD net`}
-          </span>
-        </div>
-      </div>
-
-      {/* Sliders Grid: Operational Assumptions */}
-      <div className="bg-navy-900 border border-slate-800 rounded-3xl p-6 shadow-xl mb-8">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-cyan-400" />
-            <span>Interactive Operational Assumptions</span>
-          </h3>
-          <span className="text-xs text-slate-400 font-mono">Real-Time Recalculation</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Slider 1: Monthly Throughput */}
+      {/* 3. The 3 Simple Inputs */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Input 1: Scam attempts per month */}
+        <div className="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex justify-between text-xs mb-1.5 font-semibold">
-              <span className="text-slate-300">{t.monthlyTx}</span>
-              <span className="text-cyan-400 font-mono">{(transactions / 1000000).toFixed(1)}M / mo</span>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="input-attempts" className="text-sm font-semibold text-slate-200">
+                {lang === 'bn' ? 'মাসে কতটি স্ক্যাম চেষ্টা হয়' : 'Scam attempts per month'}
+              </label>
+              <span 
+                className="text-slate-400 hover:text-slate-200 cursor-help"
+                title={lang === 'bn' ? 'প্রতি মাসে গ্রাহকদের লক্ষ্য করে প্রতারণার চেষ্টার আনুমানিক সংখ্যা (ডিফল্ট ১০,০০০)' : 'Estimated scam attempts targeted at customers each month'}
+              >
+                <HelpCircle className="w-4 h-4" />
+              </span>
             </div>
+            <p className="text-xs text-slate-400 mb-3">
+              {lang === 'bn' ? 'ডিফল্ট: ১০,০০০ টি / মাস' : 'Default: 10,000 / month'}
+            </p>
+          </div>
+          <div className="relative">
             <input
-              type="range"
-              min="5000000"
-              max="40000000"
-              step="1000000"
-              value={transactions}
-              onChange={(e) => setTransactions(Number(e.target.value))}
-              className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+              id="input-attempts"
+              type="number"
+              min="100"
+              max="1000000"
+              step="500"
+              value={attempts}
+              onChange={(e) => setAttempts(Math.max(1, Number(e.target.value) || 0))}
+              className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white font-medium focus:outline-none focus:border-emerald-500"
             />
           </div>
+        </div>
 
-          {/* Slider 2: Scam Attempt Rate */}
+        {/* Input 2: Average loss per scam */}
+        <div className="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex justify-between text-xs mb-1.5 font-semibold">
-              <span className="text-slate-300">{t.scamPrevalence}</span>
-              <span className="text-cyan-400 font-mono">{scamRate.toFixed(2)}%</span>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="input-avgloss" className="text-sm font-semibold text-slate-200">
+                {lang === 'bn' ? 'একটি স্ক্যামে গড় ক্ষতি (৳)' : 'Average loss per scam (৳)'}
+              </label>
+              <span 
+                className="text-slate-400 hover:text-slate-200 cursor-help"
+                title={lang === 'bn' ? 'একটি সফল প্রতারণায় গ্রাহকের গড় আর্থিক ক্ষতি (assumptions.json থেকে নেওয়া)' : 'Average loss per successful fraud incident'}
+              >
+                <HelpCircle className="w-4 h-4" />
+              </span>
             </div>
-            <input
-              type="range"
-              min="0.1"
-              max="2.5"
-              step="0.05"
-              value={scamRate}
-              onChange={(e) => setScamRate(Number(e.target.value))}
-              className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-cyan-500"
-            />
+            <p className="text-xs text-slate-400 mb-3">
+              {lang === 'bn' ? 'ডিফল্ট: ৳৮,৫০০ টাকা' : 'Default: ৳8,500'}
+            </p>
           </div>
-
-          {/* Slider 3: Attempt Success Rate */}
-          <div>
-            <div className="flex justify-between text-xs mb-1.5 font-semibold">
-              <span className="text-slate-300">{t.attemptSuccess}</span>
-              <span className="text-cyan-400 font-mono">{attemptSuccessRate}%</span>
-            </div>
+          <div className="relative">
             <input
-              type="range"
-              min="10"
-              max="75"
-              step="5"
-              value={attemptSuccessRate}
-              onChange={(e) => setAttemptSuccessRate(Number(e.target.value))}
-              className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-cyan-500"
-            />
-          </div>
-
-          {/* Slider 4: Average Loss */}
-          <div>
-            <div className="flex justify-between text-xs mb-1.5 font-semibold">
-              <span className="text-slate-300">{t.avgLossLabel}</span>
-              <span className="text-cyan-400 font-mono">৳{avgLoss.toLocaleString()}</span>
-            </div>
-            <input
-              type="range"
-              min="3000"
-              max="20000"
+              id="input-avgloss"
+              type="number"
+              min="500"
+              max="50000"
               step="500"
               value={avgLoss}
-              onChange={(e) => setAvgLoss(Number(e.target.value))}
-              className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+              onChange={(e) => setAvgLoss(Math.max(1, Number(e.target.value) || 0))}
+              className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white font-medium focus:outline-none focus:border-emerald-500"
             />
           </div>
+        </div>
 
-          {/* Slider 5: Analyst Hourly Cost */}
+        {/* Input 3: How many would have succeeded */}
+        <div className="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex justify-between text-xs mb-1.5 font-semibold">
-              <span className="text-slate-300">{t.analystCost}</span>
-              <span className="text-cyan-400 font-mono">৳{hourlyCost}/hr</span>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="input-successrate" className="text-sm font-semibold text-slate-200">
+                {lang === 'bn' ? 'কতভাগ সফল হতো (%)' : 'How many would succeed (%)'}
+              </label>
+              <span 
+                className="text-slate-400 hover:text-slate-200 cursor-help"
+                title={lang === 'bn' ? 'কোনো বাধা না থাকলে কত শতাংশ প্রতারণা সফল হতো (ডিফল্ট ৩৫%)' : 'Percentage of scam attempts that would succeed if unblocked'}
+              >
+                <HelpCircle className="w-4 h-4" />
+              </span>
             </div>
-            <input
-              type="range"
-              min="400"
-              max="1500"
-              step="50"
-              value={hourlyCost}
-              onChange={(e) => setHourlyCost(Number(e.target.value))}
-              className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-cyan-500"
-            />
+            <p className="text-xs text-slate-400 mb-3">
+              {lang === 'bn' ? 'ডিফল্ট: ৩৫% (সংরক্ষণশীল)' : 'Default: 35%'}
+            </p>
           </div>
-
-          {/* Slider 6: Program Cost Annual */}
-          <div>
-            <div className="flex justify-between text-xs mb-1.5 font-semibold">
-              <span className="text-slate-300">{t.programCost}</span>
-              <span className="text-cyan-400 font-mono">৳{(programCostAnnual / 1000000).toFixed(1)}M / yr</span>
-            </div>
+          <div className="relative">
             <input
-              type="range"
-              min="5000000"
-              max="35000000"
-              step="1000000"
-              value={programCostAnnual}
-              onChange={(e) => setProgramCostAnnual(Number(e.target.value))}
-              className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+              id="input-successrate"
+              type="number"
+              min="5"
+              max="100"
+              step="1"
+              value={successRate}
+              onChange={(e) => setSuccessRate(Math.min(100, Math.max(1, Number(e.target.value) || 0)))}
+              className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white font-medium focus:outline-none focus:border-emerald-500"
             />
           </div>
         </div>
       </div>
 
-      {/* Sensitivity Analysis Table: Per 100k Transactions */}
-      <div className="bg-navy-900 border border-slate-800 rounded-3xl p-6 shadow-xl mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 mb-4 gap-2">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-white">
-            3-Way Sensitivity Matrix (Normalized Per 100,000 Transactions)
-          </h3>
-          <span className="text-xs text-slate-400 font-mono">Net Benefit = (Loss Saved + Labor Saved) - Allocated Cost</span>
+      {/* 4. Big Result Line */}
+      <div className="rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 p-6 shadow-xl">
+        <div className="text-sm font-medium text-emerald-400 mb-1 flex items-center gap-1.5">
+          <Sparkles className="w-4 h-4" />
+          {lang === 'bn' ? 'আনুমানিক বার্ষিক নিট সাশ্রয়' : 'Estimated Annual Net Benefit'}
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left">
-            <thead className="text-slate-400 border-b border-slate-800 uppercase tracking-wider font-mono">
-              <tr>
-                <th className="pb-3">Scenario</th>
-                <th className="pb-3">Assumed Modifiers</th>
-                <th className="pb-3">Loss Prevented</th>
-                <th className="pb-3">Labor Saved</th>
-                <th className="pb-3">Allocated Cost</th>
-                <th className="pb-3">Net Benefit (BDT)</th>
-                <th className="pb-3">Net Benefit (USD)</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 font-mono text-slate-300">
-              <tr>
-                <td className="py-3 font-semibold text-rose-300">{t.conservative}</td>
-                <td className="py-3 text-slate-400">-40% attempts, -25% loss, -30% success</td>
-                <td className="py-3">৳{Math.round(scenariosPer100k.worst.loss).toLocaleString()}</td>
-                <td className="py-3">৳{Math.round(scenariosPer100k.worst.labor).toLocaleString()}</td>
-                <td className="py-3 text-amber-400">৳{Math.round(scenariosPer100k.worst.cost).toLocaleString()}</td>
-                <td className="py-3 font-bold text-rose-300">৳{Math.round(scenariosPer100k.worst.net).toLocaleString()}</td>
-                <td className="py-3 text-slate-400">${scenariosPer100k.worst.netUSD.toFixed(0)}</td>
-              </tr>
-              <tr className="bg-slate-950/40">
-                <td className="py-3 font-bold text-cyan-300">{t.base}</td>
-                <td className="py-3 text-slate-400">Current baseline assumption controls</td>
-                <td className="py-3 font-bold text-white">৳{Math.round(scenariosPer100k.base.loss).toLocaleString()}</td>
-                <td className="py-3 font-bold text-white">৳{Math.round(scenariosPer100k.base.labor).toLocaleString()}</td>
-                <td className="py-3 text-amber-400">৳{Math.round(scenariosPer100k.base.cost).toLocaleString()}</td>
-                <td className="py-3 font-bold text-cyan-300">৳{Math.round(scenariosPer100k.base.net).toLocaleString()}</td>
-                <td className="py-3 font-bold text-emerald-400">${scenariosPer100k.base.netUSD.toFixed(0)}</td>
-              </tr>
-              <tr>
-                <td className="py-3 font-semibold text-emerald-300">{t.optimistic}</td>
-                <td className="py-3 text-slate-400">+40% attempts, +25% loss, +20% success</td>
-                <td className="py-3">৳{Math.round(scenariosPer100k.best.loss).toLocaleString()}</td>
-                <td className="py-3">৳{Math.round(scenariosPer100k.best.labor).toLocaleString()}</td>
-                <td className="py-3 text-amber-400">৳{Math.round(scenariosPer100k.best.cost).toLocaleString()}</td>
-                <td className="py-3 font-bold text-emerald-300">৳{Math.round(scenariosPer100k.best.net).toLocaleString()}</td>
-                <td className="py-3 text-emerald-400">${scenariosPer100k.best.netUSD.toFixed(0)}</td>
-              </tr>
-            </tbody>
-          </table>
+
+        <div className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight my-2">
+          {lang === 'bn' ? (
+            <>
+              TakaBondhu বছরে আনুমানিক{' '}
+              <span className="text-emerald-400 underline decoration-emerald-500/50 decoration-wavy">
+                {formatBDT(yearlyNetSaved)}
+              </span>{' '}
+              টাকা বাঁচাতে পারে
+            </>
+          ) : (
+            <>
+              TakaBondhu could help save about{' '}
+              <span className="text-emerald-400 underline decoration-emerald-500/50 decoration-wavy">
+                {formatBDT(yearlyNetSaved)}
+              </span>{' '}
+              per year
+            </>
+          )}
         </div>
-      </div>
 
-      {/* Phased Rollout Plan */}
-      <div className="bg-navy-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-4">
-          {t.rolloutTitle}
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-            <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block mb-1">
-              Phase 1: Shadow Mode
-            </span>
-            <p className="text-xs text-slate-300">{t.phase1}</p>
+        {/* 5. Visible Step-by-Step Formula */}
+        <div className="mt-4 pt-4 border-t border-slate-800 text-xs sm:text-sm text-slate-300 font-mono bg-slate-950/50 rounded-lg p-3">
+          <div className="text-slate-400 text-xs mb-1 font-sans">
+            {lang === 'bn' ? '📐 হিসাবের স্পষ্ট ধাপ ও সূত্র:' : '📐 Transparent Step-by-Step Formula:'}
           </div>
-
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-            <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-1">
-              Phase 2: Soft Friction
-            </span>
-            <p className="text-xs text-slate-300">{t.phase2}</p>
+          <div className="overflow-x-auto whitespace-nowrap py-1">
+            <span className="text-emerald-300">{attempts.toLocaleString()}</span>
+            <span className="text-slate-500"> (চেষ্টা) × </span>
+            <span className="text-cyan-300">{activeCatchRate}%</span>
+            <span className="text-slate-500"> (শনাক্ত) × </span>
+            <span className="text-amber-300">{successRate}%</span>
+            <span className="text-slate-500"> (সফলতা) × </span>
+            <span className="text-emerald-300">৳{avgLoss.toLocaleString()}</span>
+            <span className="text-slate-500"> (ক্ষতি) × </span>
+            <span className="text-purple-300">১২ মাস</span>
+            <span className="text-slate-500"> − </span>
+            <span className="text-rose-300">৳{(activeRunningCost / 10000000).toFixed(2)} কোটি</span>
+            <span className="text-slate-500"> (বার্ষিক খরচ) = </span>
+            <span className="text-emerald-400 font-bold">{formatBDT(yearlyNetSaved, false)}</span>
           </div>
-
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider block mb-1">
-              Phase 3: Human Review
-            </span>
-            <p className="text-xs text-slate-300">{t.phase3}</p>
-          </div>
+          <p className="text-[11px] text-slate-400 font-sans mt-2">
+            {lang === 'bn' 
+              ? `* মডেলের সনাক্তকরণ হার (${activeCatchRate}%) সরাসরি ml/reports/results.json থেকে API দ্বারা লোড করা হয়েছে।`
+              : `* Model catch rate (${activeCatchRate}%) loaded directly via API from ml/reports/results.json.`}
+          </p>
         </div>
       </div>
 
+      {/* 6. Small Best / Base / Worst Row */}
+      <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+        <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+          {lang === 'bn' ? 'বিভিন্ন অনুমানের দৃশ্যপট (সংবেদনশীলতা বিশ্লেষণ)' : 'Sensitivity Scenarios (Worst / Base / Best)'}
+        </h4>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Conservative / Worst */}
+          <div className="p-3 rounded-lg border border-slate-800 bg-slate-800/40">
+            <div className="text-xs text-slate-400">
+              {lang === 'bn' ? 'সতর্ক অনুমান (Worst)' : 'Conservative (Worst)'}
+            </div>
+            <div className="text-base font-bold text-amber-300 mt-1">
+              {formatBDT(getScenarioSaved('conservative'))}
+            </div>
+            <div className="text-[11px] text-slate-500 mt-0.5">
+              {lang === 'bn' ? 'শনাক্ত ৫৮.৭%, সফলতা ২৫%' : '58.7% catch, 25% success'}
+            </div>
+          </div>
+
+          {/* Base / Expected */}
+          <div className="p-3 rounded-lg border border-emerald-500/30 bg-emerald-950/20">
+            <div className="text-xs text-emerald-400 font-medium">
+              {lang === 'bn' ? 'স্বাভাবিক অনুমান (Base)' : 'Base Expected'}
+            </div>
+            <div className="text-base font-bold text-emerald-300 mt-1">
+              {formatBDT(yearlyNetSaved)}
+            </div>
+            <div className="text-[11px] text-slate-400 mt-0.5">
+              {lang === 'bn' ? `শনাক্ত ${activeCatchRate}%, সফলতা ${successRate}%` : `${activeCatchRate}% catch, ${successRate}% success`}
+            </div>
+          </div>
+
+          {/* Optimistic / Best */}
+          <div className="p-3 rounded-lg border border-slate-800 bg-slate-800/40">
+            <div className="text-xs text-slate-400">
+              {lang === 'bn' ? 'সর্বোচ্চ অনুমান (Best)' : 'Optimistic (Best)'}
+            </div>
+            <div className="text-base font-bold text-cyan-300 mt-1">
+              {formatBDT(getScenarioSaved('optimistic'))}
+            </div>
+            <div className="text-[11px] text-slate-500 mt-0.5">
+              {lang === 'bn' ? 'শনাক্ত ৯৮.৩%, সফলতা ৪৫%' : '98.3% catch, 45% success'}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

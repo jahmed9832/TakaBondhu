@@ -1067,6 +1067,70 @@ app.get('/v1/agents/:id/risk', async (req, res) => {
   }
 });
 
+// GET /v1/impact/config (and /api/impact/config)
+app.get(['/v1/impact/config', '/api/impact/config'], (req, res) => {
+  try {
+    const assumptionsPath = path.resolve(__dirname, '../impact/assumptions.json');
+    const resultsPath = path.resolve(__dirname, '../ml/reports/results.json');
+
+    let assumptions = {};
+    if (fs.existsSync(assumptionsPath)) {
+      assumptions = JSON.parse(fs.readFileSync(assumptionsPath, 'utf8'));
+    }
+
+    let results = {};
+    if (fs.existsSync(resultsPath)) {
+      results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+    }
+
+    const tri = results.transaction_risk_intelligence || {};
+    const reviewCapacity = tri.review_capacity?.test_time?.top_20_per_1000 || {};
+
+    const catchRateFraction = reviewCapacity.recall_at_k ?? 0.8226;
+    const catchRatePct = Number((catchRateFraction * 100).toFixed(2));
+    const avgLoss = assumptions.avg_loss_per_successful_scam_bdt?.value ?? 8500;
+    const successRatePct = Number(((assumptions.attempt_success_rate?.value ?? 0.35) * 100).toFixed(1));
+    const runningCostYearly = assumptions.program_cost_annual_bdt?.value ?? 18500000;
+
+    return res.json({
+      status: 'ok',
+      defaults: {
+        scam_attempts_per_month: 10000,
+        avg_loss_per_scam_bdt: avgLoss,
+        attempt_success_rate_pct: successRatePct
+      },
+      metrics: {
+        catch_rate_pct: catchRatePct,
+        catch_rate_fraction: catchRateFraction,
+        yearly_running_cost_bdt: runningCostYearly,
+        precision_at_capacity: reviewCapacity.precision_at_k ?? 0.9666,
+        fpr: tri.test_time?.fpr ?? 0.0041
+      },
+      scenarios: {
+        conservative: {
+          catch_rate_pct: 58.7,
+          success_rate_pct: 25,
+          loss_multiplier: 0.85
+        },
+        base: {
+          catch_rate_pct: catchRatePct,
+          success_rate_pct: successRatePct,
+          loss_multiplier: 1.0
+        },
+        optimistic: {
+          catch_rate_pct: 98.32,
+          success_rate_pct: 45,
+          loss_multiplier: 1.2
+        }
+      },
+      disclaimer: "Illustrative estimate based on stated assumptions and a synthetic benchmark, not real upay data / শুধু অনুমান — বাস্তব উপায় ডেটা নয়"
+    });
+  } catch (err) {
+    console.error('Error serving impact config:', err.message);
+    return res.status(500).json({ error: 'Failed to load impact configuration' });
+  }
+});
+
 // 6. POST /v1/feedback (Analyst triage decision feed with RBAC)
 const FEEDBACK_LOG_FILE = path.join(DATA_DIR, 'analyst_feedback.jsonl');
 app.post('/v1/feedback', (req, res) => {
