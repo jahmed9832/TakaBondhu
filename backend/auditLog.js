@@ -23,6 +23,14 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
+if (!fs.existsSync(AUDIT_LOG_FILE)) {
+  try {
+    fs.writeFileSync(AUDIT_LOG_FILE, '', 'utf-8');
+  } catch (err) {
+    console.error('Error creating empty audit_log.jsonl:', err.message);
+  }
+}
+
 let lastLogHash = '0000000000000000000000000000000000000000000000000000000000000000';
 
 // Initialize lastLogHash from existing file if present

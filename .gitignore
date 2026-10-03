@@ -38,3 +38,7 @@ dist-ssr/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Runtime state data
+backend/data/audit_log.jsonl
+backend/data/review_queue.json

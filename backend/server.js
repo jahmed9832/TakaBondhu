@@ -110,6 +110,16 @@ function recordTelemetry(score, latencyMs, needsReview) {
 
 // Local Review Queue Persistence (JSON)
 const REVIEW_QUEUE_FILE = path.join(DATA_DIR, 'review_queue.json');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+if (!fs.existsSync(REVIEW_QUEUE_FILE)) {
+  try {
+    fs.writeFileSync(REVIEW_QUEUE_FILE, '[]', 'utf-8');
+  } catch (err) {
+    console.error('Error creating empty review_queue.json:', err.message);
+  }
+}
 function loadReviewQueue() {
   if (fs.existsSync(REVIEW_QUEUE_FILE)) {
     try {
